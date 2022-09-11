@@ -1,0 +1,1 @@
+{"version":3,"file":"QueryVars.d.ts","sourceRoot":"","sources":["../src/QueryVars.ts"],"names":[],"mappings":"AAEA,aAAK,SAAS,GAAG,EAEhB,CAAA;AA0BD,cAAM,SAAS;IAEb,MAAM,EAAE,SAAS,CAAyB;IAC1C,WAAW,EAAE,SAAS,CAAyB;IAC/C,KAAK,EAAE,SAAS,CAAyB;IAEzC,GAAG;IAII,KAAK;CAKb;AAGD,eAAe,SAAS,CAAA"}

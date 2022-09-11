@@ -7,19 +7,20 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev"
+    "dev:demo": "cd ./apps/demo && yarn dev",
+    "dev:hook": "tsc -p ./packages/react-hook --watch",
+    "dev:lib": "tsc -p ./packages/lib --watch",
+    "dev:types": "tsc -p ./packages/types --watch",
+    "dev": "concurrently \"yarn dev:types\" \"yarn dev:hook\" \"yarn dev:lib\" \"yarn dev:squid\" \"yarn dev:squid:serve\" \"yarn dev:demo\""
   },
   "devDependencies": {
     "eslint-config-custom": "*",
     "prettier": "latest",
-    "turbo": "^1.4.3",
-    "turbo-darwin-arm64": "1.3.1"
+    "concurrently": "^7.3.0"
   },
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "dependencies": {},
   "packageManager": "yarn@1.22.10"
 }
