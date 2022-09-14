@@ -1,5 +1,10 @@
 import { gql } from '@apollo/client';
-import { WayfinderCallbackResult, QueryResultType  } from '@talismn/wayfinder-types'
+import { 
+  WayfinderCallbackResult, 
+  QueryResultType, 
+  WayfinderInputVars, 
+  WayfinderInternalVars
+} from '@talismn/wayfinder-types'
 
 const CHAIN_FIELDS = gql`
   fragment ChainFields on Chain{
@@ -47,6 +52,22 @@ export const defaultQuery = gql`
   }
 `
 
+// these are the inputs we collect from the user
+export const defaultInputVars: WayfinderInputVars = {
+  account: undefined,
+  availableAssets: [],
+  source: undefined,
+  destination: undefined,
+  token: undefined,
+  amount: undefined,
+  destAccount: undefined
+}
+
+export const defaultInternalVars: WayfinderInternalVars = {
+  status: 'INITIALISED',
+  statusMessage: null
+}
+
 export const defaultQueryResult: QueryResultType = {
   all: {
     channels: [],
@@ -68,6 +89,8 @@ export const defaultQueryResult: QueryResultType = {
 }
 
 export const defaultWayfinderCallbackResult: WayfinderCallbackResult = {
-  ...defaultQueryResult,
+  all: defaultQueryResult.all,
+  filtered: defaultQueryResult.filtered,
+  inputParams: defaultInputVars,
   status: "INITIALISED"
 }

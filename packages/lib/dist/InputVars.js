@@ -20,6 +20,8 @@ class Variable {
 }
 class QueryVars {
     constructor(vars) {
+        this.time = new Date().getTime();
+        this.timeout = setTimeout(() => { }, 0);
         this.vars = {};
         this.callbackStore = {};
         Object.keys(vars).forEach(key => {
@@ -30,13 +32,30 @@ class QueryVars {
     }
     // set a value - make sure it's in the set of allowed values
     set(key, value) {
-        if (!!this.vars[key]) {
+        if (typeof key === 'object') {
+            Object.keys(key).forEach(_key => {
+                if (!this.vars[_key])
+                    return;
+                this.vars[_key].value = key[_key];
+            });
+            this.triggerUpdate();
+        }
+        else {
+            if (!this.vars[key] || !value)
+                return;
             this.vars[key].value = value;
             this.triggerUpdate();
         }
     }
     get(key) {
         return this.vars[key].value;
+    }
+    all() {
+        const all = {};
+        Object.keys(this.vars).forEach(key => {
+            all[key] = this.vars[key].value;
+        });
+        return all;
     }
     // itterate through all vars and reset back to default value
     reset(fields) {
@@ -46,15 +65,10 @@ class QueryVars {
         });
         this.triggerUpdate();
     }
-    // public values(){
-    //   const returnObj: {[key: string]: any} = {}
-    //   Object.keys(this.vars).map(key => returnObj[key] = this.vars[key].value)
-    //   return returnObj
-    // }
     // subscription callback
     triggerUpdate() {
         const returnObj = {};
-        Object.keys(this.vars).map(key => returnObj[key] = this.vars[key].value);
+        Object.keys(this.vars).forEach(key => returnObj[key] = this.vars[key].value);
         Object.values(this.callbackStore).forEach(cb => {
             cb(returnObj);
         });

@@ -1,4 +1,4 @@
-import { WayfinderProps, WayfinderCallback, WayfinderConfigProps } from '@talismn/wayfinder-types';
+import { WayfinderCallback, WayfinderConfigProps, GenericObject } from '@talismn/wayfinder-types';
 declare class WayFinder {
     private inputVars;
     private internalVars;
@@ -6,15 +6,15 @@ declare class WayFinder {
     private callbackStore;
     private availableAssets;
     private autoSelectValues;
-    constructor({ uri }: WayfinderProps);
+    constructor();
     configure(props: WayfinderConfigProps): void;
-    reset({ clearAvailableAssets }?: {
+    reset(props?: {
         clearAvailableAssets?: boolean;
+        cb: () => void;
     }): void;
-    private fetchRoutes;
     private updateStatus;
     private handleUpdate;
-    setFilter(key: string, val: string | undefined): void;
+    setFilter(key: string | GenericObject, value?: any): void;
     private fireSubscriptions;
     subscribe(cb: WayfinderCallback): () => void;
 }

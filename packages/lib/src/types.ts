@@ -3,13 +3,16 @@ import {
   States
 } from '@talismn/wayfinder-types'
 
-export type DefaultInputVars = {
+export type _DefaultInputVars = {
+  account: string|undefined
+  availableAssets: AvailableAsset[]
   source: string|undefined
   destination: string|undefined
   token: string|undefined
   amount: string|undefined
+  destAccount: string|undefined
 }
 
-export type DefaultInternalVars = {
+export type _DefaultInternalVars = {
   status: States
 }

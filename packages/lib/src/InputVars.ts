@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
+import { GenericObject } from '@talismn/wayfinder-types'
+
 
 type TValue<T> = T|null
 
@@ -27,7 +29,7 @@ class Variable<T>{
 
 
 type VariableSet = {
-  [key: string]: Variable<string>
+  [key: string]: Variable<any>
 }
 
 type InputSet = {
@@ -36,20 +38,29 @@ type InputSet = {
 
 class QueryVars {
 
+  private time: number = new Date().getTime()
+  private timeout: ReturnType<typeof setTimeout> = setTimeout(()=>{}, 0)
   private vars: VariableSet = {}
   private callbackStore: {[id: string]: (val: {[id: string]: any}) => void} = {}
   
   constructor(vars: InputSet){
     Object.keys(vars).forEach(key => {
       const val = vars[key]
-      this.vars[key] = new Variable(val)
+      this.vars[key] = new Variable<typeof val>(val)
     })
     this.triggerUpdate()
   }
 
   // set a value - make sure it's in the set of allowed values
-  set(key: string, value: any){
-    if(!!this.vars[key]){
+  public set(key: string|GenericObject, value?: any){
+    if(typeof key === 'object'){
+      Object.keys(key).forEach(_key => {
+        if(!this.vars[_key]) return
+        this.vars[_key].value = key[_key]
+      })
+      this.triggerUpdate()
+    }else{
+      if(!this.vars[key] || !value) return
       this.vars[key].value = value
       this.triggerUpdate()
     }
@@ -58,29 +69,29 @@ class QueryVars {
   get(key: string) {
     return this.vars[key].value
   }
+
+  all(){
+    const all: {[key: string]: any} = {}
+    Object.keys(this.vars).forEach(key => {
+      all[key] = this.vars[key].value
+    })
+    return all
+  }
   
   // itterate through all vars and reset back to default value
   public reset(fields?: string[]){
     Object.keys(this.vars).forEach((key: string) => {
-      
       // only reset the fields specified, otherwise all if not specified
       (!fields || fields.includes(key)) && this.vars[key].reset()
-
     })
-    
+        
     this.triggerUpdate()
   }
 
-  // public values(){
-  //   const returnObj: {[key: string]: any} = {}
-  //   Object.keys(this.vars).map(key => returnObj[key] = this.vars[key].value)
-  //   return returnObj
-  // }
-
   // subscription callback
-  private triggerUpdate(){    
+  private triggerUpdate(){  
     const returnObj: {[key: string]: any} = {}
-    Object.keys(this.vars).map(key => returnObj[key] = this.vars[key].value)
+    Object.keys(this.vars).forEach(key => returnObj[key] = this.vars[key].value)
     Object.values(this.callbackStore).forEach(cb => {
       cb(returnObj)
     })

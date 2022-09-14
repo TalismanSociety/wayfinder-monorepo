@@ -1,8 +1,4 @@
-import { DocumentNode } from '@apollo/client';
-
-
 export type States = 'INITIALISED'|'MISSING_INPUT'|'NO_ROUTES'|'ROUTE_FOUND'|'ERROR'|'LOADING'|'SENDING'
-
 
 // a chain type
 export type Chain = {
@@ -52,8 +48,25 @@ export type QueryResultType = {
   query: QueryResultQueryType
 }
 
+export type WayfinderInputVars = {
+  account: string|undefined
+  availableAssets: AvailableAsset[]
+  source: string|undefined
+  destination: string|undefined
+  token: string|undefined
+  amount: string|undefined
+  destAccount: string|undefined
+}
 
-export type WayfinderCallbackResult = QueryResultType & {
+export type WayfinderInternalVars = {
+  status: States
+  statusMessage: string|null 
+}
+
+export type WayfinderCallbackResult = {
+  all: QueryResultGroupType
+  filtered: QueryResultGroupType
+  inputParams: WayfinderInputVars
   status: States
 }
 
@@ -61,7 +74,7 @@ export type WayfinderCallbackResult = QueryResultType & {
 export type WayfinderCallback = (params: WayfinderCallbackResult) => void
 
 export type WayfinderHookResult = WayfinderCallbackResult & {
-  set(key: string, val: string|undefined): void
+  set(key: string|GenericObject, val?: any): void
   clear(): void
 }
 
@@ -73,6 +86,7 @@ export type AvailableAsset = {
 
 
 export type WayfinderConfigProps = {
+  uri: string
   availableAssets?: AvailableAsset[]
   autoSelectValues?: Boolean
 }
@@ -83,3 +97,7 @@ export type WayfinderRouterProps = {
 }
 
 export type WayfinderProps = WayfinderRouterProps & {}
+
+export type GenericObject = {
+  [key: string]: any
+}

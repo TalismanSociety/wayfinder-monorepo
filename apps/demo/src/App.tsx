@@ -1,10 +1,10 @@
 import useWayfinder from '@talismn/wayfinder-react-hook'
-import { Chain, WayfinderHookResult } from '@talismn/wayfinder-types'
-import { availableAssets } from './config'
+import { Chain, WayfinderHookResult, WayfinderConfigProps } from '@talismn/wayfinder-types'
+import { useEffect } from 'react'
+import { availableAccounts, availableAssets } from './config'
 
-const wayfinderProps = {
-  availableAssets,
-  autoSelectValues: true
+const wayfinderProps: WayfinderConfigProps = {
+  uri: 'http://localhost:4350/graphql'
 }
 
 const App = () => {
@@ -12,30 +12,63 @@ const App = () => {
   const {
     all,
     filtered,
-    query,
+    inputParams,
     status,
     set,
     clear
   } : WayfinderHookResult = useWayfinder(wayfinderProps)
 
+  // set this when the accounts have loaded
+  //  - in reality this will be queries from somewhere 
+  useEffect(() => {
+    set('account', availableAccounts[0].address)
+  }, [])
+
+  // fetch the available assets when the account changes
+  //  - we can probably migrate this to a hook, which wraps useWayfinder with the ability to 
+  //  - lookup assets when the account changes
+  useEffect(() => {
+    if(!inputParams.account) return
+    set('availableAssets', availableAssets[inputParams.account])
+  }, [inputParams.account])
+
+
   return <div style={{display: 'flex'}}>
     
-    <div style={{padding: '2em'}}>
-      <h1>User Assets</h1>
-      {(availableAssets).map(({chain, token, amount}) => <div key={`${chain}${token}`}>{chain} | {token} | {amount}</div> )}
+    <div style={{padding: '2em', width: '20%'}}>
+      <h1>User Accounts</h1>
+      
+      {(availableAccounts).map(({name, address}) => {
+        return <div>
+          <h3 key={address} style={{marginBottom: '0.4em'}}>{name} | {address}</h3>
+          {(availableAssets[address]).map(({chain, token, amount}) => <div key={`${chain}${token}`}>{chain} | {token} | {amount}</div> )}
+        </div>
+      } )}
+
       <sub style={{opacity: 0.5}}>key: [chain | token | amount]</sub>
     </div>
 
 
-    <div style={{padding: '2em'}}>
+    <div style={{padding: '2em', width: '20%'}}>
       <h1>User Input:</h1>
-      <form>
+      <form onSubmit={() => console.log(434343)}>
+        <fieldset>
+          <legend>From Account:</legend>
+          <select 
+            style={{width: '100%'}} 
+            value={inputParams.account} 
+            onChange={e => set('account', e.target.value)}
+            >
+            {(availableAccounts).map(({name, address}) => <option key={address} value={address}>{name}</option>)}
+          </select>
+        </fieldset>
+
         <fieldset>
           <legend>Source Chain:</legend>
           <select 
             style={{width: '100%'}} 
-            disabled={!!query?.source}  
-            value={query?.source || '-1'} 
+            disabled={!!inputParams?.source}  
+            value={inputParams?.source || '-1'} 
             onChange={e => set('source', e.target.value === '-1' ? undefined : e.target.value)}
             >
             <option value={'-1'}>Select</option>
@@ -52,8 +85,8 @@ const App = () => {
           <legend>Destination Chain:</legend>
           <select 
             style={{width: '100%'}} 
-            disabled={!!query?.destination} 
-            value={query?.destination || '-1'} 
+            disabled={!!inputParams?.destination} 
+            value={inputParams?.destination || '-1'} 
             onChange={e => set('destination', e.target.value === '-1' ? undefined : e.target.value)}
             >
             <option value={'-1'}>Select</option>
@@ -67,11 +100,11 @@ const App = () => {
         </fieldset>
 
         <fieldset>
-          <legend>Destination Chain:</legend>
+          <legend>Destination Token:</legend>
           <select 
             style={{width: '100%'}} 
-            disabled={!!query?.token} 
-            value={query?.token || '-1'} 
+            disabled={!!inputParams?.token} 
+            value={inputParams?.token || '-1'} 
             onChange={e => set('token', e.target.value === '-1' ? undefined : e.target.value)}
             >
             <option value={'-1'}>Select</option>
@@ -86,7 +119,7 @@ const App = () => {
 
         <fieldset>
           <legend>Amount:</legend>
-          <input style={{width: '100%'}} type="number" min='0' max='100' value={query?.source || ''} onChange={e => set('amount', e.target.value)}/> 
+          <input style={{width: '100%'}} type="number" min='0' max='100' value={inputParams?.source || ''} onChange={e => set('amount', e.target.value)}/> 
         </fieldset>
        
         <button type='submit'>Submit</button>
@@ -94,12 +127,19 @@ const App = () => {
       </form>
     </div>
 
-    <div style={{padding: '2em'}}>
+    <div style={{padding: '2em', width: '20%'}}>
       <h1>Selected Inputs</h1>
-      {Object.entries(query).map(([key, val]) => <div>{key}: {val}</div> )}
+      <h3>Account</h3>
+      <div>Address: {inputParams.account}</div>
+      <div>Assets: {inputParams.availableAssets.map(asset => `${asset.token}:${asset.amount}`).join(' ')}</div>
+      <h3>Input Params</h3>
+      <div>Source: {inputParams.source}</div>
+      <div>Destination: {inputParams.destination}</div>
+      <div>Token: {inputParams.token}</div>
+      <div>Amount: {inputParams.amount}</div>
     </div>
 
-    <div style={{padding: '2em'}}>
+    <div style={{padding: '2em', width: '20%'}}>
       <h1>Routes</h1>
       <h3>Filtered (by user assets/input)</h3>
       {(filtered?.channels||[]).map(({id, tokens}) => <div key={id}>{id} | {tokens.map(({name}) => name).join(', ')}</div> )}
@@ -107,7 +147,7 @@ const App = () => {
       {(all?.channels||[]).map(({id, tokens}) => <div key={id}>{id} | {tokens.map(({name}) => name).join(', ')}</div> )}
     </div>
 
-    <div style={{padding: '2em'}}>
+    <div style={{padding: '2em', width: '20%'}}>
       <h1>Other:</h1>
       <div>Status: {status}</div>
       <div>Route: {status === 'ROUTE_FOUND' ? filtered?.channels[0]?.id : '-'}</div>

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defaultWayfinderCallbackResult = exports.defaultQueryResult = exports.defaultQuery = void 0;
+exports.defaultWayfinderCallbackResult = exports.defaultQueryResult = exports.defaultInternalVars = exports.defaultInputVars = exports.defaultQuery = void 0;
 const client_1 = require("@apollo/client");
 const CHAIN_FIELDS = (0, client_1.gql) `
   fragment ChainFields on Chain{
@@ -44,6 +44,20 @@ exports.defaultQuery = (0, client_1.gql) `
     }
   }
 `;
+// these are the inputs we collect from the user
+exports.defaultInputVars = {
+    account: undefined,
+    availableAssets: [],
+    source: undefined,
+    destination: undefined,
+    token: undefined,
+    amount: undefined,
+    destAccount: undefined
+};
+exports.defaultInternalVars = {
+    status: 'INITIALISED',
+    statusMessage: null
+};
 exports.defaultQueryResult = {
     all: {
         channels: [],
@@ -64,6 +78,8 @@ exports.defaultQueryResult = {
     }
 };
 exports.defaultWayfinderCallbackResult = {
-    ...exports.defaultQueryResult,
+    all: exports.defaultQueryResult.all,
+    filtered: exports.defaultQueryResult.filtered,
+    inputParams: exports.defaultInputVars,
     status: "INITIALISED"
 };

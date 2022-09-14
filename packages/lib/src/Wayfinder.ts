@@ -6,25 +6,15 @@ import {
   WayfinderCallback,
   States,
   QueryResultType,
-  WayfinderConfigProps
+  WayfinderConfigProps,
+  WayfinderInputVars,
+  GenericObject
 } from '@talismn/wayfinder-types'
 import router from './Router'
 import InputVars from './InputVars';
 import { filterChannelDataByAssets } from './util'
-import { DefaultInputVars, DefaultInternalVars } from './types'
-import { defaultQueryResult } from './config'
+import { defaultQueryResult, defaultInputVars, defaultInternalVars } from './config'
 
-// these are the inputs we collect from the user
-const defaultInputVars: DefaultInputVars = {
-  source: undefined,
-  destination: undefined,
-  token: undefined,
-  amount: undefined,
-}
-
-const defaultInternalVars: DefaultInternalVars = {
-  status: 'INITIALISED'
-}
 
 class WayFinder{
   
@@ -50,15 +40,12 @@ class WayFinder{
 
 
   // init the wayfinder lib
-  constructor({uri}: WayfinderProps){
+  constructor(){
     // set up a input vars watcher
-    this.inputVars.subscribe((params: DefaultInputVars) => this.handleUpdate(params))
+    this.inputVars.subscribe(params => this.handleUpdate(params))
 
     // set up a internal vars watcher
-    this.internalVars.subscribe(() => this.fireSubscriptions())
-    
-    // configure the router
-    router.configure({uri})
+    this.internalVars.subscribe(() => this.fireSubscriptions())    
 
     // trigger a reset
     this.reset()
@@ -67,46 +54,31 @@ class WayFinder{
 
   // allow the user to set some internal values
   public configure(props: WayfinderConfigProps){
-    this.availableAssets = props.availableAssets
+    router.configure({uri: props.uri})
     this.autoSelectValues = props.autoSelectValues||false
+    if(!!props.availableAssets) this.inputVars.set('availableAssets', props.availableAssets)
   }
 
 
   // reset the wayfinder back to its original state
-  reset({clearAvailableAssets = false }: {clearAvailableAssets?: boolean} = {}){
+  reset(props?: {clearAvailableAssets?: boolean, cb: () => void}){
     // reset user input assets if requested
-    if(clearAvailableAssets === true) this.internalVars.set('availableAssets', null)
+    if(props?.clearAvailableAssets === true) this.internalVars.set('availableAssets', null)
 
     // todo
     this.channelData = {...defaultQueryResult}
 
     // reset all the user input options
-    this.inputVars.reset(['source', 'destination', 'token'])
+    this.inputVars.reset(['source', 'destination', 'token', 'amount'])
 
     // reset all internal vars
     this.internalVars.reset()
+
+    // fire the callback if we have one
+    if(!!props?.cb) props.cb()
   }
 
-
-
-  
-  // fetch all the routes based on source chain, destination chain and token
-  private async fetchRoutes(params: QueryParams) {
-    // deconstruct the params
-    const {
-      source,
-      destination,
-      token,
-    } = params
-
-    // pluck out the vars we need in the query
-    const queryVars = {source, destination, token}
-
-    // run the query
-    return await router.fetchChannels(queryVars)
-  }
-
-  
+  // define the status   
   private updateStatus() {
 
     // check if there are channels returned
@@ -147,40 +119,46 @@ class WayFinder{
 
   // update the wayfinder state based on input values
   // this should only trigger when something changes
-  private async handleUpdate(params: DefaultInputVars){
+  private async handleUpdate(params: WayfinderInputVars){
     // get all vars
     const {
       source,
       destination,
       token,
-      amount
+      availableAssets
     } = params
     
-    // fetch routes
-    const channelData = await this.fetchRoutes({source, destination, token})
+    try {
+      // fetch routes
+      const channelData = await router.fetchChannels({source, destination, token})
 
-    // hack to get around routes not returning anything
-    if(!Object.keys(channelData).length) return
+      // hack to get around routes not returning anything
+      if(!Object.keys(channelData).length) return
 
-    // set the channelData
-    this.channelData = channelData
+      // set the channelData
+      this.channelData = channelData
 
-    // set the filtered routes based on the user tokens
-    this.channelData.filtered = filterChannelDataByAssets(this.channelData.filtered, this.availableAssets)
-    
-    // if there's only one available source, destination or token automatically set the values
-    if(this.autoSelectValues === true){
-      if(!this.inputVars.get('source') && this.channelData.filtered.sources.length === 1){
-        this.inputVars.set('source', this.channelData.filtered.sources[0].id) 
+      // set the filtered routes based on the user tokens available
+      this.channelData.filtered = filterChannelDataByAssets(this.channelData.filtered, availableAssets)
+      
+      // if there's only one available source, destination or token automatically set the values
+      if(this.autoSelectValues === true){
+        if(!this.inputVars.get('source') && this.channelData.filtered.sources.length === 1){
+          this.inputVars.set('source', this.channelData.filtered.sources[0].id) 
+        }
+
+        if(!this.inputVars.get('destination') && this.channelData.filtered.destinations.length === 1){
+          this.inputVars.set('destination', this.channelData.filtered.destinations[0].id) 
+        }
+
+        if(!this.inputVars.get('token') && this.channelData.filtered.tokens.length === 1){
+          this.inputVars.set('token', this.channelData.filtered.tokens[0].id) 
+        }
       }
 
-      if(!this.inputVars.get('destination') && this.channelData.filtered.destinations.length === 1){
-        this.inputVars.set('destination', this.channelData.filtered.destinations[0].id) 
-      }
-
-      if(!this.inputVars.get('token') && this.channelData.filtered.tokens.length === 1){
-        this.inputVars.set('token', this.channelData.filtered.tokens[0].id) 
-      }
+    } catch (error) {
+      this.internalVars.set('status', 'ERROR')
+      this.internalVars.set('statusMessage', 'Router failed to fetch routes from source. Source may be unavailable.')
     }
 
     // update the status
@@ -193,17 +171,19 @@ class WayFinder{
 
   // setting the active item based on one selected
   // todo: type the val as a value in the current token|source|destination array
-  public setFilter(key: string, val: string|undefined){
-    this.inputVars.set(key, val)
+  public setFilter(key: string|GenericObject, value?: any){
+    this.reset()
+    this.inputVars.set(key, value)    
   }
 
   
   // trigger all teh callbacks to be called after an update
   private fireSubscriptions(){    
-    //if(this.internalVars.get('status') === 'INITIALISED') return
     Object.values(this.callbackStore).forEach(cb => {
       cb({
-        ...this.channelData,
+        all: this.channelData.all,
+        filtered: this.channelData.filtered,
+        inputParams: this.inputVars.all() as WayfinderInputVars,
         status: this.internalVars.get('status') as States
       })
     })

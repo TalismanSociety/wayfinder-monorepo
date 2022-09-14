@@ -35,12 +35,28 @@ export declare type QueryResultType = {
     filtered: QueryResultGroupType;
     query: QueryResultQueryType;
 };
-export declare type WayfinderCallbackResult = QueryResultType & {
+export declare type WayfinderInputVars = {
+    account: string | undefined;
+    availableAssets: AvailableAsset[];
+    source: string | undefined;
+    destination: string | undefined;
+    token: string | undefined;
+    amount: string | undefined;
+    destAccount: string | undefined;
+};
+export declare type WayfinderInternalVars = {
+    status: States;
+    statusMessage: string | null;
+};
+export declare type WayfinderCallbackResult = {
+    all: QueryResultGroupType;
+    filtered: QueryResultGroupType;
+    inputParams: WayfinderInputVars;
     status: States;
 };
 export declare type WayfinderCallback = (params: WayfinderCallbackResult) => void;
 export declare type WayfinderHookResult = WayfinderCallbackResult & {
-    set(key: string, val: string | undefined): void;
+    set(key: string | GenericObject, val?: any): void;
     clear(): void;
 };
 export declare type AvailableAsset = {
@@ -49,6 +65,7 @@ export declare type AvailableAsset = {
     amount: string;
 };
 export declare type WayfinderConfigProps = {
+    uri: string;
     availableAssets?: AvailableAsset[];
     autoSelectValues?: Boolean;
 };
@@ -56,4 +73,7 @@ export declare type WayfinderRouterProps = {
     uri: string;
 };
 export declare type WayfinderProps = WayfinderRouterProps & {};
+export declare type GenericObject = {
+    [key: string]: any;
+};
 //# sourceMappingURL=index.d.ts.map

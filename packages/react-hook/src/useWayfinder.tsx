@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react'
 import WayFinder, { defaultWayfinderCallbackResult } from '@talismn/wayfinder-lib'
-import { WayfinderConfigProps, WayfinderHookResult, WayfinderCallbackResult } from '@talismn/wayfinder-types'
+import { WayfinderConfigProps, WayfinderHookResult, WayfinderCallbackResult, AvailableAsset } from '@talismn/wayfinder-types'
 
-const wayfinderInstance = new WayFinder({uri: 'http://localhost:4350/graphql'})
+const wayfinderInstance = new WayFinder()
 
-const useWayfinder = (props: WayfinderConfigProps = {}): WayfinderHookResult => {
+const defaultProps = {
+  uri: 'http://localhost:4350/graphql'
+}
 
-  const {
-    availableAssets,
-    autoSelectValues
-  } = props
+const useWayfinder = (props: WayfinderConfigProps = defaultProps): WayfinderHookResult => {
+
 
   const [wayfinderState, setWayfinderState] = useState<WayfinderCallbackResult>(defaultWayfinderCallbackResult)
 
   useEffect(() => {
-    wayfinderInstance.configure({availableAssets, autoSelectValues})
-  }, [availableAssets])
-
+    wayfinderInstance.configure(props)
+  }, [props])
 
   useEffect(() => {
     const unsub = wayfinderInstance.subscribe(setWayfinderState)
@@ -25,7 +24,7 @@ const useWayfinder = (props: WayfinderConfigProps = {}): WayfinderHookResult => 
 
   return {
     ...wayfinderState,
-    set: (key: string, val: string|undefined) => wayfinderInstance.setFilter(key, val),
+    set: (key, val) => wayfinderInstance.setFilter(key, val),
     clear: () => wayfinderInstance.reset(),
   }
 }
