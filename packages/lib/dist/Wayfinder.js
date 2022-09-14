@@ -20,8 +20,6 @@ class WayFinder {
         this.channelData = { ...config_1.defaultQueryResult };
         // a store of callbacks triggered when this instance updates
         this.callbackStore = {};
-        // the user defined available assets
-        this.availableAssets = undefined;
         // determines if the wayfinder auto selects values beased on available routes
         // if there's 1 options available for a certain input field, it will automatically be selected
         this.autoSelectValues = false;
@@ -122,7 +120,8 @@ class WayFinder {
     // setting the active item based on one selected
     // todo: type the val as a value in the current token|source|destination array
     setFilter(key, value) {
-        this.reset();
+        if (key === 'account' || Object.keys(key).includes('account'))
+            this.reset();
         this.inputVars.set(key, value);
     }
     // trigger all teh callbacks to be called after an update

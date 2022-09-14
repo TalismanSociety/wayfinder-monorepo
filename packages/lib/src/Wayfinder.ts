@@ -1,8 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'; 
 import { 
   AvailableAsset,
-  QueryParams,
-  WayfinderProps,
   WayfinderCallback,
   States,
   QueryResultType,
@@ -30,9 +28,6 @@ class WayFinder{
 
   // a store of callbacks triggered when this instance updates
   private callbackStore: {[id: string]: WayfinderCallback} = {}
-  
-  // the user defined available assets
-  private availableAssets: AvailableAsset[]|undefined = undefined
   
   // determines if the wayfinder auto selects values beased on available routes
   // if there's 1 options available for a certain input field, it will automatically be selected
@@ -172,7 +167,8 @@ class WayFinder{
   // setting the active item based on one selected
   // todo: type the val as a value in the current token|source|destination array
   public setFilter(key: string|GenericObject, value?: any){
-    this.reset()
+    if(key === 'account' || Object.keys(key).includes('account')) this.reset()
+
     this.inputVars.set(key, value)    
   }
 

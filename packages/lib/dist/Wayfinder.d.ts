@@ -4,7 +4,6 @@ declare class WayFinder {
     private internalVars;
     private channelData;
     private callbackStore;
-    private availableAssets;
     private autoSelectValues;
     constructor();
     configure(props: WayfinderConfigProps): void;

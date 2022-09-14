@@ -32,6 +32,8 @@ const App = () => {
     set('availableAssets', availableAssets[inputParams.account])
   }, [inputParams.account])
 
+  console.log()
+
 
   return <div style={{display: 'flex'}}>
     
@@ -47,7 +49,6 @@ const App = () => {
 
       <sub style={{opacity: 0.5}}>key: [chain | token | amount]</sub>
     </div>
-
 
     <div style={{padding: '2em', width: '20%'}}>
       <h1>User Input:</h1>
@@ -119,7 +120,13 @@ const App = () => {
 
         <fieldset>
           <legend>Amount:</legend>
-          <input style={{width: '100%'}} type="number" min='0' max='100' value={inputParams?.source || ''} onChange={e => set('amount', e.target.value)}/> 
+          <input 
+            style={{width: '100%'}} 
+            type="number" 
+            min='0' 
+            max='10000000' 
+            value={inputParams?.amount || 0} 
+            onChange={e => set('amount', e.target.value)}/> 
         </fieldset>
        
         <button type='submit'>Submit</button>
