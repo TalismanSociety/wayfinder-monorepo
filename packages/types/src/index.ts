@@ -83,6 +83,7 @@ export type WayfinderSubscriptionResult = {
   inputParams: WayfinderInputVars
   status: States
   statusMessage: string|null 
+  submitTransaction: () => boolean
 }
 
 // this is the callback type the user expects

@@ -164,15 +164,6 @@ class WayFinder{
         return
       }
 
-
-      // TODO GAS CHECK: check the gas token contains enough funds + reapage?
-      if(1>1){
-        internalVars.set('status', 'INSUFFICIENT_FUNDS')
-        internalVars.set('statusMessage', `Not enough gas.`)
-        return
-      }
-
-
       // made all the checks, looks like this will work
       // all the user to proceed
       internalVars.set('status', 'READY_TO_PROCESS')
@@ -196,8 +187,7 @@ class WayFinder{
       availableAssets
     } = params
 
-    // we only want to trigger this when source, destination or token has changed
-    // or while we have no routes
+    // refetch routes when needed
     if(
       // check these vals for change
       changeMon.hasChanged({
@@ -223,29 +213,28 @@ class WayFinder{
         this.channelData = channelData
       } catch (error) {
         internalVars.set('status', 'ERROR')
+        internalVars.set('statusMessage', `Could not fetch route information.`)
+        return
       }
     }
 
-    // TODO ----- ONLY DO THIS WHEN WHEN AVAILABLEASSETS CHANGED
+    // filter the channel data when availableAssets or filteredAssets changes
     if(changeMon.hasChanged({availableAssets, filteredAssets: this.channelData.filtered})) {
       this.channelData.filtered = filterChannelDataByAssets(this.channelData.filtered, availableAssets)
     }
     
-    // attempt autoselect remaining fields
-    // do not trigger updates here
     this.attemptAutoSelect()
  
-    // update the global status
     this.updateStatus()
 
-    // trigger an update
     this.fireSubscriptions()
   }
 
   // attempt autoselect fields based on filtered route information
   // do not trigger callback after this
+  // causing frontend issues, need to refactor slightly - disabled for now
   private attemptAutoSelect(){
-    if(this.config?.autoSelectValues === true){
+    if(this.config?.autoSelectValues === true && false){
       if(!inputVars.get('source') && this.channelData.filtered.sources.length === 1){
         inputVars.set('source', this.channelData.filtered.sources[0].id, true) 
       }
@@ -274,13 +263,24 @@ class WayFinder{
 
     const status = internalVars.get('status') as States
 
+    const submitTransactionCb = () => {
+      if(status === 'READY_TO_PROCESS'){
+        console.log(1111)
+        return true
+      }else{
+        console.log(2222)
+        return false
+      }
+    }
+
     // define the data
     const cbData: WayfinderSubscriptionResult = {
       all: this.channelData.all,
       filtered: this.channelData.filtered,
       inputParams: inputVars.all() as WayfinderInputVars,
       status: status,
-      statusMessage: internalVars.get('statusMessage') || statusMessages[status]
+      statusMessage: internalVars.get('statusMessage') || statusMessages[status],
+      submitTransaction: submitTransactionCb
     }
 
     subscriptionService.fire(cbData)

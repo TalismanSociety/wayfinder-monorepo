@@ -54,6 +54,7 @@ export declare type WayfinderSubscriptionResult = {
     inputParams: WayfinderInputVars;
     status: States;
     statusMessage: string | null;
+    submitTransaction: () => boolean;
 };
 export declare type WayfinderSubscription = (params: WayfinderSubscriptionResult) => void;
 export declare type WayfinderHookResult = WayfinderSubscriptionResult & {

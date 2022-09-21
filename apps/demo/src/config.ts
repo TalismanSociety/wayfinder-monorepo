@@ -10,7 +10,7 @@ export const availableAssets: {[address: string] : AvailableAsset[]} = {
     {
       chain: 'chain0',
       token: 'token1',
-      amount: '2'
+      amount: '8'
     },
     {
       chain: 'chain2',

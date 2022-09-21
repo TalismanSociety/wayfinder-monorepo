@@ -1,5 +1,5 @@
 import { Chain } from '@talismn/wayfinder-types'
-import { availableAccounts, availableAssets } from './config'
+import { availableAssets } from './config'
 import useXChainTransaction from './useXChainTransation'
 
 const App = () => {
@@ -11,10 +11,10 @@ const App = () => {
     status,
     statusMessage,
     set,
-    clear
+    clear,
+    availableAccounts,
+    submitTransaction
   } = useXChainTransaction()
-
-
 
   return <div style={{display: 'flex'}}>
     
@@ -33,7 +33,13 @@ const App = () => {
 
     <div style={{padding: '2em', width: '20%'}}>
       <h1>User Input:</h1>
-      <form onSubmit={({target}) => console.log(434343)} >
+      <form 
+        onSubmit={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
+          submitTransaction()
+        }}
+      >
         <fieldset>
           <legend>From Account:</legend>
           <select 

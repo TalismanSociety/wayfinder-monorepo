@@ -76,7 +76,7 @@ export const defaultQueryResult: QueryResultType = {
     destinations: [],
     tokens: []
   },
-  filtered: {
+  filtered: { 
     channels: [],
     sources: [],
     destinations: [],
@@ -94,7 +94,8 @@ export const defaultWayfinderSubscriptionResult: WayfinderSubscriptionResult = {
   filtered: defaultQueryResult.filtered,
   inputParams: defaultInputVars,
   status: "INITIALISED",
-  statusMessage: null
+  statusMessage: null,
+  submitTransaction: () => false
 }
 
 
@@ -114,6 +115,6 @@ export const statusMessages = {
 
 export const defaultConfig: WayfinderConfigProps = {
   uri: 'http://localhost:4350/graphql',
-  handleRequestFee: () => {},
+  handleRequestFee: () => '0',
   handleSendTransaction: () => {}
 }

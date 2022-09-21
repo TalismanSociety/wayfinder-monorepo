@@ -114,12 +114,6 @@ class WayFinder {
                 internalVars.set('statusMessage', `${amount} is below the existential depost amount required on ${inputVars.get('destination')}.`);
                 return;
             }
-            // TODO GAS CHECK: check the gas token contains enough funds + reapage?
-            if (1 > 1) {
-                internalVars.set('status', 'INSUFFICIENT_FUNDS');
-                internalVars.set('statusMessage', `Not enough gas.`);
-                return;
-            }
             // made all the checks, looks like this will work
             // all the user to proceed
             internalVars.set('status', 'READY_TO_PROCESS');
@@ -133,8 +127,7 @@ class WayFinder {
     async handleUpdate(params) {
         // get all vars
         const { account, source, destination, token, availableAssets } = params;
-        // we only want to trigger this when source, destination or token has changed
-        // or while we have no routes
+        // refetch routes when needed
         if (
         // check these vals for change
         changeMon.hasChanged({
@@ -158,24 +151,23 @@ class WayFinder {
             }
             catch (error) {
                 internalVars.set('status', 'ERROR');
+                internalVars.set('statusMessage', `Could not fetch route information.`);
+                return;
             }
         }
-        // TODO ----- ONLY DO THIS WHEN WHEN AVAILABLEASSETS CHANGED
+        // filter the channel data when availableAssets or filteredAssets changes
         if (changeMon.hasChanged({ availableAssets, filteredAssets: this.channelData.filtered })) {
             this.channelData.filtered = (0, util_1.filterChannelDataByAssets)(this.channelData.filtered, availableAssets);
         }
-        // attempt autoselect remaining fields
-        // do not trigger updates here
         this.attemptAutoSelect();
-        // update the global status
         this.updateStatus();
-        // trigger an update
         this.fireSubscriptions();
     }
     // attempt autoselect fields based on filtered route information
     // do not trigger callback after this
+    // causing frontend issues, need to refactor slightly - disabled for now
     attemptAutoSelect() {
-        if (this.config?.autoSelectValues === true) {
+        if (this.config?.autoSelectValues === true && false) {
             if (!inputVars.get('source') && this.channelData.filtered.sources.length === 1) {
                 inputVars.set('source', this.channelData.filtered.sources[0].id, true);
             }
@@ -197,13 +189,24 @@ class WayFinder {
     // trigger all teh callbacks to be called after an update
     fireSubscriptions() {
         const status = internalVars.get('status');
+        const submitTransactionCb = () => {
+            if (status === 'READY_TO_PROCESS') {
+                console.log(1111);
+                return true;
+            }
+            else {
+                console.log(2222);
+                return false;
+            }
+        };
         // define the data
         const cbData = {
             all: this.channelData.all,
             filtered: this.channelData.filtered,
             inputParams: inputVars.all(),
             status: status,
-            statusMessage: internalVars.get('statusMessage') || config_1.statusMessages[status]
+            statusMessage: internalVars.get('statusMessage') || config_1.statusMessages[status],
+            submitTransaction: submitTransactionCb
         };
         subscriptionService.fire(cbData);
     }

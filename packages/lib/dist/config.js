@@ -82,7 +82,8 @@ exports.defaultWayfinderSubscriptionResult = {
     filtered: exports.defaultQueryResult.filtered,
     inputParams: exports.defaultInputVars,
     status: "INITIALISED",
-    statusMessage: null
+    statusMessage: null,
+    submitTransaction: () => false
 };
 exports.statusMessages = {
     ERROR: 'An unknown error has occurred',
@@ -98,6 +99,6 @@ exports.statusMessages = {
 };
 exports.defaultConfig = {
     uri: 'http://localhost:4350/graphql',
-    handleRequestFee: () => { },
+    handleRequestFee: () => '0',
     handleSendTransaction: () => { }
 };
