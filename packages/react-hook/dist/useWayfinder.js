@@ -4,12 +4,8 @@ var tslib_1 = require("tslib");
 var react_1 = require("react");
 var wayfinder_lib_1 = tslib_1.__importStar(require("@talismn/wayfinder-lib"));
 var wayfinderInstance = new wayfinder_lib_1.default();
-var defaultProps = {
-    uri: 'http://localhost:4350/graphql'
-};
 var useWayfinder = function (props) {
-    if (props === void 0) { props = defaultProps; }
-    var _a = (0, react_1.useState)(wayfinder_lib_1.defaultWayfinderCallbackResult), wayfinderState = _a[0], setWayfinderState = _a[1];
+    var _a = (0, react_1.useState)(wayfinder_lib_1.defaultWayfinderSubscriptionResult), wayfinderState = _a[0], setWayfinderState = _a[1];
     (0, react_1.useEffect)(function () {
         wayfinderInstance.configure(props);
     }, [props]);

@@ -1,21 +1,19 @@
-import { WayfinderCallback, WayfinderConfigProps, GenericObject } from '@talismn/wayfinder-types';
+import { WayfinderSubscription, WayfinderConfigProps, GenericObject } from '@talismn/wayfinder-types';
 declare class WayFinder {
-    private inputVars;
-    private internalVars;
+    private config;
     private channelData;
-    private callbackStore;
-    private autoSelectValues;
     constructor();
-    configure(props: WayfinderConfigProps): void;
+    configure(options: WayfinderConfigProps): void;
     reset(props?: {
         clearAvailableAssets?: boolean;
         cb: () => void;
     }): void;
     private updateStatus;
     private handleUpdate;
+    private attemptAutoSelect;
     setFilter(key: string | GenericObject, value?: any): void;
     private fireSubscriptions;
-    subscribe(cb: WayfinderCallback): () => void;
+    subscribe(cb: WayfinderSubscription): () => void;
 }
 export default WayFinder;
 //# sourceMappingURL=Wayfinder.d.ts.map

@@ -1,6 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const uuid_1 = require("uuid");
+const SubscriptionService_1 = __importDefault(require("./SubscriptionService"));
 class Variable {
     constructor(defaultValue) {
         this._initialValue = null;
@@ -20,10 +23,8 @@ class Variable {
 }
 class QueryVars {
     constructor(vars) {
-        this.time = new Date().getTime();
-        this.timeout = setTimeout(() => { }, 0);
         this.vars = {};
-        this.callbackStore = {};
+        this.subscriptionService = new SubscriptionService_1.default();
         Object.keys(vars).forEach(key => {
             const val = vars[key];
             this.vars[key] = new Variable(val);
@@ -31,20 +32,20 @@ class QueryVars {
         this.triggerUpdate();
     }
     // set a value - make sure it's in the set of allowed values
-    set(key, value) {
+    set(key, value, muteUpdate) {
         if (typeof key === 'object') {
             Object.keys(key).forEach(_key => {
                 if (!this.vars[_key])
                     return;
                 this.vars[_key].value = key[_key];
             });
-            this.triggerUpdate();
+            muteUpdate !== true && this.triggerUpdate();
         }
         else {
-            if (!this.vars[key] || !value)
+            if (!this.vars[key])
                 return;
             this.vars[key].value = value;
-            this.triggerUpdate();
+            muteUpdate !== true && this.triggerUpdate();
         }
     }
     get(key) {
@@ -69,18 +70,13 @@ class QueryVars {
     triggerUpdate() {
         const returnObj = {};
         Object.keys(this.vars).forEach(key => returnObj[key] = this.vars[key].value);
-        Object.values(this.callbackStore).forEach(cb => {
-            cb(returnObj);
-        });
+        this.subscriptionService.fire(returnObj);
     }
     // subscription service
     subscribe(cb) {
-        const uuid = (0, uuid_1.v4)();
-        this.callbackStore[uuid] = cb;
+        const unsub = this.subscriptionService.subscribe(cb);
         this.triggerUpdate();
-        return () => {
-            delete this.callbackStore[uuid];
-        };
+        return unsub;
     }
 }
 exports.default = QueryVars;

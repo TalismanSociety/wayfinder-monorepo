@@ -1,9 +1,10 @@
 import { gql } from '@apollo/client';
 import { 
-  WayfinderCallbackResult, 
+  WayfinderSubscriptionResult, 
   QueryResultType, 
   WayfinderInputVars, 
-  WayfinderInternalVars
+  WayfinderInternalVars,
+  WayfinderConfigProps
 } from '@talismn/wayfinder-types'
 
 const CHAIN_FIELDS = gql`
@@ -59,7 +60,7 @@ export const defaultInputVars: WayfinderInputVars = {
   source: undefined,
   destination: undefined,
   token: undefined,
-  amount: undefined,
+  amount: '0',
   destAccount: undefined
 }
 
@@ -88,9 +89,31 @@ export const defaultQueryResult: QueryResultType = {
   }
 }
 
-export const defaultWayfinderCallbackResult: WayfinderCallbackResult = {
+export const defaultWayfinderSubscriptionResult: WayfinderSubscriptionResult = {
   all: defaultQueryResult.all,
   filtered: defaultQueryResult.filtered,
   inputParams: defaultInputVars,
-  status: "INITIALISED"
+  status: "INITIALISED",
+  statusMessage: null
+}
+
+
+
+export const statusMessages = {
+  ERROR: 'An unknown error has occurred',
+  INITIALISED: 'The wayfinder is initialised',
+  FETCHING_ROUTES: 'Fetching routes',
+  INPUT_REQUIRED: 'One or more inputs are required in order to find a route',
+  ROUTE_NOT_FOUND: 'No routes found given the input paramaters',
+  INSUFFICIENT_FUNDS: 'Insufficient funds to make this transaction',
+  INSUFICCIENT_FEE: 'Insufficient funds to pay the fee for this transaction',
+  READY_TO_PROCESS: 'Everything OK',
+  PROCESSING: 'Processing transaction',
+  COMPLETE: 'Transaction complete'
+}
+
+export const defaultConfig: WayfinderConfigProps = {
+  uri: 'http://localhost:4350/graphql',
+  handleRequestFee: () => {},
+  handleSendTransaction: () => {}
 }

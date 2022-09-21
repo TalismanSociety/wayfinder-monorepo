@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
 import { GenericObject } from '@talismn/wayfinder-types'
-
+import SubscriptionService from './SubscriptionService'
 
 type TValue<T> = T|null
 
@@ -38,10 +37,8 @@ type InputSet = {
 
 class QueryVars {
 
-  private time: number = new Date().getTime()
-  private timeout: ReturnType<typeof setTimeout> = setTimeout(()=>{}, 0)
   private vars: VariableSet = {}
-  private callbackStore: {[id: string]: (val: {[id: string]: any}) => void} = {}
+  private subscriptionService = new SubscriptionService<GenericObject>()
   
   constructor(vars: InputSet){
     Object.keys(vars).forEach(key => {
@@ -52,17 +49,17 @@ class QueryVars {
   }
 
   // set a value - make sure it's in the set of allowed values
-  public set(key: string|GenericObject, value?: any){
+  public set(key: string|GenericObject, value: any, muteUpdate?: Boolean){
     if(typeof key === 'object'){
       Object.keys(key).forEach(_key => {
         if(!this.vars[_key]) return
         this.vars[_key].value = key[_key]
       })
-      this.triggerUpdate()
+      muteUpdate !== true && this.triggerUpdate()
     }else{
-      if(!this.vars[key] || !value) return
+      if(!this.vars[key]) return
       this.vars[key].value = value
-      this.triggerUpdate()
+      muteUpdate !== true && this.triggerUpdate()
     }
   }
 
@@ -92,19 +89,14 @@ class QueryVars {
   private triggerUpdate(){  
     const returnObj: {[key: string]: any} = {}
     Object.keys(this.vars).forEach(key => returnObj[key] = this.vars[key].value)
-    Object.values(this.callbackStore).forEach(cb => {
-      cb(returnObj)
-    })
+    this.subscriptionService.fire(returnObj)
   }
 
   // subscription service
   public subscribe(cb: (vals: any) => void) {
-    const uuid = uuidv4()
-    this.callbackStore[uuid] = cb
+    const unsub = this.subscriptionService.subscribe(cb)
     this.triggerUpdate()
-    return () => {
-      delete this.callbackStore[uuid]
-    }
+    return unsub
   }
 }
 

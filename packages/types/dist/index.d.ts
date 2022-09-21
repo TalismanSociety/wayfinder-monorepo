@@ -1,4 +1,4 @@
-export declare type States = 'INITIALISED' | 'MISSING_INPUT' | 'NO_ROUTES' | 'ROUTE_FOUND' | 'ERROR' | 'LOADING' | 'SENDING';
+export declare type States = 'ERROR' | 'INITIALISED' | 'FETCHING_ROUTES' | 'INPUT_REQUIRED' | 'ROUTE_NOT_FOUND' | 'INSUFFICIENT_FUNDS' | 'INSUFICCIENT_FEE' | 'READY_TO_PROCESS' | 'PROCESSING' | 'COMPLETE';
 export declare type Chain = {
     id: string;
     name: string;
@@ -48,14 +48,15 @@ export declare type WayfinderInternalVars = {
     status: States;
     statusMessage: string | null;
 };
-export declare type WayfinderCallbackResult = {
+export declare type WayfinderSubscriptionResult = {
     all: QueryResultGroupType;
     filtered: QueryResultGroupType;
     inputParams: WayfinderInputVars;
     status: States;
+    statusMessage: string | null;
 };
-export declare type WayfinderCallback = (params: WayfinderCallbackResult) => void;
-export declare type WayfinderHookResult = WayfinderCallbackResult & {
+export declare type WayfinderSubscription = (params: WayfinderSubscriptionResult) => void;
+export declare type WayfinderHookResult = WayfinderSubscriptionResult & {
     set(key: string | GenericObject, val?: any): void;
     clear(): void;
 };
@@ -68,6 +69,8 @@ export declare type WayfinderConfigProps = {
     uri: string;
     availableAssets?: AvailableAsset[];
     autoSelectValues?: Boolean;
+    handleRequestFee(chain: any): string;
+    handleSendTransaction(tx: any): void;
 };
 export declare type WayfinderRouterProps = {
     uri: string;

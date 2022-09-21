@@ -1,4 +1,18 @@
-export type States = 'INITIALISED'|'MISSING_INPUT'|'NO_ROUTES'|'ROUTE_FOUND'|'ERROR'|'LOADING'|'SENDING'
+// Status' and meanings
+// These are ordered by flow, start at the top and work down to complete
+// Status' will often be accompanied with a (more verbose) status message
+// ----------
+// ERROR: Some unknown/general error has happened (see message for more info)
+// INITIALISED: The initial/default state 
+// FETCHING_ROUTES: In the process of fetching routes from the source
+// INPUT_REQUIRED: Requires more input (from either source, destination, token params) before a route can be determined
+// ROUTE_NOT_FOUND: No route was found given the inputs
+// INSUFICCIENT_FUNDS: Not enough funds of the token type selected, once a route has been determined
+// INSUFICCIENT_FEE: Not enough funds of the fee-type required fo use the route
+// READY_TO_PROCESS: Route found, enough token balance, enough fee balance
+// PROCESSING: TX submitted and watching progress
+// COMPLETE: Sending complete (only watching the source chain)
+export type States = 'ERROR'|'INITIALISED'|'FETCHING_ROUTES'|'INPUT_REQUIRED'|'ROUTE_NOT_FOUND'|'INSUFFICIENT_FUNDS'|'INSUFICCIENT_FEE'|'READY_TO_PROCESS'|'PROCESSING'|'COMPLETE'
 
 // a chain type
 export type Chain = {
@@ -63,17 +77,18 @@ export type WayfinderInternalVars = {
   statusMessage: string|null 
 }
 
-export type WayfinderCallbackResult = {
+export type WayfinderSubscriptionResult = {
   all: QueryResultGroupType
   filtered: QueryResultGroupType
   inputParams: WayfinderInputVars
   status: States
+  statusMessage: string|null 
 }
 
 // this is the callback type the user expects
-export type WayfinderCallback = (params: WayfinderCallbackResult) => void
+export type WayfinderSubscription = (params: WayfinderSubscriptionResult) => void
 
-export type WayfinderHookResult = WayfinderCallbackResult & {
+export type WayfinderHookResult = WayfinderSubscriptionResult & {
   set(key: string|GenericObject, val?: any): void
   clear(): void
 }
@@ -89,6 +104,8 @@ export type WayfinderConfigProps = {
   uri: string
   availableAssets?: AvailableAsset[]
   autoSelectValues?: Boolean
+  handleRequestFee(chain: any): string
+  handleSendTransaction(tx: any): void
 }
 
 

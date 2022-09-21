@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defaultWayfinderCallbackResult = exports.defaultQueryResult = exports.defaultInternalVars = exports.defaultInputVars = exports.defaultQuery = void 0;
+exports.defaultConfig = exports.statusMessages = exports.defaultWayfinderSubscriptionResult = exports.defaultQueryResult = exports.defaultInternalVars = exports.defaultInputVars = exports.defaultQuery = void 0;
 const client_1 = require("@apollo/client");
 const CHAIN_FIELDS = (0, client_1.gql) `
   fragment ChainFields on Chain{
@@ -51,7 +51,7 @@ exports.defaultInputVars = {
     source: undefined,
     destination: undefined,
     token: undefined,
-    amount: undefined,
+    amount: '0',
     destAccount: undefined
 };
 exports.defaultInternalVars = {
@@ -77,9 +77,27 @@ exports.defaultQueryResult = {
         token: null
     }
 };
-exports.defaultWayfinderCallbackResult = {
+exports.defaultWayfinderSubscriptionResult = {
     all: exports.defaultQueryResult.all,
     filtered: exports.defaultQueryResult.filtered,
     inputParams: exports.defaultInputVars,
-    status: "INITIALISED"
+    status: "INITIALISED",
+    statusMessage: null
+};
+exports.statusMessages = {
+    ERROR: 'An unknown error has occurred',
+    INITIALISED: 'The wayfinder is initialised',
+    FETCHING_ROUTES: 'Fetching routes',
+    INPUT_REQUIRED: 'One or more inputs are required in order to find a route',
+    ROUTE_NOT_FOUND: 'No routes found given the input paramaters',
+    INSUFFICIENT_FUNDS: 'Insufficient funds to make this transaction',
+    INSUFICCIENT_FEE: 'Insufficient funds to pay the fee for this transaction',
+    READY_TO_PROCESS: 'Everything OK',
+    PROCESSING: 'Processing transaction',
+    COMPLETE: 'Transaction complete'
+};
+exports.defaultConfig = {
+    uri: 'http://localhost:4350/graphql',
+    handleRequestFee: () => { },
+    handleSendTransaction: () => { }
 };

@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react'
-import WayFinder, { defaultWayfinderCallbackResult } from '@talismn/wayfinder-lib'
-import { WayfinderConfigProps, WayfinderHookResult, WayfinderCallbackResult, AvailableAsset } from '@talismn/wayfinder-types'
+import WayFinder, { defaultWayfinderSubscriptionResult } from '@talismn/wayfinder-lib'
+import { WayfinderConfigProps, WayfinderHookResult, WayfinderSubscriptionResult } from '@talismn/wayfinder-types'
 
 const wayfinderInstance = new WayFinder()
 
-const defaultProps = {
-  uri: 'http://localhost:4350/graphql'
-}
 
-const useWayfinder = (props: WayfinderConfigProps = defaultProps): WayfinderHookResult => {
+const useWayfinder = (props: WayfinderConfigProps): WayfinderHookResult => {
 
 
-  const [wayfinderState, setWayfinderState] = useState<WayfinderCallbackResult>(defaultWayfinderCallbackResult)
+  const [wayfinderState, setWayfinderState] = useState<WayfinderSubscriptionResult>(defaultWayfinderSubscriptionResult)
 
   useEffect(() => {
     wayfinderInstance.configure(props)

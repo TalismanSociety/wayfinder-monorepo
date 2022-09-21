@@ -3,12 +3,10 @@ declare type InputSet = {
     [key: string]: any;
 };
 declare class QueryVars {
-    private time;
-    private timeout;
     private vars;
-    private callbackStore;
+    private subscriptionService;
     constructor(vars: InputSet);
-    set(key: string | GenericObject, value?: any): void;
+    set(key: string | GenericObject, value: any, muteUpdate?: Boolean): void;
     get(key: string): any;
     all(): {
         [key: string]: any;

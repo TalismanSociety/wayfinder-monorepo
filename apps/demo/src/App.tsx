@@ -1,11 +1,6 @@
-import useWayfinder from '@talismn/wayfinder-react-hook'
-import { Chain, WayfinderHookResult, WayfinderConfigProps } from '@talismn/wayfinder-types'
-import { useEffect } from 'react'
+import { Chain } from '@talismn/wayfinder-types'
 import { availableAccounts, availableAssets } from './config'
-
-const wayfinderProps: WayfinderConfigProps = {
-  uri: 'http://localhost:4350/graphql'
-}
+import useXChainTransaction from './useXChainTransation'
 
 const App = () => {
 
@@ -14,25 +9,11 @@ const App = () => {
     filtered,
     inputParams,
     status,
+    statusMessage,
     set,
     clear
-  } : WayfinderHookResult = useWayfinder(wayfinderProps)
+  } = useXChainTransaction()
 
-  // set this when the accounts have loaded
-  //  - in reality this will be queries from somewhere 
-  useEffect(() => {
-    set('account', availableAccounts[0].address)
-  }, [])
-
-  // fetch the available assets when the account changes
-  //  - we can probably migrate this to a hook, which wraps useWayfinder with the ability to 
-  //  - lookup assets when the account changes
-  useEffect(() => {
-    if(!inputParams.account) return
-    set('availableAssets', availableAssets[inputParams.account])
-  }, [inputParams.account])
-
-  console.log()
 
 
   return <div style={{display: 'flex'}}>
@@ -52,7 +33,7 @@ const App = () => {
 
     <div style={{padding: '2em', width: '20%'}}>
       <h1>User Input:</h1>
-      <form onSubmit={() => console.log(434343)}>
+      <form onSubmit={({target}) => console.log(434343)} >
         <fieldset>
           <legend>From Account:</legend>
           <select 
@@ -125,11 +106,12 @@ const App = () => {
             type="number" 
             min='0' 
             max='10000000' 
+            step='0.1'
             value={inputParams?.amount || 0} 
             onChange={e => set('amount', e.target.value)}/> 
         </fieldset>
        
-        <button type='submit'>Submit</button>
+        <button type='submit' disabled={status !== 'READY_TO_PROCESS'}>Submit</button>
         <button type='reset' onClick={() => clear()}>Reset</button>
       </form>
     </div>
@@ -157,7 +139,8 @@ const App = () => {
     <div style={{padding: '2em', width: '20%'}}>
       <h1>Other:</h1>
       <div>Status: {status}</div>
-      <div>Route: {status === 'ROUTE_FOUND' ? filtered?.channels[0]?.id : '-'}</div>
+      <div>Status Message: {statusMessage}</div>
+      <div>Route: {status === 'FETCHING_ROUTES' ? filtered?.channels[0]?.id : '-'}</div>
     </div>
   </div>
   

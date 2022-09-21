@@ -1,0 +1,1 @@
+{"version":3,"file":"SubscriptionService.d.ts","sourceRoot":"","sources":["../src/SubscriptionService.ts"],"names":[],"mappings":"AAGA,aAAK,YAAY,CAAC,CAAC,IAAI,CAAC,MAAM,EAAE,CAAC,KAAK,IAAI,CAAA;AAE1C,cAAM,mBAAmB,CAAC,YAAY;IAGpC,OAAO,CAAC,aAAa,CAAiD;IAGtE,OAAO,CAAC,SAAS,CAAa;IAIvB,IAAI,CAAC,IAAI,EAAE,YAAY;IAcvB,SAAS,CAAC,EAAE,EAAE,YAAY,CAAC,YAAY,CAAC;CAOhD;AAED,eAAe,mBAAmB,CAAA"}
