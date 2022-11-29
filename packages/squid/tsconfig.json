@@ -1,0 +1,3 @@
+{
+  "extends": "@talismn/wayfinder-tsconfig/node.json"
+}
