@@ -1,4 +1,4 @@
-import Wayfinder from './Wayfinder';
+import Wayfinder from './Wayfinder'
 
 export default Wayfinder
 

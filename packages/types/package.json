@@ -8,13 +8,14 @@
     "dist",
     "src"
   ],
-  "main": "dist/index.js",
+  "main": "dist/talismn-wayfinder-types.cjs.js",
+  "module": "dist/talismn-wayfinder-types.esm.js",
   "scripts": {
     "dev": "tsc --watch",
     "build": "rm -rf dist && tsc"
   },
   "devDependencies": {
-    "typescript": "~4.7.4",
-    "@talismn/wayfinder-tsconfig": "0.1.0"
+    "@talismn/wayfinder-tsconfig": "workspace:^",
+    "typescript": "~4.7.4"
   }
 }

@@ -2,8 +2,11 @@
   "name": "@talismn/wayfinder-tsconfig",
   "version": "0.1.0",
   "private": true,
-  "main": "index.js",
+  "main": "dist/talismn-wayfinder-tsconfig.cjs.js",
+  "module": "dist/talismn-wayfinder-tsconfig.esm.js",
   "files": [
-    "base.json"
+    "dist",
+    "base.json",
+    "react.json"
   ]
 }

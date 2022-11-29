@@ -3,7 +3,7 @@
 // Status' will often be accompanied with a (more verbose) status message
 // ----------
 // ERROR: Some unknown/general error has happened (see message for more info)
-// INITIALISED: The initial/default state 
+// INITIALISED: The initial/default state
 // FETCHING_ROUTES: In the process of fetching routes from the source
 // INPUT_REQUIRED: Requires more input (from either source, destination, token params) before a route can be determined
 // ROUTE_NOT_FOUND: No route was found given the inputs
@@ -12,35 +12,44 @@
 // READY_TO_PROCESS: Route found, enough token balance, enough fee balance
 // PROCESSING: TX submitted and watching progress
 // COMPLETE: Sending complete (only watching the source chain)
-export type States = 'ERROR'|'INITIALISED'|'FETCHING_ROUTES'|'INPUT_REQUIRED'|'ROUTE_NOT_FOUND'|'INSUFFICIENT_FUNDS'|'INSUFICCIENT_FEE'|'READY_TO_PROCESS'|'PROCESSING'|'COMPLETE'
+export type States =
+  | 'ERROR'
+  | 'INITIALISED'
+  | 'FETCHING_ROUTES'
+  | 'INPUT_REQUIRED'
+  | 'ROUTE_NOT_FOUND'
+  | 'INSUFFICIENT_FUNDS'
+  | 'INSUFICCIENT_FEE'
+  | 'READY_TO_PROCESS'
+  | 'PROCESSING'
+  | 'COMPLETE'
 
 // a chain type
 export type Chain = {
-	id: string
-	name: string
+  id: string
+  name: string
 }
 
 // a token type
 export type Token = {
-	id: string
-	name: string
-	symbol: string
+  id: string
+  name: string
+  symbol: string
 }
 
 // a channel
 export type Channel = {
-	id: string    				// the channel ID - muist be unique
-	source: Chain         // the source chain
-	destination: Chain    // the destination chain
-	tokens: Token[]       // the tokens to transfer
+  id: string // the channel ID - muist be unique
+  source: Chain // the source chain
+  destination: Chain // the destination chain
+  tokens: Token[] // the tokens to transfer
 }
 
 export type QueryParams = {
   source?: string
-	destination?: string
-	token?: string
+  destination?: string
+  token?: string
 }
-
 
 export type QueryResultGroupType = {
   channels: Channel[]
@@ -50,9 +59,9 @@ export type QueryResultGroupType = {
 }
 
 export type QueryResultQueryType = {
-  source: string|null
-  destination: string|null
-  token: string|null
+  source: string | null
+  destination: string | null
+  token: string | null
 }
 
 // this is the type we receive back from the backend/API
@@ -63,18 +72,18 @@ export type QueryResultType = {
 }
 
 export type WayfinderInputVars = {
-  account: string|undefined
+  account: string | undefined
   availableAssets: AvailableAsset[]
-  source: string|undefined
-  destination: string|undefined
-  token: string|undefined
-  amount: string|undefined
-  destAccount: string|undefined
+  source: string | undefined
+  destination: string | undefined
+  token: string | undefined
+  amount: string | undefined
+  destAccount: string | undefined
 }
 
 export type WayfinderInternalVars = {
   status: States
-  statusMessage: string|null 
+  statusMessage: string | null
 }
 
 export type WayfinderSubscriptionResult = {
@@ -82,7 +91,7 @@ export type WayfinderSubscriptionResult = {
   filtered: QueryResultGroupType
   inputParams: WayfinderInputVars
   status: States
-  statusMessage: string|null 
+  statusMessage: string | null
   submitTransaction: () => boolean
 }
 
@@ -90,7 +99,7 @@ export type WayfinderSubscriptionResult = {
 export type WayfinderSubscription = (params: WayfinderSubscriptionResult) => void
 
 export type WayfinderHookResult = WayfinderSubscriptionResult & {
-  set(key: string|GenericObject, val?: any): void
+  set(key: string | GenericObject, val?: any): void
   clear(): void
 }
 
@@ -100,7 +109,6 @@ export type AvailableAsset = {
   amount: string
 }
 
-
 export type WayfinderConfigProps = {
   uri: string
   availableAssets?: AvailableAsset[]
@@ -108,7 +116,6 @@ export type WayfinderConfigProps = {
   handleRequestFee(chain: any): string
   handleSendTransaction(tx: any): void
 }
-
 
 export type WayfinderRouterProps = {
   uri: string

@@ -1,50 +1,66 @@
-import { gql } from '@apollo/client';
-import { 
-  WayfinderSubscriptionResult, 
-  QueryResultType, 
-  WayfinderInputVars, 
+import { gql } from '@apollo/client'
+import {
+  QueryResultType,
+  WayfinderConfigProps,
+  WayfinderInputVars,
   WayfinderInternalVars,
-  WayfinderConfigProps
+  WayfinderSubscriptionResult,
 } from '@talismn/wayfinder-types'
 
 const CHAIN_FIELDS = gql`
-  fragment ChainFields on Chain{
-      id
-      name
+  fragment ChainFields on Chain {
+    id
+    name
   }
 `
 
 const TOKEN_FIELDS = gql`
-  fragment TokenFields on Token{
-      id
-      name
-      symbol
+  fragment TokenFields on Token {
+    id
+    name
+    symbol
   }
 `
 
 const CHILD_FRAGMENT = gql`
-  ${CHAIN_FIELDS} 
-  ${TOKEN_FIELDS}  
-  fragment Pieces on ResultGroup{
-    channels{
+  ${CHAIN_FIELDS}
+  ${TOKEN_FIELDS}
+  fragment Pieces on ResultGroup {
+    channels {
       id
-      source {...ChainFields}
-      destination { ...ChainFields }
-      tokens { ...TokenFields }
+      source {
+        ...ChainFields
+      }
+      destination {
+        ...ChainFields
+      }
+      tokens {
+        ...TokenFields
+      }
     }
-    sources { ...ChainFields}
-    destinations { ...ChainFields }
-    tokens {...TokenFields}
+    sources {
+      ...ChainFields
+    }
+    destinations {
+      ...ChainFields
+    }
+    tokens {
+      ...TokenFields
+    }
   }
 `
 
 export const defaultQuery = gql`
   ${CHILD_FRAGMENT}
-  query GetChannels($source: String, $destination: String, $token: String){
-    result(source: $source, destination: $destination, token: $token){
-      all{ ...Pieces }
-      filtered{ ...Pieces}
-      query{
+  query GetChannels($source: String, $destination: String, $token: String) {
+    result(source: $source, destination: $destination, token: $token) {
+      all {
+        ...Pieces
+      }
+      filtered {
+        ...Pieces
+      }
+      query {
         source
         destination
         token
@@ -61,12 +77,12 @@ export const defaultInputVars: WayfinderInputVars = {
   destination: undefined,
   token: undefined,
   amount: '0',
-  destAccount: undefined
+  destAccount: undefined,
 }
 
 export const defaultInternalVars: WayfinderInternalVars = {
   status: 'INITIALISED',
-  statusMessage: null
+  statusMessage: null,
 }
 
 export const defaultQueryResult: QueryResultType = {
@@ -74,31 +90,29 @@ export const defaultQueryResult: QueryResultType = {
     channels: [],
     sources: [],
     destinations: [],
-    tokens: []
+    tokens: [],
   },
-  filtered: { 
+  filtered: {
     channels: [],
     sources: [],
     destinations: [],
-    tokens: []
+    tokens: [],
   },
   query: {
     source: null,
     destination: null,
-    token: null
-  }
+    token: null,
+  },
 }
 
 export const defaultWayfinderSubscriptionResult: WayfinderSubscriptionResult = {
   all: defaultQueryResult.all,
   filtered: defaultQueryResult.filtered,
   inputParams: defaultInputVars,
-  status: "INITIALISED",
+  status: 'INITIALISED',
   statusMessage: null,
-  submitTransaction: () => false
+  submitTransaction: () => false,
 }
-
-
 
 export const statusMessages = {
   ERROR: 'An unknown error has occurred',
@@ -110,11 +124,11 @@ export const statusMessages = {
   INSUFICCIENT_FEE: 'Insufficient funds to pay the fee for this transaction',
   READY_TO_PROCESS: 'Everything OK',
   PROCESSING: 'Processing transaction',
-  COMPLETE: 'Transaction complete'
+  COMPLETE: 'Transaction complete',
 }
 
 export const defaultConfig: WayfinderConfigProps = {
   uri: 'http://localhost:4350/graphql',
   handleRequestFee: () => '0',
-  handleSendTransaction: () => {}
+  handleSendTransaction: () => {},
 }

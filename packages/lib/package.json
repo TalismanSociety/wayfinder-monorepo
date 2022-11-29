@@ -8,13 +8,14 @@
     "dist",
     "src"
   ],
-  "main": "dist/index.js",
+  "main": "dist/talismn-wayfinder-lib.cjs.js",
+  "module": "dist/talismn-wayfinder-lib.esm.js",
   "scripts": {
-    "build": "rm -rf dist && tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "build": "rm -rf dist && tsc"
   },
   "devDependencies": {
-    "@talismn/wayfinder-types": "0.1.0",
+    "@talismn/wayfinder-types": "workspace:^",
     "@types/node": "^16.11.41",
     "expect": "^27.5.1",
     "fast-check": "^2.25.0",
@@ -24,6 +25,7 @@
     "@apollo/client": "^3.6.9",
     "@types/md5": "^2.3.2",
     "graphql": "^16.6.0",
-    "md5": "^2.3.0"
+    "md5": "^2.3.0",
+    "uuid": "^9.0.0"
   }
 }

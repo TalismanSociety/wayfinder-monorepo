@@ -1,18 +1,18 @@
+import { ApolloClient, DefaultOptions, InMemoryCache, gql } from '@apollo/client'
+import { DocumentNode } from '@apollo/client'
 import { QueryParams, QueryResultType, WayfinderRouterProps } from '@talismn/wayfinder-types'
-import { ApolloClient, InMemoryCache, DefaultOptions, gql } from '@apollo/client';
-import { defaultQuery, defaultQueryResult } from './config'
-import { DocumentNode } from '@apollo/client';
 
+import { defaultQuery, defaultQueryResult } from './config'
 
 export const _defaultQuery = gql`
-  query GetChannels{
-    result{
-      all{
-        channels{
+  query GetChannels {
+    result {
+      all {
+        channels {
           id
         }
       }
-      query{
+      query {
         source
         destination
         token
@@ -32,35 +32,33 @@ const defaultApolloClientOptions: DefaultOptions = {
   },
 }
 
-class Router{ 
-
+class Router {
   uri?: string = undefined
   query: DocumentNode = defaultQuery
-  client = new ApolloClient({cache: new InMemoryCache()})
+  client = new ApolloClient({ cache: new InMemoryCache() })
 
-  configure({uri}: WayfinderRouterProps){
+  configure({ uri }: WayfinderRouterProps) {
     this.uri = uri
 
     this.client = new ApolloClient({
       uri: this.uri,
       cache: new InMemoryCache({
-        addTypename: false
+        addTypename: false,
       }),
       defaultOptions: defaultApolloClientOptions,
-      assumeImmutableResults: true
-    });
+      assumeImmutableResults: true,
+    })
   }
 
-  async fetchChannels(params: QueryParams){
-    const result = await this.client.query({query: this.query, variables: { ...params } })
+  async fetchChannels(params: QueryParams) {
+    const result = await this.client.query({ query: this.query, variables: { ...params } })
 
     return {
-      ...result?.data?.result||defaultQueryResult
+      ...(result?.data?.result || defaultQueryResult),
     } as QueryResultType
   }
 }
 
 const router = new Router()
-
 
 export default router

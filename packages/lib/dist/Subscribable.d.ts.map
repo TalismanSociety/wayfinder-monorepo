@@ -1,1 +1,0 @@
-{"version":3,"file":"Subscribable.d.ts","sourceRoot":"","sources":["../src/Subscribable.ts"],"names":[],"mappings":"AAEA,aAAK,YAAY,CAAC,CAAC,IAAI,CAAC,MAAM,EAAE,CAAC,KAAK,IAAI,CAAA;AAE1C,cAAM,YAAY,CAAC,YAAY;IAE7B,OAAO,CAAC,aAAa,CAAiD;IAItE,SAAS,CAAC,iBAAiB,CAAC,IAAI,EAAE,YAAY;IAOvC,SAAS,CAAC,EAAE,EAAE,YAAY,CAAC,YAAY,CAAC;CAOhD;AAED,eAAe,YAAY,CAAA"}

@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react'
 import WayFinder, { defaultWayfinderSubscriptionResult } from '@talismn/wayfinder-lib'
 import { WayfinderConfigProps, WayfinderHookResult, WayfinderSubscriptionResult } from '@talismn/wayfinder-types'
+import { useEffect, useState } from 'react'
 
 const wayfinderInstance = new WayFinder()
 
-
 const useWayfinder = (props: WayfinderConfigProps): WayfinderHookResult => {
-
-
   const [wayfinderState, setWayfinderState] = useState<WayfinderSubscriptionResult>(defaultWayfinderSubscriptionResult)
 
   useEffect(() => {

@@ -1,24 +1,3 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "jsx": "react",
-    "declaration": true,
-    "pretty": true,
-    "rootDir": "src",
-    "sourceMap": false,
-    "strict": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": false,
-    "noFallthroughCasesInSwitch": true,
-    "outDir": "dist",
-    "lib": ["es2018", "dom"],
-    "importHelpers": true
-  },
-  "include": ["src", "./src/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "extends": "@talismn/wayfinder-tsconfig/react.json"
 }
