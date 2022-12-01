@@ -3,12 +3,13 @@ import { Chain } from '@talismn/wayfinder-types'
 import { availableAssets } from './config'
 import useXChainTransaction from './useXChainTransation'
 
-const App = () => {
+export const App = () => {
   const { all, filtered, inputParams, status, statusMessage, set, clear, availableAccounts, submitTransaction } =
     useXChainTransaction()
 
   return (
     <div style={{ display: 'flex' }}>
+      <style>{darkTheme}</style>
       <div style={{ padding: '2em', width: '20%' }}>
         <h1>User Accounts</h1>
 
@@ -201,4 +202,11 @@ const App = () => {
   )
 }
 
-export default App
+const darkTheme = `
+  @media (prefers-color-scheme: dark) {
+    html {
+      background: #efefef;
+      filter: invert(1);
+    }
+  }
+`
