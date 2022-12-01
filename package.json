@@ -11,7 +11,7 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "preconstruct dev",
+    "postinstall": "husky install && preconstruct dev",
     "dev:demo": "yarn workspace xcm-demo dev",
     "build:demo": "yarn workspace xcm-demo build",
     "dev:squid": "yarn workspace squid dev",
