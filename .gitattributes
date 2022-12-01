@@ -2,3 +2,4 @@
 * text=auto
 /.yarn/plugins/** binary
 /.yarn/releases/** binary
+package-lock.json -diff

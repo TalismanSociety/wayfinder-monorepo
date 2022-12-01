@@ -12,11 +12,13 @@
   ],
   "scripts": {
     "postinstall": "husky install && preconstruct dev",
+    "build:packages": "preconstruct build",
     "dev:demo": "yarn workspace xcm-demo dev",
     "build:demo": "yarn workspace xcm-demo build",
-    "dev:squid": "yarn workspace squid dev",
+    "dev:squid": "make dev",
+    "build:squid": "make build",
     "dev": "concurrently \"yarn dev:demo\" \"yarn dev:squid\"",
-    "build": "preconstruct build && yarn build:demo"
+    "build": "yarn build:packages && yarn build:demo && yarn build:squid"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
