@@ -11,7 +11,7 @@ class ChangeMon {
       const changed = existingVal !== newVal
 
       // if we have changed, set the val
-      if (!!changed) {
+      if (changed) {
         this.state[key] = newVal
       }
 

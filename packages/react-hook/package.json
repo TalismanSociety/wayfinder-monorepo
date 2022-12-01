@@ -36,6 +36,7 @@
   ],
   "devDependencies": {
     "@talismn/wayfinder-types": "workspace:^",
+    "@testing-library/dom": "^8.19.0",
     "@types/node": "^16.11.41",
     "expect": "^27.5.1",
     "fast-check": "^2.25.0",

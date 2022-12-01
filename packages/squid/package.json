@@ -9,8 +9,8 @@
   ],
   "main": "dist/talismn-wayfinder-datasource.cjs.js",
   "scripts": {
-    "build": "rm -rf lib && tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "build": "rm -rf lib && tsc"
   },
   "devDependencies": {
     "@types/node": "^16.11.41",

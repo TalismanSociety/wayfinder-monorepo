@@ -1,4 +1,4 @@
-import { AvailableAsset, Chain, QueryResultGroupType, Token } from '@talismn/wayfinder-types'
+import { AvailableAsset, QueryResultGroupType } from '@talismn/wayfinder-types'
 
 export const defaultResultGroup: QueryResultGroupType = {
   channels: [],

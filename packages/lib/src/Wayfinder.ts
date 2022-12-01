@@ -76,7 +76,7 @@ class WayFinder {
     internalVars.reset()
 
     // fire the callback if we have one
-    if (!!props?.cb) props.cb()
+    if (props?.cb) props.cb()
   }
 
   // define the status
@@ -210,19 +210,19 @@ class WayFinder {
   // do not trigger callback after this
   // causing frontend issues, need to refactor slightly - disabled for now
   private attemptAutoSelect() {
-    if (this.config?.autoSelectValues === true && false) {
-      if (!inputVars.get('source') && this.channelData.filtered.sources.length === 1) {
-        inputVars.set('source', this.channelData.filtered.sources[0].id, true)
-      }
-
-      if (!inputVars.get('destination') && this.channelData.filtered.destinations.length === 1) {
-        inputVars.set('destination', this.channelData.filtered.destinations[0].id, true)
-      }
-
-      if (!inputVars.get('token') && this.channelData.filtered.tokens.length === 1) {
-        inputVars.set('token', this.channelData.filtered.tokens[0].id, true)
-      }
-    }
+    // if (this.config?.autoSelectValues === true) {
+    //   if (!inputVars.get('source') && this.channelData.filtered.sources.length === 1) {
+    //     inputVars.set('source', this.channelData.filtered.sources[0].id, true)
+    //   }
+    //
+    //   if (!inputVars.get('destination') && this.channelData.filtered.destinations.length === 1) {
+    //     inputVars.set('destination', this.channelData.filtered.destinations[0].id, true)
+    //   }
+    //
+    //   if (!inputVars.get('token') && this.channelData.filtered.tokens.length === 1) {
+    //     inputVars.set('token', this.channelData.filtered.tokens[0].id, true)
+    //   }
+    // }
   }
 
   // setting the active item based on one selected

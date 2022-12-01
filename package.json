@@ -14,7 +14,8 @@
     "postinstall": "preconstruct dev",
     "dev:demo": "yarn workspace xcm-demo dev",
     "build:demo": "yarn workspace xcm-demo build",
-    "dev": "yarn dev:demo",
+    "dev:squid": "yarn workspace squid dev",
+    "dev": "concurrently \"yarn dev:demo\" \"yarn dev:squid\"",
     "build": "preconstruct build && yarn build:demo"
   },
   "devDependencies": {
@@ -24,7 +25,7 @@
     "@preconstruct/cli": "^2.2.2",
     "concurrently": "^7.3.0",
     "eslint": "^8.28.0",
-    "eslint-config-custom": "*",
+    "eslint-config-wayfinder": "workspace:^",
     "husky": "^8.0.2",
     "import-sort-style-module": "^6.0.0",
     "prettier": "^2.8.0",

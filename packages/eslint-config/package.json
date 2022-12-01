@@ -1,0 +1,14 @@
+{
+  "name": "eslint-config-wayfinder",
+  "version": "0.1.0",
+  "main": "dist/eslint-config-wayfinder.cjs.js",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.1"
+  }
+}
