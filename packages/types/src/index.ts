@@ -18,6 +18,7 @@ export type States =
   | 'FETCHING_ROUTES'
   | 'INPUT_REQUIRED'
   | 'ROUTE_NOT_FOUND'
+  | 'MULTIPLE_ROUTES_FOUND'
   | 'INSUFFICIENT_FUNDS'
   | 'INSUFICCIENT_FEE'
   | 'READY_TO_PROCESS'
@@ -28,6 +29,7 @@ export type States =
 export type Chain = {
   id: string
   name: string
+  addressFormat?: string
 }
 
 // a token type
@@ -109,11 +111,19 @@ export type AvailableAsset = {
   amount: string
 }
 
+// live stats for a channel
+export type ChannelStats = {
+  sourceFee: string
+  sourceExistentialDeposit: string
+  destinationFee: string
+  destinationExistentialDeposit: string
+}
+
 export type WayfinderConfigProps = {
   uri: string
   availableAssets?: AvailableAsset[]
   autoSelectValues?: Boolean
-  handleRequestFee(chain: any): string
+  handleFetchChannelStats(tx: any): ChannelStats
   handleSendTransaction(tx: any): void
 }
 

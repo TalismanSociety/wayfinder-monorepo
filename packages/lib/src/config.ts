@@ -129,6 +129,6 @@ export const statusMessages = {
 
 export const defaultConfig: WayfinderConfigProps = {
   uri: 'http://localhost:4350/graphql',
-  handleRequestFee: () => '0',
-  handleSendTransaction: () => {},
+  handleFetchChannelStats: (tx: any) => {},
+  handleSendTransaction: (tx: any) => {},
 }

@@ -24,22 +24,33 @@ import { availableAccounts, availableAssets } from './config' // <-- this is fak
   into a useable format so that the wayfinder knows what is available
 */
 
+// ---> 1. DEFINE YOUR WAYFINDER CONFIG OPTIONS
+const wayfinderConfig: WayfinderConfigProps = {
+  // uri of the wayfinder endpoint
+  uri: 'http://localhost:4350/graphql',
+
+  // [TODO] handle fetching the fee
+  handleFetchChannelStats: (tx: any) => {
+    console.log(tx)
+    return {
+      sourceFee: '0.1',
+      sourceExistentialDeposit: '1',
+      destinationFee: '0.1',
+      destinationExistentialDeposit: '1',
+    }
+  },
+
+  //handleRequestStats: () => '0.1',
+  //handleRequestDestinationStats: () => '0.1',
+
+  // [TODO] handle sending the tx
+  handleSendTransaction: (tx: any) => {
+    console.log('TODO: Handle Send Tx', { tx })
+    return true
+  },
+}
+
 const useXChainTransaction = () => {
-  // ---> 1. DEFINE YOUR WAYFINDER CONFIG OPTIONS
-  const wayfinderConfig: WayfinderConfigProps = {
-    // uri of the wayfinder endpoint
-    uri: 'http://localhost:4350/graphql',
-
-    // [TODO] handle fetching the fee
-    handleRequestFee: (chain) => '0.1',
-
-    // [TODO] handle sending the tx
-    handleSendTransaction: (tx) => {
-      console.log('TODO: Handle Send Tx', { tx })
-      return true
-    },
-  }
-
   // ---> 2. INIT YOUR WAYFINDER
   const wayfinderValues: WayfinderHookResult = useWayfinder(wayfinderConfig)
 

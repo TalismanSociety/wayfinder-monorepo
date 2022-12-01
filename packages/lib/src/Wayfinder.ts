@@ -10,6 +10,7 @@ import {
 
 import ChangeMon from './ChangeMon'
 import { defaultConfig, defaultInputVars, defaultInternalVars, defaultQueryResult, statusMessages } from './config'
+import { InputRequiredError, MultipleRouteFoundError, NoRouteFoundError } from './errors'
 import InputVars from './InputVars'
 import router from './Router'
 import SubscriptionService from './SubscriptionService'
@@ -81,56 +82,88 @@ class WayFinder {
 
   // define the status
   private updateStatus() {
-    internalVars.set('statusMessage', null, true)
-    internalVars.set('warning', null, true)
+    // reset status
+    //internalVars.set('statusMessage', null, true)
+    //internalVars.set('warning', null, true)
 
-    // check if we have routes available
-    if (this.channelData.filtered.channels.length <= 0) {
-      internalVars.set('status', 'ROUTE_NOT_FOUND')
-      return
-    }
+    // get all input variables
+    const inputAccount = inputVars.get('account')
+    const inputSource = inputVars.get('source')
+    const inputDestination = inputVars.get('destination')
+    const inputToken = inputVars.get('token')
 
-    // determine if user inputs are still required
-    if (!this.channelData.query.source || !this.channelData.query.destination || !this.channelData.query.token) {
+    // get fetched channel vars
+    const channel = this.channelData.filtered.channels[0]
+    const channelCount = this.channelData.filtered.channels.length
+
+    // check all required input variables are set
+    if (!inputAccount || !inputSource || !inputDestination || !inputToken) {
       // fire this once on init to be sure, to be sure
-      if (internalVars.get('status') === 'INITIALISED') {
-        this.fireSubscriptions()
-      }
+      if (internalVars.get('status') === 'INITIALISED') this.fireSubscriptions()
 
-      internalVars.set('status', 'INPUT_REQUIRED')
-      return
+      // construct the missing variables array
+      const missingInputValues = []
+      if (!inputAccount) missingInputValues.push('Account')
+      if (!inputSource) missingInputValues.push('Source chain')
+      if (!inputDestination) missingInputValues.push('Destination chain')
+      if (!inputToken) missingInputValues.push('Token')
+
+      throw new InputRequiredError(missingInputValues)
     }
 
-    // determine if we have a route
+    // check if we have at least 1 channel
+    if (channelCount < 1) throw new NoRouteFoundError()
+
+    // check if we have at no more than 1 route
+    if (channelCount > 1) throw new MultipleRouteFoundError(channelCount)
+
+    /// TODOTODOTODOTODO
+    // validate source and destination address formats
+    if (!inputVars.get('account')) {
+      throw new InputRequiredError(['account'])
+    }
+
+    // determine if we have all required variables set
     if (
-      !!this.channelData.query.source &&
-      !!this.channelData.query.destination &&
-      !!this.channelData.query.token &&
+      !!inputVars.get('source') && // source chain
+      !!inputVars.get('destination') && // destination chain
+      !!inputVars.get('token') && // token
+      !!inputVars.get('amount') && // amount
       this.channelData.filtered.channels.length === 1
     ) {
-      // if we have a route, and all values are set
+      // yay, we have a route, and all values are set
       // lets figure out the user has enough funds
-      const asset = inputVars.get('availableAssets').find(({ chain, token }: any) => {
-        return chain === inputVars.get('source') && token === inputVars.get('token')
-      })
+
+      // get the users asset on the source chain
+      const sourceAasset = inputVars
+        .get('availableAssets')
+        .find(({ chain, token }: any) => chain === inputVars.get('source') && token === inputVars.get('token'))
+
+      // get the users asset on the destination chain
+      const destaintionAsset = inputVars
+        .get('availableAssets')
+        .find(({ chain, token }: any) => chain === inputVars.get('destiantion') && token === inputVars.get('token'))
+
+      console.log(222, { sourceAasset, destaintionAsset })
 
       // calculate gat, existentialDeposits, totals etc
-      const gas = +this.config.handleRequestFee('test')
+      const gas = +this.config.handleFetchChannelStats(inputVars.all())
       const existentialDepositSource = 1
       const existentialDepositDestination = 1
       const amount = +inputVars.get('amount')
       const amountAndGas = amount + gas
+      const maxAmountAvailableToSend = amountAndGas + existentialDepositSource
 
       // TODO: use asert here to make it easier
 
       // AMOUNT CHECK: amount must be greater than 0
-      if (amount <= 0) {
+      if (!amount || amount <= 0) {
         internalVars.set('status', 'INPUT_REQUIRED')
         return
       }
 
       // SOURCE REAP CHECK: check the amount being sent will reap the source account
-      if (amountAndGas + existentialDepositSource > asset.amount) {
+      if (maxAmountAvailableToSend > sourceAasset.amount) {
         internalVars.set('status', 'INSUFFICIENT_FUNDS')
         internalVars.set('statusMessage', `Performing this action will reap your account.`)
         return
@@ -163,20 +196,21 @@ class WayFinder {
     // get all vars
     const { account, source, destination, token, availableAssets } = params
 
-    // refetch routes when needed
-    if (
-      // check these vals for change
-      changeMon.hasChanged({
-        source,
-        destination,
-        token,
-        account,
-        status: internalVars.get('status'),
-      }) ||
-      // or, check we're in any of these statuses
-      ['INITIALISED', 'NO_ROUTE_FOUND'].includes(internalVars.get('status'))
-    ) {
-      try {
+    try {
+      // refetch routes when needed
+      if (
+        // check these vals for change
+        changeMon.hasChanged({
+          source,
+          destination,
+          token,
+          account,
+          status: internalVars.get('status'),
+        }) ||
+        // or, check we're in any of these statuses
+        ['INITIALISED', 'NO_ROUTE_FOUND'].includes(internalVars.get('status'))
+      ) {
+        // set internal status
         internalVars.set('status', 'FETCHING_ROUTES')
 
         // fetch routes form routing service
@@ -187,23 +221,22 @@ class WayFinder {
 
         // set the channelData
         this.channelData = channelData
-      } catch (error) {
-        internalVars.set('status', 'ERROR')
-        internalVars.set('statusMessage', `Could not fetch route information.`)
-        return
       }
+
+      // filter the channel data when availableAssets or filteredAssets changes
+      if (changeMon.hasChanged({ availableAssets, filteredAssets: this.channelData.filtered })) {
+        this.channelData.filtered = filterChannelDataByAssets(this.channelData.filtered, availableAssets)
+      }
+
+      this.attemptAutoSelect()
+
+      this.updateStatus()
+
+      this.fireSubscriptions()
+    } catch (error: any) {
+      internalVars.set('status', error.status)
+      internalVars.set('statusMessage', error.message)
     }
-
-    // filter the channel data when availableAssets or filteredAssets changes
-    if (changeMon.hasChanged({ availableAssets, filteredAssets: this.channelData.filtered })) {
-      this.channelData.filtered = filterChannelDataByAssets(this.channelData.filtered, availableAssets)
-    }
-
-    this.attemptAutoSelect()
-
-    this.updateStatus()
-
-    this.fireSubscriptions()
   }
 
   // attempt autoselect fields based on filtered route information
@@ -228,7 +261,18 @@ class WayFinder {
   // setting the active item based on one selected
   // todo: type the val as a value in the current token|source|destination array
   public setFilter(key: string | GenericObject, value?: any) {
+    // reset all vars on account change
     if (key === 'account' || Object.keys(key).includes('account')) this.reset()
+
+    // preformat the amount field to be a string
+    if (key === 'amount' || Object.keys(key).includes('amount')) {
+      if (key === 'amount') {
+        value = parseFloat(value).toString()
+      } else if (typeof key === 'object') {
+        key.amount = parseFloat(value).toString()
+      }
+    }
+
     inputVars.set(key, value)
   }
 
@@ -238,7 +282,7 @@ class WayFinder {
 
     const submitTransactionCb = () => {
       if (status === 'READY_TO_PROCESS') {
-        console.log(1111)
+        console.log(1111, inputVars.all())
         return true
       } else {
         console.log(2222)

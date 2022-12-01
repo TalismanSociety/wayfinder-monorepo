@@ -55,7 +55,7 @@ export const App = () => {
             </select>
           </fieldset>
 
-          <fieldset>
+          <fieldset style={{ display: 'flex' }}>
             <legend>Source Chain:</legend>
             <select
               style={{ width: '100%' }}
@@ -82,9 +82,10 @@ export const App = () => {
                 )}
               </optgroup>
             </select>
+            <button onClick={(e) => set('source', undefined)}>x</button>
           </fieldset>
 
-          <fieldset>
+          <fieldset style={{ display: 'flex' }}>
             <legend>Destination Chain:</legend>
             <select
               style={{ width: '100%' }}
@@ -111,9 +112,10 @@ export const App = () => {
                 )}
               </optgroup>
             </select>
+            <button onClick={(e) => set('destination', undefined)}>x</button>
           </fieldset>
 
-          <fieldset>
+          <fieldset style={{ display: 'flex' }}>
             <legend>Destination Token:</legend>
             <select
               style={{ width: '100%' }}
@@ -140,6 +142,7 @@ export const App = () => {
                 )}
               </optgroup>
             </select>
+            <button onClick={(e) => set('token', undefined)}>x</button>
           </fieldset>
 
           <fieldset>
