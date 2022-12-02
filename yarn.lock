@@ -3981,26 +3981,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@talisman/wayfinder-demo@workspace:apps/demo":
-  version: 0.0.0-use.local
-  resolution: "@talisman/wayfinder-demo@workspace:apps/demo"
-  dependencies:
-    "@talismn/wayfinder-react-hook": "workspace:^"
-    "@talismn/wayfinder-types": "workspace:^"
-    "@types/react": ^18.0.15
-    "@types/react-dom": ^18.0.6
-    "@types/uuid": ^8.3.4
-    "@vitejs/plugin-react": ^2.2.0
-    eslint: ^8.28.0
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    typescript: ^4.7.4
-    uuid: ^8.3.2
-    vite: ^3.2.4
-    vite-plugin-eslint: ^1.8.1
-  languageName: unknown
-  linkType: soft
-
 "@talismn/wayfinder-datasource@workspace:apps/squid":
   version: 0.0.0-use.local
   resolution: "@talismn/wayfinder-datasource@workspace:apps/squid"
@@ -4082,6 +4062,26 @@ __metadata:
   dependencies:
     "@talismn/wayfinder-tsconfig": "workspace:^"
     typescript: ~4.7.4
+  languageName: unknown
+  linkType: soft
+
+"@talismn/xcm-demo@workspace:apps/demo":
+  version: 0.0.0-use.local
+  resolution: "@talismn/xcm-demo@workspace:apps/demo"
+  dependencies:
+    "@talismn/wayfinder-react-hook": "workspace:^"
+    "@talismn/wayfinder-types": "workspace:^"
+    "@types/react": ^18.0.15
+    "@types/react-dom": ^18.0.6
+    "@types/uuid": ^8.3.4
+    "@vitejs/plugin-react": ^2.2.0
+    eslint: ^8.28.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    typescript: ^4.7.4
+    uuid: ^8.3.2
+    vite: ^3.2.4
+    vite-plugin-eslint: ^1.8.1
   languageName: unknown
   linkType: soft
 

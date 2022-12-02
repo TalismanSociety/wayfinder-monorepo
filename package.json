@@ -13,8 +13,8 @@
   "scripts": {
     "postinstall": "husky install && preconstruct dev",
     "build:packages": "preconstruct build",
-    "dev:demo": "yarn workspace xcm-demo dev",
-    "build:demo": "yarn workspace xcm-demo build",
+    "dev:demo": "yarn workspace @talismn/xcm-demo dev",
+    "build:demo": "yarn workspace @talismn/xcm-demo build",
     "dev:squid": "make dev",
     "build:squid": "make build",
     "dev": "concurrently \"yarn dev:demo\" \"yarn dev:squid\"",

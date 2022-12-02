@@ -12,5 +12,5 @@ To install and run:
 
 1. git clone from repo
 1. `yarn` to install all deps
+1. `make up` to start the squid database (in docker)
 1. `yarn dev` to spin up a dev environment
-1. `[todo]` in a new terminal window to start the squid processor
