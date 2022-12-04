@@ -7,8 +7,24 @@ RUN apk add g++ make python3
 
 FROM node-with-gyp AS builder
 WORKDIR /squid
-ADD . .
+ADD .yarn .yarn
+ADD .yarnrc.yml .
+ADD yarn.lock .
+ADD Makefile .
+ADD package.json .
+ADD apps/demo/package.json apps/demo/
+ADD apps/squid/package.json apps/squid/
+ADD packages/eslint-config packages/eslint-config
+ADD packages/lib packages/lib
+ADD packages/react-hook packages/react-hook
+ADD packages/tsconfig packages/tsconfig
+ADD packages/types packages/types
 RUN yarn install --immutable
+ADD apps/squid/tsconfig.json apps/squid/
+ADD apps/squid/schema.graphql apps/squid/
+ADD apps/squid/src apps/squid/src
+ADD packages packages
+RUN make build
 
 
 FROM node AS squid
@@ -32,8 +48,8 @@ EXPOSE 4000
 
 
 FROM squid AS processor
-CMD ["make", "process"]
+CMD ["yarn", "workspace", "@talismn/wayfinder-datasource", "processor:start"]
 
 
 FROM squid AS query-node
-CMD ["make", "serve"]
+CMD ["yarn", "workspace", "@talismn/wayfinder-datasource", "query-node:start"]
