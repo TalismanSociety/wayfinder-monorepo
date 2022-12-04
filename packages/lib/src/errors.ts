@@ -5,10 +5,6 @@ export class WayfinderError extends Error {
   message: string = 'An error has occurred'
   name: string = this.constructor.name
   isblocking: boolean = true
-
-  constructor() {
-    super()
-  }
 }
 
 export class NoRouteFoundError extends WayfinderError {

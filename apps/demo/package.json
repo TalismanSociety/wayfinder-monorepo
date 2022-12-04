@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@talismn/util": "^0.1.4",
     "@talismn/wayfinder-react-hook": "workspace:^",
     "@types/uuid": "^8.3.4",
     "eslint": "^8.28.0",

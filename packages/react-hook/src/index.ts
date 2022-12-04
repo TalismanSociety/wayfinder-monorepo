@@ -1,3 +1,1 @@
-import useWayfinder from './useWayfinder'
-
-export default useWayfinder
+export * from './useWayfinder'

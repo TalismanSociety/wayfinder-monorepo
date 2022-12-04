@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 type CallBackType<T> = (params: T) => void
 
-class SubscriptionService<CbResultType> {
+export class SubscriptionService<CbResultType> {
   // a store of callbacks triggered when this instance updates
   private callbackStore: { [id: string]: CallBackType<CbResultType> } = {}
 
@@ -32,5 +32,3 @@ class SubscriptionService<CbResultType> {
     }
   }
 }
-
-export default SubscriptionService

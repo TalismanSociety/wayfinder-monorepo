@@ -34,7 +34,7 @@ const defaultApolloClientOptions: DefaultOptions = {
 
 class Router {
   uri?: string = undefined
-  query: any = defaultQuery
+  query: DocumentNode = defaultQuery
   client = new ApolloClient({ cache: new InMemoryCache() })
 
   configure({ uri }: WayfinderRouterProps) {
@@ -59,6 +59,4 @@ class Router {
   }
 }
 
-const router = new Router()
-
-export default router
+export const router = new Router()

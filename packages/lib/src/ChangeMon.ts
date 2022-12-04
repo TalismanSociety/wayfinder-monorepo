@@ -1,6 +1,6 @@
 import { GenericObject } from '@talismn/wayfinder-types'
 
-class ChangeMon {
+export class ChangeMon {
   // keep a state hash in order to minimise callbacks
   private state: GenericObject = {}
 
@@ -21,5 +21,3 @@ class ChangeMon {
     return changeditems.length > 0
   }
 }
-
-export default ChangeMon

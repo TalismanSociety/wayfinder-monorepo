@@ -8,12 +8,12 @@ import {
   WayfinderSubscriptionResult,
 } from '@talismn/wayfinder-types'
 
-import ChangeMon from './ChangeMon'
+import { ChangeMon } from './ChangeMon'
 import { defaultConfig, defaultInputVars, defaultInternalVars, defaultQueryResult, statusMessages } from './config'
 import { InputRequiredError, MultipleRouteFoundError, NoRouteFoundError } from './errors'
-import InputVars from './InputVars'
-import router from './Router'
-import SubscriptionService from './SubscriptionService'
+import { InputVars } from './InputVars'
+import { router } from './Router'
+import { SubscriptionService } from './SubscriptionService'
 import { filterChannelDataByAssets } from './util'
 
 // init a new change monitor
@@ -30,7 +30,7 @@ const inputVars = new InputVars(defaultInputVars)
 // and then can subscribe to certain values rather than all at once
 const internalVars = new InputVars(defaultInternalVars)
 
-class WayFinder {
+export class WayFinder {
   // wayfinder props
   private config: WayfinderConfigProps = defaultConfig
 
@@ -311,5 +311,3 @@ class WayFinder {
     return unsub
   }
 }
-
-export default WayFinder

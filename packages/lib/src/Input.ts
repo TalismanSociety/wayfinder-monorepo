@@ -1,4 +1,4 @@
-export default class Input<T> {
+export class Input<T> {
   public _initialValue?: T
   public _value?: T
 

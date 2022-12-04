@@ -1,7 +1,8 @@
+import { formatDecimals } from '@talismn/util'
 import { Chain } from '@talismn/wayfinder-types'
 
 import { availableAssets } from './config'
-import useXChainTransaction from './useXChainTransation'
+import { useXChainTransaction } from './useXChainTransaction'
 
 export const App = () => {
   const { all, filtered, inputParams, status, statusMessage, set, clear, availableAccounts, submitTransaction } =
@@ -9,30 +10,32 @@ export const App = () => {
 
   return (
     <div style={{ display: 'flex' }}>
+      <style>{base}</style>
       <style>{darkTheme}</style>
       <div style={{ padding: '2em', width: '20%' }}>
-        <h1>User Accounts</h1>
+        <h2>User Accounts</h2>
 
-        {availableAccounts.map(({ name, address }) => {
-          return (
-            <div key={[name, address].join('-')}>
-              <h3 key={address} style={{ marginBottom: '0.4em' }}>
-                {name} | {address}
-              </h3>
-              {availableAssets[address].map(({ chain, token, amount }) => (
-                <div key={`${chain}${token}`}>
-                  {chain} | {token} | {amount}
-                </div>
-              ))}
-            </div>
-          )
-        })}
-
-        <sub style={{ opacity: 0.5 }}>key: [chain | token | amount]</sub>
+        <pre>
+          {availableAccounts.map(({ name, address }) => {
+            return (
+              <p key={[name, address].join('-')}>
+                <strong>
+                  {name} ({address.substring(0, 4)}...{address.substring(address.length - 4)})
+                </strong>
+                <br />
+                {availableAssets[address].map(({ chain, token, amount }) => (
+                  <div key={`${chain}${token}`}>
+                    {chain} &lt;- {formatDecimals(amount)} {token}
+                  </div>
+                ))}
+              </p>
+            )
+          })}
+        </pre>
       </div>
 
       <div style={{ padding: '2em', width: '20%' }}>
-        <h1>User Input:</h1>
+        <h2>User Input</h2>
         <form
           onSubmit={(e) => {
             e.stopPropagation()
@@ -41,7 +44,7 @@ export const App = () => {
           }}
         >
           <fieldset>
-            <legend>From Account:</legend>
+            <legend>From Account</legend>
             <select
               style={{ width: '100%' }}
               value={inputParams.account}
@@ -56,7 +59,7 @@ export const App = () => {
           </fieldset>
 
           <fieldset style={{ display: 'flex' }}>
-            <legend>Source Chain:</legend>
+            <legend>Source Chain</legend>
             <select
               style={{ width: '100%' }}
               disabled={!!inputParams?.source}
@@ -86,7 +89,7 @@ export const App = () => {
           </fieldset>
 
           <fieldset style={{ display: 'flex' }}>
-            <legend>Destination Chain:</legend>
+            <legend>Destination Chain</legend>
             <select
               style={{ width: '100%' }}
               disabled={!!inputParams?.destination}
@@ -116,7 +119,7 @@ export const App = () => {
           </fieldset>
 
           <fieldset style={{ display: 'flex' }}>
-            <legend>Destination Token:</legend>
+            <legend>Destination Token</legend>
             <select
               style={{ width: '100%' }}
               disabled={!!inputParams?.token}
@@ -146,7 +149,7 @@ export const App = () => {
           </fieldset>
 
           <fieldset>
-            <legend>Amount:</legend>
+            <legend>Amount</legend>
             <input
               style={{ width: '100%' }}
               type="number"
@@ -168,44 +171,126 @@ export const App = () => {
       </div>
 
       <div style={{ padding: '2em', width: '20%' }}>
-        <h1>Selected Inputs</h1>
-        <h3>Account</h3>
-        <div>Address: {inputParams.account}</div>
-        <div>Assets: {inputParams.availableAssets.map((asset) => `${asset.token}:${asset.amount}`).join(' ')}</div>
-        <h3>Input Params</h3>
-        <div>Source: {inputParams.source}</div>
-        <div>Destination: {inputParams.destination}</div>
-        <div>Token: {inputParams.token}</div>
-        <div>Amount: {inputParams.amount}</div>
+        <h2>Selected Inputs</h2>
+
+        <pre>
+          <p>
+            <strong>Account</strong>
+            <br />
+            {inputParams.account
+              ? `${inputParams.account.substring(0, 4)}...${inputParams.account.substring(
+                  inputParams.account.length - 4
+                )}`
+              : 'None'}
+          </p>
+          <p>
+            <strong>Account Assets</strong>
+            <br />
+            {inputParams.availableAssets.map((asset) => `${asset.token}:${asset.amount}`).join(' ')}
+          </p>
+          <p>
+            <strong>Source</strong>
+            <br />
+            {inputParams.source ?? 'None'}
+          </p>
+          <p>
+            <strong>Destination</strong>
+            <br />
+            {inputParams.destination ?? 'None'}
+          </p>
+          <p>
+            <strong>Token</strong>
+            <br />
+            {inputParams.token ?? 'None'}
+          </p>
+          <p>
+            <strong>Amount</strong>
+            <br />
+            {inputParams.amount ?? 'None'}
+          </p>
+        </pre>
       </div>
 
       <div style={{ padding: '2em', width: '20%' }}>
-        <h1>Routes</h1>
-        <h3>Filtered (by user assets/input)</h3>
-        {(filtered?.channels || []).map(({ id, tokens }) => (
-          <div key={id}>
-            {id} | {tokens.map(({ name }) => name).join(', ')}
-          </div>
-        ))}
-        <h3>All</h3>
-        {(all?.channels || []).map(({ id, tokens }) => (
-          <div key={id}>
-            {id} | {tokens.map(({ name }) => name).join(', ')}
-          </div>
-        ))}
+        <h2>Routes</h2>
+        <pre>
+          <p>
+            <strong>Filtered (by user assets/input)</strong>
+          </p>
+          {(filtered?.channels || []).map(({ id, source, destination, tokens }) => (
+            <p key={id}>
+              Route {id}
+              <br />
+              {tokens.map(({ name }) => `${source.name} --${name}-> ${destination.name}`).join('\n')}
+            </p>
+          ))}
+          <p>
+            <strong>All</strong>
+          </p>
+          {(all?.channels || []).map(({ id, source, destination, tokens }) => (
+            <p key={id}>
+              Route {id}
+              <br />
+              {tokens.map(({ name }) => `${source.name} --${name}-> ${destination.name}`).join('\n')}
+            </p>
+          ))}
+        </pre>
       </div>
 
       <div style={{ padding: '2em', width: '20%' }}>
-        <h1>Other:</h1>
-        <div>Status: {status}</div>
-        <div>Status Message: {statusMessage}</div>
-        <div>Route: {status === 'FETCHING_ROUTES' ? filtered?.channels[0]?.id : '-'}</div>
+        <h2>Other</h2>
+        <pre>
+          <p>
+            <strong>Status</strong>
+            <br />
+            {status}
+          </p>
+          <p>
+            <strong>Status Message</strong>
+            <br />
+            {statusMessage}
+          </p>
+          <p>
+            <strong>Route</strong>
+            <br />
+            {status === 'FETCHING_ROUTES' ? filtered?.channels[0]?.id : '-'}
+          </p>
+        </pre>
       </div>
     </div>
   )
 }
 
-const darkTheme = `
+const css = (raw: readonly string[] | ArrayLike<string>, ...substitutions: any[]): string =>
+  String.raw({ raw }, ...substitutions)
+
+const base = css`
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    font-size: 10px;
+  }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+      'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1.4rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  code,
+  pre {
+    white-space: pre-wrap;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-size: 1.2rem;
+  }
+  a {
+    text-decoration: none;
+  }
+`
+
+const darkTheme = css`
   @media (prefers-color-scheme: dark) {
     html {
       background: #efefef;

@@ -1,4 +1,4 @@
-import useWayfinder from '@talismn/wayfinder-react-hook'
+import { useWayfinder } from '@talismn/wayfinder-react-hook'
 import { WayfinderConfigProps, WayfinderHookResult } from '@talismn/wayfinder-types'
 import { useEffect } from 'react'
 
@@ -50,7 +50,7 @@ const wayfinderConfig: WayfinderConfigProps = {
   },
 }
 
-const useXChainTransaction = () => {
+export const useXChainTransaction = () => {
   // ---> 2. INIT YOUR WAYFINDER
   const wayfinderValues: WayfinderHookResult = useWayfinder(wayfinderConfig)
 
@@ -72,5 +72,3 @@ const useXChainTransaction = () => {
     availableAccounts,
   }
 }
-
-export default useXChainTransaction

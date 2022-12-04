@@ -1,7 +1,7 @@
 import { AvailableAsset } from '@talismn/wayfinder-types'
 
 export const availableAssets: { [address: string]: AvailableAsset[] } = {
-  '11111111111': [
+  '13Dg1mYyNddpzDxZZ2ksZeAQxjDAqAzH24bGmBhzs5dQcmwF': [
     {
       chain: 'chain0',
       token: 'token0',
@@ -18,7 +18,7 @@ export const availableAssets: { [address: string]: AvailableAsset[] } = {
       amount: '2',
     },
   ],
-  '2222222222': [
+  '1YmEYgtfPbwx5Jos1PjKDWRpuJWSpTzytwZgYan6kgiquNS': [
     {
       chain: 'chain1',
       token: 'token1',
@@ -35,10 +35,10 @@ type AvailableAccount = {
 export const availableAccounts: AvailableAccount[] = [
   {
     name: 'Account1',
-    address: '11111111111',
+    address: '13Dg1mYyNddpzDxZZ2ksZeAQxjDAqAzH24bGmBhzs5dQcmwF',
   },
   {
-    name: 'account2',
-    address: '2222222222',
+    name: 'Account2',
+    address: '1YmEYgtfPbwx5Jos1PjKDWRpuJWSpTzytwZgYan6kgiquNS',
   },
 ]

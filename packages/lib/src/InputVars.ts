@@ -1,6 +1,6 @@
 import { GenericObject } from '@talismn/wayfinder-types'
 
-import SubscriptionService from './SubscriptionService'
+import { SubscriptionService } from './SubscriptionService'
 
 type TValue<T> = T | null
 
@@ -34,7 +34,7 @@ type InputSet = {
   [key: string]: any
 }
 
-class QueryVars {
+export class InputVars {
   private vars: VariableSet = {}
   private subscriptionService = new SubscriptionService<GenericObject>()
 
@@ -97,5 +97,3 @@ class QueryVars {
     return unsub
   }
 }
-
-export default QueryVars
