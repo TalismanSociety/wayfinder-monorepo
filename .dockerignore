@@ -1,0 +1,5 @@
+*Versions.jsonl
+.git
+lib
+node_modules
+/apps/squid/src/model

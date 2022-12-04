@@ -1,20 +1,37 @@
-dev:
-	@cd apps/squid && $(MAKE) -s $@
-process:
-	@cd apps/squid && $(MAKE) -s $@
-serve:
-	@cd apps/squid && $(MAKE) -s $@
-build:
-	@cd apps/squid && $(MAKE) -s $@
-create-migration:
-	@cd apps/squid && $(MAKE) -s $@
-migrate:
-	@cd apps/squid && $(MAKE) -s $@
+dev: build migrate
+	@bash -c 'yarn workspace @talismn/wayfinder-datasource query-node:start & node --inspect -r dotenv/config apps/squid/lib/processor.js & wait'
+
+
+process: migrate
+	@yarn workspace @talismn/wayfinder-datasource processor:start
+
+serve: build
+	@yarn workspace @talismn/wayfinder-datasource query-node:start
+
+
+build: codegen
+	@yarn workspace @talismn/wayfinder-datasource build
+
+
+create-migration: build
+	@cd apps/squid && npx squid-typeorm-migration generate
+
+migrate: build
+	@yarn workspace @talismn/wayfinder-datasource db:migrate
+
+
 codegen:
-	@cd apps/squid && $(MAKE) -s $@
+	@cd apps/squid && npx squid-typeorm-codegen
+
 typegen:
-	@cd apps/squid && $(MAKE) -s $@
+	@cd apps/squid && npx squid-substrate-typegen typegen.json
+
+
 up:
-	@cd apps/squid && $(MAKE) -s $@
+	@docker-compose up -d
+
 down:
-	@cd apps/squid && $(MAKE) -s $@
+	@docker-compose down
+
+
+.PHONY: build serve process migrate codegen typegen up down
