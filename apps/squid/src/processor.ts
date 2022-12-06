@@ -1,3 +1,8 @@
+import { Chain, ChainToken, Route, Token } from './model'
+import { parseRawData } from './server-extension/resolvers/channel/data/index'
+import { getStandaloneDbConnection } from './server-extension/resolvers/channel/db'
+import { rawData } from './server-extension/resolvers/channel/raw-data/index'
+
 // notes for v2
 // currently we're not doing any data ingestion for this squid
 // in future versions we will ingest data from a source somewhere
@@ -7,4 +12,21 @@
 // Ultimately we want to make this process automated and seamless
 // so that it's always, to-the-block, sychronsied with the chains
 
-export {}
+async function replaceDbWithRawData() {
+  const data = parseRawData(rawData)
+
+  const entityManager = await getStandaloneDbConnection()
+
+  // ditch existing data
+  await entityManager.delete(Route, {})
+  await entityManager.delete(ChainToken, {})
+  await entityManager.delete(Token, {})
+  await entityManager.delete(Chain, {})
+
+  // insert new data
+  await entityManager.save(data.chains)
+  await entityManager.save(data.tokens)
+  await entityManager.save(data.chainTokens)
+  await entityManager.save(data.routes)
+}
+replaceDbWithRawData()

@@ -22,12 +22,15 @@
     "@subsquid/substrate-processor": "1.7.0",
     "@subsquid/typeorm-migration": "0.1.2",
     "@subsquid/typeorm-store": "0.1.2",
+    "@talismn/chaindata-provider": "^0.1.10",
+    "@types/uuid": "^9.0.0",
     "class-validator": "^0.13.2",
     "dotenv": "^10.0.0",
     "graphql": "^15.0.0",
     "pg": "8.8.0",
     "type-graphql": "^1.2.0-rc.1",
-    "typeorm": "0.3.9"
+    "typeorm": "0.3.9",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@subsquid/substrate-metadata-explorer": "1.0.6",

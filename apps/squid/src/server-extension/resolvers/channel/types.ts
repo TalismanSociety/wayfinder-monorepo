@@ -11,9 +11,6 @@ export class Chain {
 
   @Field(() => String)
   name!: string
-
-  @Field(() => String)
-  pallet!: string
 }
 
 @ObjectType()

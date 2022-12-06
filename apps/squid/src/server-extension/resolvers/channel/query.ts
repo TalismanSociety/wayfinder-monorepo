@@ -1,4 +1,4 @@
-import channels from './datasource'
+import { oldFormatAdaptor as channels } from './data'
 import { Chain, Result, Token } from './types'
 
 type Props = {

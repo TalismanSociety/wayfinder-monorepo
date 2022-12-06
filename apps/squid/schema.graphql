@@ -1,3 +1,55 @@
+type Route @entity {
+  # TODO: Distinguish which method each route should use:
+  #       - limitedTeleport
+  #       - reserveTransfer
+  #       - limitedReserveTransfer
+  #
+  # TODO: Provide a more flexible way to customise the shape of the XCM message
+  #       - destination, account, asset sections
+  #       - V1/X1/X2/etc
+  id: ID!
+  from: Chain!
+  to: Chain!
+  token: Token!
+  feeToken: Token!
+  fee: String!
+  weightLimit: String!
+}
+
 type Chain @entity {
   id: ID!
+  # null for relaychain, Int for parachain
+  paraId: Int
+  name: String!
+  logo: String!
+  prefix: Int!
+
+  tokens: [ChainToken!]! @derivedFrom(field: "chain")
+  routesFrom: [Route!]! @derivedFrom(field: "from")
+  routesTo: [Route!]! @derivedFrom(field: "to")
+}
+
+type ChainToken @entity {
+  id: ID!
+  chain: Chain!
+  token: Token!
+
+  # if this is the native token for this chain
+  isNative: Boolean!
+
+  # existentialDeposit for this token on this chain
+  existentialDeposit: String!
+
+  # on-chain identifier for this token on this chain
+  tokenId: String!
+}
+
+type Token @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+
+  chains: [ChainToken!]! @derivedFrom(field: "token")
+  routes: [Route!]! @derivedFrom(field: "token")
 }
