@@ -1,7 +1,7 @@
 import { Chain, ChainToken, Route, Token } from './model'
-import { parseRawData } from './server-extension/resolvers/channel/data/index'
-import { getStandaloneDbConnection } from './server-extension/resolvers/channel/db'
-import { rawData } from './server-extension/resolvers/channel/raw-data/index'
+import { rawData } from './raw-data'
+import { getStandaloneDbConnection } from './util/db'
+import { parseRawData } from './util/parseRawData'
 
 // notes for v2
 // currently we're not doing any data ingestion for this squid

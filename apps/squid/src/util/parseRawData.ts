@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { Chain, ChainToken, Route, Token } from '../../../../model'
-import { rawData } from '../raw-data'
+import { Chain, ChainToken, Route, Token } from '../model'
 import type { RawData } from '../raw-data/_types'
 
 export const parseRawData = (rawData: RawData) => {
@@ -71,10 +70,3 @@ export const parseRawData = (rawData: RawData) => {
 
   return { chains, tokens, chainTokens, routes }
 }
-
-export const oldFormatAdaptor = parseRawData(rawData).routes.map((route) => ({
-  id: route.id,
-  source: { id: route.from.id, name: route.from.name },
-  destination: { id: route.to.id, name: route.to.name },
-  tokens: [{ id: route.token.id, name: route.token.name, symbol: route.token.symbol }],
-}))

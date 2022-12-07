@@ -1,4 +1,4 @@
-import { Chain, ChainToken, Route, Token } from '../../../../model'
+import { Chain, ChainToken, Route, Token } from '../model'
 
 type NoId<T> = Omit<T, 'id'>
 type ChainDerivedFields = 'tokens' | 'routesFrom' | 'routesTo'

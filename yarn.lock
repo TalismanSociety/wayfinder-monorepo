@@ -4232,11 +4232,13 @@ __metadata:
     "@subsquid/typeorm-store": 0.1.2
     "@talismn/chaindata-provider": ^0.1.10
     "@talismn/wayfinder-tsconfig": "workspace:^"
+    "@types/lodash": ^4.14.191
     "@types/node": 16.11.56
     "@types/uuid": ^9.0.0
     class-validator: ^0.13.2
     dotenv: ^10.0.0
     graphql: ^15.0.0
+    lodash: ^4.17.21
     pg: 8.8.0
     type-graphql: ^1.2.0-rc.1
     typeorm: 0.3.9
@@ -4676,6 +4678,13 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: e60b153664572116dfea673c5bda7778dbff150498f44f998e34b5886d8afc47f16799280e4b6e241c0472aef1bc36add771c569c68fc5125fc2ae519a3eb9ac
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4.14.191":
+  version: 4.14.191
+  resolution: "@types/lodash@npm:4.14.191"
+  checksum: ba0d5434e10690869f32d5ea49095250157cae502f10d57de0a723fd72229ce6c6a4979576f0f13e0aa9fbe3ce2457bfb9fa7d4ec3d6daba56730a51906d1491
   languageName: node
   linkType: hard
 
