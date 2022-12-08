@@ -6,28 +6,28 @@ export const chainTokens: RawData['chainTokens'] = [
     token: 'BNC',
     isNative: true,
     existentialDeposit: '10000000000',
-    tokenId: JSON.stringify({ Native: 'BNC' }),
+    tokenIdent: JSON.stringify({ Native: 'BNC' }),
   },
   {
     chain: 'bifrost',
     token: 'KSM',
     isNative: false,
     existentialDeposit: '100000000',
-    tokenId: JSON.stringify({ Token: 'KSM' }),
+    tokenIdent: JSON.stringify({ Token: 'KSM' }),
   },
   {
     chain: 'bifrost',
     token: 'KAR',
     isNative: false,
     existentialDeposit: '148000000',
-    tokenId: JSON.stringify({ Token: 'KAR' }),
+    tokenIdent: JSON.stringify({ Token: 'KAR' }),
   },
   {
     chain: 'bifrost',
     token: 'AUSD',
     isNative: false,
     existentialDeposit: '100000000',
-    tokenId: JSON.stringify({ Stable: 'KUSD' }),
+    tokenIdent: JSON.stringify({ Stable: 'KUSD' }),
   },
 ]
 

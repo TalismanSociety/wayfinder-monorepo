@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 
 import {
   Chain as ChainModel,
@@ -85,7 +85,7 @@ export class ChainToken implements ChainTokenModel {
   existentialDeposit!: string
 
   @Field()
-  tokenId!: string
+  tokenIdent!: string
 }
 
 @ObjectType()
@@ -114,6 +114,15 @@ export class Route implements RouteModel {
 
   @Field()
   weightLimit!: string
+}
+
+@InputType()
+export class AssetInput {
+  @Field()
+  chainId!: string
+
+  @Field()
+  tokenId!: string
 }
 
 @ObjectType()

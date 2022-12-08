@@ -8,7 +8,7 @@ import {
   Route as RouteModel,
   Token as TokenModel,
 } from '../../model'
-import { Chain, ChainToken, FilterResult, Route, Token } from '../model'
+import { AssetInput, Chain, ChainToken, FilterResult, Route, Token } from '../model'
 
 @Resolver()
 export class FilterResolver {
@@ -18,7 +18,8 @@ export class FilterResolver {
   async filter(
     @Arg('from', { nullable: true }) fromId: string,
     @Arg('to', { nullable: true }) toId: string,
-    @Arg('token', { nullable: true }) tokenId: string
+    @Arg('token', { nullable: true }) tokenId: string,
+    @Arg('assets', () => [AssetInput], { nullable: true }) assets: Array<{ chainId: string; tokenId: string }>
   ): Promise<FilterResult> {
     const manager = await this.tx()
 
@@ -34,11 +35,14 @@ export class FilterResolver {
     // create the route filters
     const allPass = () => true
     const fromFilter = fromId ? (route: Route) => route.from.id === fromId : allPass
-    const toFilter = toId ? (route: Route) => route.to.id === fromId : allPass
+    const toFilter = toId ? (route: Route) => route.to.id === toId : allPass
     const tokenFilter = tokenId ? (route: Route) => route.token.id === tokenId : allPass
+    const assetsFilter = assets
+      ? (route: Route) => assets.some(({ chainId, tokenId }) => chainId === route.from.id && tokenId === route.token.id)
+      : allPass
 
     // filter the routes
-    const routes = allRoutes.filter(fromFilter).filter(toFilter).filter(tokenFilter)
+    const routes = allRoutes.filter(fromFilter).filter(toFilter).filter(tokenFilter).filter(assetsFilter)
 
     // retrieve the filtered things based on the remaining routes
     const sources = uniq(routes.map(({ from }) => from.id)).map((id) => allChainsMap[id])

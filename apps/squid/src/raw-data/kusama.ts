@@ -6,7 +6,7 @@ export const chainTokens: RawData['chainTokens'] = [
     token: 'KSM',
     isNative: true,
     existentialDeposit: '79999999',
-    tokenId: '',
+    tokenIdent: '',
   },
 ]
 

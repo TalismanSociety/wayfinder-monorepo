@@ -25,52 +25,57 @@ export type States =
   | 'PROCESSING'
   | 'COMPLETE'
 
-// a chain type
 export type Chain = {
   id: string
+  paraId: number | undefined | null
   name: string
-  addressFormat?: string
+  logo: string
+  prefix: number
+  tokens: ChainToken[]
+  routesFrom: Route[]
+  routesTo: Route[]
 }
 
-// a token type
 export type Token = {
   id: string
   name: string
   symbol: string
+  decimals: number
+  chains: ChainToken[]
+  routes: Route[]
 }
 
-// a channel
-export type Channel = {
-  id: string // the channel ID - muist be unique
-  source: Chain // the source chain
-  destination: Chain // the destination chain
-  tokens: Token[] // the tokens to transfer
+export type ChainToken = {
+  id: string
+  chain: Chain
+  token: Token
+  isNative: boolean
+  existentialDeposit: string
+  tokenIdent: string
+}
+
+export type Route = {
+  id: string
+  from: Chain
+  to: Chain
+  token: Token
+  feeToken: Token
+  fee: string
+  weightLimit: string
 }
 
 export type QueryParams = {
-  source?: string
-  destination?: string
-  token?: string
-}
-
-export type QueryResultGroupType = {
-  channels: Channel[]
-  sources: Chain[]
-  destinations: Chain[]
-  tokens: Token[]
-}
-
-export type QueryResultQueryType = {
-  source: string | null
-  destination: string | null
-  token: string | null
+  source?: Chain['id']
+  destination?: Chain['id']
+  token?: Token['id']
 }
 
 // this is the type we receive back from the backend/API
 export type QueryResultType = {
-  all: QueryResultGroupType
-  filtered: QueryResultGroupType
-  query: QueryResultQueryType
+  routes: Route[]
+  sources: Chain[]
+  destinations: Chain[]
+  tokens: Token[]
 }
 
 export type WayfinderInputVars = {

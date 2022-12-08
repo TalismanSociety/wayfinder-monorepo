@@ -8,14 +8,14 @@ export const chainTokens: RawData['chainTokens'] = [
     token: 'KSM',
     isNative: false,
     existentialDeposit: '79999999',
-    tokenId: '',
+    tokenIdent: '',
   },
   {
     chain: 'statemine',
     token: 'RMRK',
     isNative: false,
     existentialDeposit: '100000000',
-    tokenId: new BN(8).toString(),
+    tokenIdent: new BN(8).toString(),
   },
 ]
 

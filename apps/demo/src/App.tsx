@@ -1,56 +1,68 @@
-import { formatDecimals } from '@talismn/util'
-import { Chain } from '@talismn/wayfinder-types'
+import { githubUnknownTokenLogoUrl } from '@talismn/chaindata-provider'
+// import { formatDecimals } from '@talismn/util'
+import { useMemo } from 'react'
 
-import { availableAssets } from './config'
-import { useXChainTransaction } from './useXChainTransaction'
+import { Connect, useAccounts } from './Accounts'
+import { useAssetsWithBalances } from './useAssetsWithBalances'
+import { useWayfinder } from './useWayfinder'
 
 export const App = () => {
-  const { all, filtered, inputParams, status, statusMessage, set, clear, availableAccounts, submitTransaction } =
-    useXChainTransaction()
+  const accounts = useAccounts()
+  const addresses = useMemo(() => accounts.map(({ address }) => address), [accounts])
+
+  const {
+    inputs: { dispatch, ...inputs },
+    all,
+    filtered,
+  } = useWayfinder()
+
+  useAssetsWithBalances(inputs.sender ? inputs.sender : addresses, (assets) => dispatch({ setAssets: assets }))
 
   return (
     <div style={{ display: 'flex' }}>
       <style>{base}</style>
       <style>{darkTheme}</style>
-      <div style={{ padding: '2em', width: '20%' }}>
+      <div style={{ padding: '2em', width: '25%' }}>
         <h2>User Accounts</h2>
 
-        <pre>
-          {availableAccounts.map(({ name, address }) => {
-            return (
-              <p key={[name, address].join('-')}>
-                <strong>
-                  {name} ({address.substring(0, 4)}...{address.substring(address.length - 4)})
-                </strong>
-                <br />
-                {availableAssets[address].map(({ chain, token, amount }) => (
-                  <div key={`${chain}${token}`}>
-                    {chain} &lt;- {formatDecimals(amount)} {token}
-                  </div>
-                ))}
-              </p>
-            )
-          })}
-        </pre>
+        {accounts.length < 1 && <Connect />}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {accounts.map(({ avatar, name, address }) => (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1em' }}>
+              <img
+                src={avatar ?? githubUnknownTokenLogoUrl}
+                alt={address}
+                style={{ height: '2em', maxWidth: '100%' }}
+              />
+              <span style={{ display: 'inline-flex', flexDirection: 'column' }}>
+                <div>{name}</div>
+                <div style={{ opacity: '0.5', fontSize: '0.75em' }}>
+                  ({address.substring(0, 4)}...{address.substring(address.length - 4)})
+                </div>
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div style={{ padding: '2em', width: '20%' }}>
+      <div style={{ padding: '2em', width: '25%' }}>
         <h2>User Input</h2>
         <form
           onSubmit={(e) => {
             e.stopPropagation()
             e.preventDefault()
-            submitTransaction()
+            // submitTransaction()
           }}
         >
           <fieldset>
             <legend>From Account</legend>
             <select
               style={{ width: '100%' }}
-              value={inputParams.account}
-              onChange={(e) => set('account', e.target.value)}
+              value={inputs.sender}
+              onChange={(e) => dispatch({ setSender: e.target.value === '-1' ? undefined : e.target.value })}
             >
-              {availableAccounts.map(({ name, address }) => (
+              <option value={-1}>Select</option>
+              {accounts.map(({ name, address }) => (
                 <option key={address} value={address}>
                   {name}
                 </option>
@@ -62,90 +74,87 @@ export const App = () => {
             <legend>Source Chain</legend>
             <select
               style={{ width: '100%' }}
-              disabled={!!inputParams?.source}
-              value={inputParams?.source || '-1'}
-              onChange={(e) => set('source', e.target.value === '-1' ? undefined : e.target.value)}
+              disabled={!!inputs.from}
+              value={inputs.from ?? '-1'}
+              onChange={(e) => dispatch({ setFrom: e.target.value === '-1' ? undefined : e.target.value })}
             >
               <option value={'-1'}>Select</option>
               <optgroup label="Available">
-                {(filtered?.sources || []).map(({ id, name }: Chain) => (
+                {(filtered.sources ?? []).map(({ id, name }) => (
                   <option key={id} value={id}>
                     {name}
                   </option>
                 ))}
               </optgroup>
               <optgroup label="Unavailable">
-                {(all?.sources || []).map(
-                  ({ id, name }: Chain) =>
-                    !filtered?.sources?.map(({ id }) => id)?.includes(id) && (
-                      <option key={id} value={id} disabled={true}>
-                        {name}
-                      </option>
-                    )
-                )}
+                {(all.sources ?? [])
+                  .filter((source) => !filtered.sources.some(({ id }) => id === source.id))
+                  .map(({ id, name }) => (
+                    <option key={id} value={id} disabled={true}>
+                      {name}
+                    </option>
+                  ))}
               </optgroup>
             </select>
-            <button onClick={(e) => set('source', undefined)}>x</button>
+            <button onClick={() => dispatch({ setFrom: undefined })}>x</button>
           </fieldset>
 
           <fieldset style={{ display: 'flex' }}>
             <legend>Destination Chain</legend>
             <select
               style={{ width: '100%' }}
-              disabled={!!inputParams?.destination}
-              value={inputParams?.destination || '-1'}
-              onChange={(e) => set('destination', e.target.value === '-1' ? undefined : e.target.value)}
+              disabled={!!inputs.to}
+              value={inputs.to ?? '-1'}
+              onChange={(e) => dispatch({ setTo: e.target.value === '-1' ? undefined : e.target.value })}
             >
               <option value={'-1'}>Select</option>
               <optgroup label="Available">
-                {(filtered?.destinations || []).map(({ id, name }: Chain) => (
+                {(filtered.destinations ?? []).map(({ id, name }) => (
                   <option key={id} value={id}>
                     {name}
                   </option>
                 ))}
               </optgroup>
               <optgroup label="Unavailable">
-                {(all?.destinations || []).map(
-                  ({ id, name }: Chain) =>
-                    !filtered?.destinations?.map(({ id }) => id)?.includes(id) && (
-                      <option key={id} value={id} disabled={true}>
-                        {name}
-                      </option>
-                    )
-                )}
+                {(all.destinations ?? [])
+                  .filter((destination) => !filtered.destinations.some(({ id }) => id === destination.id))
+                  .map(({ id, name }) => (
+                    <option key={id} value={id} disabled={true}>
+                      {name}
+                    </option>
+                  ))}
               </optgroup>
             </select>
-            <button onClick={(e) => set('destination', undefined)}>x</button>
+            <button onClick={() => dispatch({ setTo: undefined })}>x</button>
           </fieldset>
 
           <fieldset style={{ display: 'flex' }}>
             <legend>Destination Token</legend>
             <select
               style={{ width: '100%' }}
-              disabled={!!inputParams?.token}
-              value={inputParams?.token || '-1'}
-              onChange={(e) => set('token', e.target.value === '-1' ? undefined : e.target.value)}
+              disabled={!!inputs.token}
+              value={inputs.token ?? '-1'}
+              onChange={(e) => dispatch({ setToken: e.target.value === '-1' ? undefined : e.target.value })}
             >
               <option value={'-1'}>Select</option>
               <optgroup label="Available">
-                {(filtered?.tokens || []).map(({ id, name }: Chain) => (
+                {(filtered.tokens ?? []).map(({ id, name }) => (
                   <option key={id} value={id}>
                     {name}
                   </option>
                 ))}
               </optgroup>
               <optgroup label="Unavailable">
-                {(all?.tokens || []).map(
-                  ({ id, name }: Chain) =>
-                    !filtered?.tokens?.map(({ id }) => id)?.includes(id) && (
-                      <option key={id} value={id} disabled={true}>
-                        {name}
-                      </option>
-                    )
-                )}
+                {(all.tokens ?? [])
+                  .filter((token) => !filtered.tokens.some(({ id }) => id === token.id))
+                  .map(({ id, name }) => (
+                    <option key={id} value={id} disabled={true}>
+                      {name}
+                    </option>
+                  ))}
               </optgroup>
             </select>
-            <button onClick={(e) => set('token', undefined)}>x</button>
+            <button onClick={() => dispatch({ setToken: undefined })}>x</button>
           </fieldset>
 
           <fieldset>
@@ -156,105 +165,83 @@ export const App = () => {
               min="0"
               max="10000000"
               step="0.1"
-              value={inputParams?.amount || 0}
-              onChange={(e) => set('amount', e.target.value)}
+              value={parseFloat(inputs.amount ?? '0')}
+              onChange={(e) => dispatch({ setAmount: e.target.value.length < 1 ? undefined : e.target.value })}
             />
           </fieldset>
 
-          <button type="submit" disabled={status !== 'READY_TO_PROCESS'}>
+          <button type="submit" disabled={/*status !== 'READY_TO_PROCESS'*/ undefined}>
             Submit
           </button>
-          <button type="reset" onClick={() => clear()}>
+          <button type="reset" onClick={() => dispatch({ reset: true })}>
             Reset
           </button>
         </form>
       </div>
 
-      <div style={{ padding: '2em', width: '20%' }}>
+      <div style={{ padding: '2em', width: '25%' }}>
         <h2>Selected Inputs</h2>
 
         <pre>
           <p>
             <strong>Account</strong>
             <br />
-            {inputParams.account
-              ? `${inputParams.account.substring(0, 4)}...${inputParams.account.substring(
-                  inputParams.account.length - 4
-                )}`
+            {inputs.sender
+              ? ((account) => (
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div>{account?.name ?? 'Not found'}</div>
+                    <div style={{ opacity: '0.5' }}>
+                      ({inputs.sender.substring(0, 4)}...{inputs.sender.substring(inputs.sender.length - 4)})
+                    </div>
+                  </div>
+                ))(accounts.find(({ address }) => address === inputs.sender))
               : 'None'}
           </p>
           <p>
-            <strong>Account Assets</strong>
+            <strong>Assets</strong>
             <br />
-            {inputParams.availableAssets.map((asset) => `${asset.token}:${asset.amount}`).join(' ')}
+            {(inputs.assets ?? [])
+              .map((asset) => `${all.sourcesMap[asset.chainId].name}:${all.tokensMap[asset.tokenId].symbol}`)
+              .join('\n')}
           </p>
           <p>
             <strong>Source</strong>
             <br />
-            {inputParams.source ?? 'None'}
+            {inputs.from ?? 'None'}
           </p>
           <p>
             <strong>Destination</strong>
             <br />
-            {inputParams.destination ?? 'None'}
+            {inputs.to ?? 'None'}
           </p>
           <p>
             <strong>Token</strong>
             <br />
-            {inputParams.token ?? 'None'}
+            {inputs.token ?? 'None'}
           </p>
           <p>
             <strong>Amount</strong>
             <br />
-            {inputParams.amount ?? 'None'}
+            {inputs.amount ?? 'None'}
           </p>
         </pre>
       </div>
 
-      <div style={{ padding: '2em', width: '20%' }}>
+      <div style={{ padding: '2em', width: '25%' }}>
         <h2>Routes</h2>
         <pre>
           <p>
             <strong>Filtered (by user assets/input)</strong>
           </p>
-          {(filtered?.channels || []).map(({ id, source, destination, tokens }) => (
+          {(filtered.routes ?? []).map(({ id, from, to, token }) => (
             <p key={id}>
               Route {id}
               <br />
-              {tokens.map(({ name }) => `${source.name} --${name}-> ${destination.name}`).join('\n')}
+              {`${all.sourcesMap[from.id].name} --${all.tokensMap[token.id].symbol}-> ${
+                all.destinationsMap[to.id].name
+              }`}
             </p>
           ))}
-          <p>
-            <strong>All</strong>
-          </p>
-          {(all?.channels || []).map(({ id, source, destination, tokens }) => (
-            <p key={id}>
-              Route {id}
-              <br />
-              {tokens.map(({ name }) => `${source.name} --${name}-> ${destination.name}`).join('\n')}
-            </p>
-          ))}
-        </pre>
-      </div>
-
-      <div style={{ padding: '2em', width: '20%' }}>
-        <h2>Other</h2>
-        <pre>
-          <p>
-            <strong>Status</strong>
-            <br />
-            {status}
-          </p>
-          <p>
-            <strong>Status Message</strong>
-            <br />
-            {statusMessage}
-          </p>
-          <p>
-            <strong>Route</strong>
-            <br />
-            {status === 'FETCHING_ROUTES' ? filtered?.channels[0]?.id : '-'}
-          </p>
         </pre>
       </div>
     </div>
@@ -294,6 +281,11 @@ const darkTheme = css`
   @media (prefers-color-scheme: dark) {
     html {
       background: #efefef;
+      filter: invert(1);
+    }
+
+    img,
+    svg {
       filter: invert(1);
     }
   }

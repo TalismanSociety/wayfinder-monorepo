@@ -41,7 +41,7 @@ type ChainToken @entity {
   existentialDeposit: String!
 
   # on-chain identifier for this token on this chain
-  tokenId: String!
+  tokenIdent: String!
 }
 
 type Token @entity {

@@ -4,17 +4,26 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "codegen": "graphql-codegen -c src/codegen.cjs",
     "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@graphql-codegen/cli": "^2.16.1",
+    "@graphql-codegen/client-preset": "^1.2.3",
+    "@talismn/chaindata-provider": "^0.1.10",
+    "@talismn/connect-components": "^1.1.4",
+    "@talismn/connect-ui": "^1.1.0",
+    "@talismn/connect-wallets": "^1.2.1",
     "@talismn/util": "^0.1.4",
     "@talismn/wayfinder-react-hook": "workspace:^",
     "@types/uuid": "^8.3.4",
     "eslint": "^8.28.0",
+    "graphql-request": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-query": "^3.39.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

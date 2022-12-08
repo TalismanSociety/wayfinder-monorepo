@@ -6,7 +6,7 @@ export const chainTokens: RawData['chainTokens'] = [
     token: 'DOT',
     isNative: true,
     existentialDeposit: '10000000000',
-    tokenId: '',
+    tokenIdent: '',
   },
 ]
 

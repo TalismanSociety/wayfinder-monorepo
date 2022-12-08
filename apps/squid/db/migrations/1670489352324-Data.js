@@ -1,12 +1,12 @@
-module.exports = class Data1670329880485 {
-  name = 'Data1670329880485'
+module.exports = class Data1670489352324 {
+  name = 'Data1670489352324'
 
   async up(db) {
     await db.query(
       `CREATE TABLE "token" ("id" character varying NOT NULL, "name" text NOT NULL, "symbol" text NOT NULL, "decimals" integer NOT NULL, CONSTRAINT "PK_82fae97f905930df5d62a702fc9" PRIMARY KEY ("id"))`
     )
     await db.query(
-      `CREATE TABLE "chain_token" ("id" character varying NOT NULL, "is_native" boolean NOT NULL, "existential_deposit" text NOT NULL, "token_id" character varying NOT NULL, "chain_id" character varying, CONSTRAINT "PK_dc45f4dc156be196c13257cc4e0" PRIMARY KEY ("id"))`
+      `CREATE TABLE "chain_token" ("id" character varying NOT NULL, "is_native" boolean NOT NULL, "existential_deposit" text NOT NULL, "token_ident" text NOT NULL, "chain_id" character varying, "token_id" character varying, CONSTRAINT "PK_dc45f4dc156be196c13257cc4e0" PRIMARY KEY ("id"))`
     )
     await db.query(`CREATE INDEX "IDX_dff8075dddab26148799406841" ON "chain_token" ("chain_id") `)
     await db.query(`CREATE INDEX "IDX_13e5ca3c40773721d7da7c48c0" ON "chain_token" ("token_id") `)

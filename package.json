@@ -42,7 +42,7 @@
     "singleQuote": true
   },
   "importSort": {
-    ".js, .jsx, .ts, .tsx": {
+    ".js, .jsx, .cjs, .mjs, .ts, .tsx": {
       "style": "module",
       "parser": "typescript"
     }
