@@ -5,11 +5,18 @@ import { useMemo } from 'react'
 import { useSources, useTokens } from './useWayfinder'
 
 const hardcodedBalances: Array<{ address: string; chain: string; token: string; amount: string }> = [
+  // talisman dev (old)
   {
     address: '5EHNsSHuWrNMYgx3bPhsRVLG77DX8sS8wZrnbtieJzbtSZr9',
     chain: 'Polkadot',
     token: 'DOT',
-    amount: '10',
+    amount: '1.0830',
+  },
+  {
+    address: '5EHNsSHuWrNMYgx3bPhsRVLG77DX8sS8wZrnbtieJzbtSZr9',
+    chain: 'Kusama',
+    token: 'KSM',
+    amount: '0.1019',
   },
   {
     address: '5EHNsSHuWrNMYgx3bPhsRVLG77DX8sS8wZrnbtieJzbtSZr9',
@@ -21,25 +28,44 @@ const hardcodedBalances: Array<{ address: string; chain: string; token: string; 
     address: '5EHNsSHuWrNMYgx3bPhsRVLG77DX8sS8wZrnbtieJzbtSZr9',
     chain: 'Statemine',
     token: 'KSM',
-    amount: '2',
+    amount: '20',
   },
   {
     address: '5EHNsSHuWrNMYgx3bPhsRVLG77DX8sS8wZrnbtieJzbtSZr9',
     chain: 'Statemine',
     token: 'RMRK',
-    amount: '10',
+    amount: '20',
+  },
+  // talisman dev
+  {
+    address: '5CcU6DRpocLUWYJHuNLjB4gGyHJrkWuruQD5XFbRYffCfSAP',
+    chain: 'Polkadot',
+    token: 'DOT',
+    amount: '35.3366',
+  },
+  {
+    address: '5CcU6DRpocLUWYJHuNLjB4gGyHJrkWuruQD5XFbRYffCfSAP',
+    chain: 'Kusama',
+    token: 'KSM',
+    amount: '7.5003',
+  },
+  {
+    address: '5CcU6DRpocLUWYJHuNLjB4gGyHJrkWuruQD5XFbRYffCfSAP',
+    chain: 'Acala',
+    token: 'DOT',
+    amount: '2.7461471582',
   },
   {
     address: '5CcU6DRpocLUWYJHuNLjB4gGyHJrkWuruQD5XFbRYffCfSAP',
     chain: 'Karura',
     token: 'KSM',
-    amount: '4',
+    amount: '20',
   },
   {
     address: '5CcU6DRpocLUWYJHuNLjB4gGyHJrkWuruQD5XFbRYffCfSAP',
     chain: 'Bifrost',
     token: 'BNC',
-    amount: '14',
+    amount: '20',
   },
 ]
 

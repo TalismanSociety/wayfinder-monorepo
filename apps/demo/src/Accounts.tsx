@@ -14,6 +14,10 @@ const Context = createContext<{
 
 // hook for components to access accounts
 export const useAccounts = () => useContext(Context).accounts
+export const useAddresses = () => {
+  const accounts = useAccounts()
+  return useMemo(() => accounts.map(({ address }) => address), [accounts])
+}
 
 // provider for the accounts hook
 export const AccountsProvider = ({ children }: { children?: ReactNode }) => {

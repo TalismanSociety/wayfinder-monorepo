@@ -4,6 +4,16 @@ import eslint from 'vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    port: 3000,
+    host: true,
+    strictPort: true,
+    hmr: {
+      host: 'localhost',
+      port: 3010,
+      clientPort: 3010,
+    },
+  },
   plugins: [
     react(),
     eslint({

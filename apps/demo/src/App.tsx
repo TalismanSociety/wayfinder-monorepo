@@ -1,14 +1,15 @@
 import { githubUnknownTokenLogoUrl } from '@talismn/chaindata-provider'
-// import { formatDecimals } from '@talismn/util'
-import { useMemo } from 'react'
+import { formatDecimals, planckToTokens } from '@talismn/util'
 
-import { Connect, useAccounts } from './Accounts'
+import { Connect, useAccounts, useAddresses } from './Accounts'
 import { useAssetsWithBalances } from './useAssetsWithBalances'
+import { useBalances } from './useBalances'
 import { useWayfinder } from './useWayfinder'
+import { useXcmSender } from './useXcmSender'
 
 export const App = () => {
   const accounts = useAccounts()
-  const addresses = useMemo(() => accounts.map(({ address }) => address), [accounts])
+  const addresses = useAddresses()
 
   const {
     inputs: { dispatch, ...inputs },
@@ -16,7 +17,15 @@ export const App = () => {
     filtered,
   } = useWayfinder()
 
+  const balances = useBalances(inputs.sender ? inputs.sender : addresses)
+
   useAssetsWithBalances(inputs.sender ? inputs.sender : addresses, (assets) => dispatch({ setAssets: assets }))
+
+  const { status, send } = useXcmSender(
+    inputs.sender,
+    filtered.routes?.length === 1 ? filtered.routes[0] : undefined,
+    inputs.amount
+  )
 
   return (
     <div style={{ display: 'flex' }}>
@@ -51,14 +60,14 @@ export const App = () => {
           onSubmit={(e) => {
             e.stopPropagation()
             e.preventDefault()
-            // submitTransaction()
+            send()
           }}
         >
           <fieldset>
             <legend>From Account</legend>
             <select
               style={{ width: '100%' }}
-              value={inputs.sender}
+              value={inputs.sender ?? '-1'}
               onChange={(e) => dispatch({ setSender: e.target.value === '-1' ? undefined : e.target.value })}
             >
               <option value={-1}>Select</option>
@@ -96,7 +105,9 @@ export const App = () => {
                   ))}
               </optgroup>
             </select>
-            <button onClick={() => dispatch({ setFrom: undefined })}>x</button>
+            <button type="button" onClick={() => dispatch({ setFrom: undefined })}>
+              x
+            </button>
           </fieldset>
 
           <fieldset style={{ display: 'flex' }}>
@@ -125,7 +136,9 @@ export const App = () => {
                   ))}
               </optgroup>
             </select>
-            <button onClick={() => dispatch({ setTo: undefined })}>x</button>
+            <button type="button" onClick={() => dispatch({ setTo: undefined })}>
+              x
+            </button>
           </fieldset>
 
           <fieldset style={{ display: 'flex' }}>
@@ -154,7 +167,9 @@ export const App = () => {
                   ))}
               </optgroup>
             </select>
-            <button onClick={() => dispatch({ setToken: undefined })}>x</button>
+            <button type="button" onClick={() => dispatch({ setToken: undefined })}>
+              x
+            </button>
           </fieldset>
 
           <fieldset>
@@ -164,18 +179,19 @@ export const App = () => {
               type="number"
               min="0"
               max="10000000"
-              step="0.1"
+              step="any"
               value={parseFloat(inputs.amount ?? '0')}
               onChange={(e) => dispatch({ setAmount: e.target.value.length < 1 ? undefined : e.target.value })}
             />
           </fieldset>
 
-          <button type="submit" disabled={/*status !== 'READY_TO_PROCESS'*/ undefined}>
-            Submit
-          </button>
-          <button type="reset" onClick={() => dispatch({ reset: true })}>
+          <button disabled={!('READY' in status)}>{'LOADING' in status ? 'Loading' : 'Submit'}</button>
+          <button type="button" disabled={'PROCESSING' in status} onClick={() => dispatch({ reset: true })}>
             Reset
           </button>
+
+          {'ERROR' in status && <div>ERROR</div>}
+          {'ERROR' in status && <div>{status.ERROR}</div>}
         </form>
       </div>
 
@@ -201,7 +217,19 @@ export const App = () => {
             <strong>Assets</strong>
             <br />
             {(inputs.assets ?? [])
-              .map((asset) => `${all.sourcesMap[asset.chainId].name}:${all.tokensMap[asset.tokenId].symbol}`)
+              .map((asset) => ({
+                asset,
+                chain: all.sourcesMap[asset.chainId],
+                token: all.tokensMap[asset.tokenId],
+                balance: balances
+                  .filter((balance) => balance.chain.id === asset.chainId && balance.token.id === asset.tokenId)
+                  .reduce((sum, balance) => sum + BigInt(balance.amount), 0n)
+                  .toString(),
+              }))
+              .map(
+                ({ chain, token, balance }) =>
+                  `${chain.name}: ${formatDecimals(planckToTokens(balance, token.decimals))} ${token.symbol}`
+              )
               .join('\n')}
           </p>
           <p>
