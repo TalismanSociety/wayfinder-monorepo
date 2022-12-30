@@ -12,11 +12,19 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  JSON: any
 }
 
 export type AssetInput = {
   chainId: Scalars['String']
   tokenId: Scalars['String']
+}
+
+export type BuildResult = {
+  __typename?: 'BuildResult'
+  method: Scalars['String']
+  module: Scalars['String']
+  params: Scalars['JSON']
 }
 
 export type Chain = {
@@ -294,6 +302,7 @@ export type PageInfo = {
 
 export type Query = {
   __typename?: 'Query'
+  build: BuildResult
   chainById?: Maybe<Chain>
   /** @deprecated Use chainById */
   chainByUniqueInput?: Maybe<Chain>
@@ -316,6 +325,12 @@ export type Query = {
   tokenByUniqueInput?: Maybe<Token>
   tokens: Array<Token>
   tokensConnection: TokensConnection
+}
+
+export type QueryBuildArgs = {
+  accountId: Scalars['String']
+  amount: Scalars['String']
+  route: Scalars['String']
 }
 
 export type QueryChainByIdArgs = {
@@ -826,6 +841,17 @@ export type TokensQuery = {
   }
 }
 
+export type BuildQueryQueryVariables = Exact<{
+  route: Scalars['String']
+  accountId: Scalars['String']
+  amount: Scalars['String']
+}>
+
+export type BuildQueryQuery = {
+  __typename?: 'Query'
+  build: { __typename?: 'BuildResult'; module: string; method: string; params: any }
+}
+
 export type FilterQueryQueryVariables = Exact<{
   from?: InputMaybe<Scalars['String']>
   to?: InputMaybe<Scalars['String']>
@@ -1125,6 +1151,67 @@ export const TokensDocument = {
     },
   ],
 } as unknown as DocumentNode<TokensQuery, TokensQueryVariables>
+export const BuildQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'buildQuery' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'route' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'amount' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'build' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'route' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'route' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'accountId' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'amount' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'amount' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'module' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'method' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'params' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BuildQueryQuery, BuildQueryQueryVariables>
 export const FilterQueryDocument = {
   kind: 'Document',
   definitions: [

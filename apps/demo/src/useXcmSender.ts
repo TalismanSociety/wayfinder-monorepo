@@ -1,9 +1,12 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Signer } from '@polkadot/api/types'
 import { formatDecimals, planckToTokens, tokensToPlanck } from '@talismn/util'
+import { request } from 'graphql-request'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useAccounts, useAddresses } from './Accounts'
+import { WAYFINDER_DATASOURCE } from './constants'
+import { buildQuery } from './graphql'
 import { useBalances } from './useBalances'
 import { useAllQuery } from './useWayfinder'
 
@@ -94,51 +97,19 @@ export const useXcmSender = (
     const feeChainToken = feeToken.chains.find(({ chain }) => chain.id === route.from.id)
     if (!feeChainToken) throw new Error(`Failed to find chain ${route.from.id} for feeToken ${feeToken.name}`)
 
-    // TODO: Can we build the arguments needed to give to pjs (and also which pallet and method to use) on the squid side
-    // for a chosen channel, as that will then let this part of the frontend be super generic (just call this pallet and method with these arguments!)
-
-    // NOTE: This will only work for Polkadot -> Acala transfers
-    // For other chains, we'll need to expand this section :)
-    const polkadotToAcalaTx = async () => {
-      const destination = { X1: { Parachain: destinationsMap[route.to.id].paraId } }
-      const account = { X1: { AccountId32: { id: accountId, network: 'Any' } } }
-      const asset = [{ ConcreteFungible: { amount: tokensToPlanck(amount, token.decimals) } }]
-
-      return api.tx.xcmPallet.reserveTransferAssets({ V0: destination }, { V0: account }, { V0: asset }, 0)
-    }
-
-    // NOTE: This will only work for Acala -> Polkadot transfers
-    // For other chains, we'll need to expand this section :)
-    const acalaToPolkadotTx = async () => {
-      const account = { X1: { AccountId32: { id: accountId, network: 'Any' } } }
-      const destination = { interior: account, parents: 1 }
-
-      const { tokenIdent } = fromChainToken
-      if (!tokenIdent) throw new Error(`No tokenIdent for token ${token.symbol} (${token.id})`)
-
-      return api.tx.xTokens.transfer(
-        tokenIdent,
-        tokensToPlanck(amount, token.decimals),
-        { V1: destination },
-        route.weightLimit
-      )
-    }
-
-    const implementedRoutes: Array<
-      [typeof source['name'], typeof dest['name'], () => ReturnType<typeof polkadotToAcalaTx>]
-    > = [
-      ['Polkadot', 'Acala', polkadotToAcalaTx],
-      ['Acala', 'Polkadot', acalaToPolkadotTx],
-    ]
-    const implementedRoute = implementedRoutes.find(([from, to]) => source.name === from && dest.name === to)
-    if (!implementedRoute)
-      return setStatus({ ERROR: `TX construction for XCM route ${source.name} -> ${dest.name} not implemented` })
-
     // set status to processing, as we are just about to start doing some async work
     setStatus({ PROCESSING: true })
 
-    const [, , buildTx] = implementedRoute
-    const tx = await buildTx()
+    let buildTx
+    try {
+      buildTx = (await request(WAYFINDER_DATASOURCE, buildQuery, { route: route.id, accountId, amount })).build
+    } catch (error) {
+      const message = ((error as any)?.response?.errors || []).map((error: any) => error.message).join(': ')
+      return setStatus({ ERROR: `Failed to build XCM TX: ${message.length > 0 ? message : error}` })
+    }
+
+    const params = JSON.parse(buildTx.params)
+    const tx = api.tx[buildTx.module][buildTx.method](...(Array.isArray(params) ? params : []))
 
     const feeEstimate = await tx.paymentInfo(pair.address, { signer: pair.signer as Signer })
 

@@ -105,6 +105,16 @@ export const tokensQuery = graphql(`
   }
 `)
 
+export const buildQuery = graphql(`
+  query buildQuery($route: String!, $accountId: String!, $amount: String!) {
+    build(route: $route, accountId: $accountId, amount: $amount) {
+      module
+      method
+      params
+    }
+  }
+`)
+
 export const filterQuery = graphql(`
   query filterQuery($from: String, $to: String, $token: String, $assets: [AssetInput!]) {
     filter(from: $from, to: $to, token: $token, assets: $assets) {
