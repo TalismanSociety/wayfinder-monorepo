@@ -23,6 +23,7 @@ type Chain @entity {
   name: String!
   logo: String!
   prefix: Int!
+  rpcs: [String!]!
 
   tokens: [ChainToken!]! @derivedFrom(field: "chain")
   routesFrom: [Route!]! @derivedFrom(field: "from")

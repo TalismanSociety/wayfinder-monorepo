@@ -19,20 +19,10 @@ type Status =
   | { TX_SUCCESS: true }
   | { TX_FAILED: true }
 
-const rpcUrls: Record<string, string> = {
-  Polkadot: 'wss://rpc.polkadot.io',
-  Statemint: 'wss://statemint.api.onfinality.io/public-ws',
-  Acala: 'wss://acala-polkadot.api.onfinality.io/public-ws',
-
-  Kusama: 'wss://kusama-rpc.polkadot.io',
-  Statemine: 'wss://statemine.api.onfinality.io/public-ws',
-  Karura: 'wss://karura.api.onfinality.io/public-ws',
-  Bifrost: 'wss://bifrost-parachain.api.onfinality.io/public-ws',
-}
-
 export const useXcmSender = (
   sender?: string,
   route?: ReturnType<typeof useAllQuery>['routesMap']['string'],
+  rpcs?: string | string[],
   amount?: string
 ) => {
   const accounts = useAccounts()
@@ -40,7 +30,7 @@ export const useXcmSender = (
   const balances = useBalances(addresses)
   const { routesMap, sourcesMap, destinationsMap, tokensMap } = useAllQuery()
 
-  const api = useApi(sender && route ? rpcUrls[sourcesMap[route.from.id].name] : undefined)
+  const api = useApi(sender && route ? rpcs : undefined)
   const [status, setStatus] = useState<Status>({ INIT: true })
 
   const [balance, feeBalance] = useMemo((): [
@@ -190,23 +180,23 @@ export const useXcmSender = (
   return { status, send }
 }
 
-const useApi = (url?: string) => {
+const useApi = (rpcs?: string | string[]) => {
   const [api, setApi] = useState<ApiPromise>()
   const refCount = useRef(0)
 
   useEffect(() => {
-    if (!url) setApi(undefined)
+    if (!rpcs) setApi(undefined)
 
     refCount.current = (refCount.current + 1) % Number.MAX_SAFE_INTEGER
     const count = refCount.current
 
-    new ApiPromise({ provider: new WsProvider(url) }).isReadyOrError.then((api) => {
+    new ApiPromise({ provider: new WsProvider(rpcs) }).isReadyOrError.then((api) => {
       // ignore this api if we've started up a new one
       if (count !== refCount.current) return
 
       setApi(api)
     })
-  }, [url])
+  }, [rpcs])
 
   return api
 }

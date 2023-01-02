@@ -34,6 +34,7 @@ export const sourcesQuery = graphql(`
         name
         logo
         prefix
+        rpcs
         tokens {
           token {
             id
@@ -62,6 +63,7 @@ export const destinationsQuery = graphql(`
         name
         logo
         prefix
+        rpcs
         tokens {
           token {
             id

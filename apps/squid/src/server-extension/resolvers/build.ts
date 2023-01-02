@@ -7,7 +7,7 @@ import {
   Route as RouteModel,
   Token as TokenModel,
 } from '../../model'
-import { getRouteImplementationKey, routeImplementations } from '../../util/route-implementations'
+import { routeImplementations } from '../../util/route-implementations'
 import { BuildResult } from '../model'
 
 @Resolver()
@@ -57,7 +57,9 @@ export class BuildResolver {
     if (!feeChainToken) throw new Error(`Can't find feeChainToken for chain ${fromId} and token ${feeTokenId}`)
 
     // fetch the route implementation
-    const routeImplementation = routeImplementations[getRouteImplementationKey(from, to)]
+    const routeImplementation = routeImplementations[from.name]
+      ? routeImplementations[from.name][to.name] ?? routeImplementations[from.name].default
+      : undefined
     if (!routeImplementation)
       throw new Error(`TX construction for XCM route ${from.name} -> ${to.name} is not implemented`)
 

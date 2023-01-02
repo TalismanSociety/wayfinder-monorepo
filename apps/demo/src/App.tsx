@@ -21,11 +21,9 @@ export const App = () => {
 
   useAssetsWithBalances(inputs.sender ? inputs.sender : addresses, (assets) => dispatch({ setAssets: assets }))
 
-  const { status, send } = useXcmSender(
-    inputs.sender,
-    filtered.routes?.length === 1 ? filtered.routes[0] : undefined,
-    inputs.amount
-  )
+  const selectedRoute = filtered.routes?.length === 1 ? filtered.routes[0] : undefined
+  const rpcs = selectedRoute ? all.sourcesMap[selectedRoute.from.id]?.rpcs ?? [] : []
+  const { status, send } = useXcmSender(inputs.sender, selectedRoute, rpcs, inputs.amount)
 
   return (
     <div style={{ display: 'flex' }}>

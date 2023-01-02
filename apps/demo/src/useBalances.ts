@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { useSources, useTokens } from './useWayfinder'
 
+// TODO: Fetch balances instead of using hardcoded list
 const hardcodedBalances: Array<{ address: string; chain: string; token: string; amount: string }> = [
   // talisman dev (old)
   {

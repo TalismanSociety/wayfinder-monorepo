@@ -36,6 +36,7 @@ export type Chain = {
   prefix: Scalars['Int']
   routesFrom: Array<Route>
   routesTo: Array<Route>
+  rpcs: Array<Scalars['String']>
   tokens: Array<ChainToken>
 }
 
@@ -272,6 +273,10 @@ export type ChainWhereInput = {
   routesTo_every?: InputMaybe<RouteWhereInput>
   routesTo_none?: InputMaybe<RouteWhereInput>
   routesTo_some?: InputMaybe<RouteWhereInput>
+  rpcs_containsAll?: InputMaybe<Array<Scalars['String']>>
+  rpcs_containsAny?: InputMaybe<Array<Scalars['String']>>
+  rpcs_containsNone?: InputMaybe<Array<Scalars['String']>>
+  rpcs_isNull?: InputMaybe<Scalars['Boolean']>
   tokens_every?: InputMaybe<ChainTokenWhereInput>
   tokens_none?: InputMaybe<ChainTokenWhereInput>
   tokens_some?: InputMaybe<ChainTokenWhereInput>
@@ -778,6 +783,7 @@ export type SourcesQuery = {
       name: string
       logo: string
       prefix: number
+      rpcs: Array<string>
       tokens: Array<{
         __typename?: 'ChainToken'
         isNative: boolean
@@ -804,6 +810,7 @@ export type DestinationsQuery = {
       name: string
       logo: string
       prefix: number
+      rpcs: Array<string>
       tokens: Array<{
         __typename?: 'ChainToken'
         isNative: boolean
@@ -965,6 +972,7 @@ export const SourcesDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'logo' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'prefix' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'rpcs' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'tokens' },
@@ -1039,6 +1047,7 @@ export const DestinationsDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'logo' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'prefix' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'rpcs' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'tokens' },

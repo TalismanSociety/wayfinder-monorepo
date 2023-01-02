@@ -1,5 +1,5 @@
-module.exports = class Data1670489352324 {
-  name = 'Data1670489352324'
+module.exports = class Data1672640527625 {
+  name = 'Data1672640527625'
 
   async up(db) {
     await db.query(
@@ -11,7 +11,7 @@ module.exports = class Data1670489352324 {
     await db.query(`CREATE INDEX "IDX_dff8075dddab26148799406841" ON "chain_token" ("chain_id") `)
     await db.query(`CREATE INDEX "IDX_13e5ca3c40773721d7da7c48c0" ON "chain_token" ("token_id") `)
     await db.query(
-      `CREATE TABLE "chain" ("id" character varying NOT NULL, "para_id" integer, "name" text NOT NULL, "logo" text NOT NULL, "prefix" integer NOT NULL, CONSTRAINT "PK_8e273aafae283b886672c952ecd" PRIMARY KEY ("id"))`
+      `CREATE TABLE "chain" ("id" character varying NOT NULL, "para_id" integer, "name" text NOT NULL, "logo" text NOT NULL, "prefix" integer NOT NULL, "rpcs" text array NOT NULL, CONSTRAINT "PK_8e273aafae283b886672c952ecd" PRIMARY KEY ("id"))`
     )
     await db.query(
       `CREATE TABLE "route" ("id" character varying NOT NULL, "fee" text NOT NULL, "weight_limit" text NOT NULL, "from_id" character varying, "to_id" character varying, "token_id" character varying, "fee_token_id" character varying, CONSTRAINT "PK_08affcd076e46415e5821acf52d" PRIMARY KEY ("id"))`

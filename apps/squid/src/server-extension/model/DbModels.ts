@@ -28,6 +28,9 @@ export class Chain implements ChainModel {
   @Field(() => Int)
   prefix!: number
 
+  @Field(() => [String])
+  rpcs!: string[]
+
   @Field(() => [ChainToken])
   tokens!: ChainToken[]
 

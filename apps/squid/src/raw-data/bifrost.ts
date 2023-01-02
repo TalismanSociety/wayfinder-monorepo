@@ -10,6 +10,13 @@ export const chainTokens: RawData['chainTokens'] = [
   },
   {
     chain: 'bifrost',
+    token: 'VSKSM',
+    isNative: false,
+    existentialDeposit: '100000000',
+    tokenIdent: JSON.stringify({ VSToken: 'KSM' }),
+  },
+  {
+    chain: 'bifrost',
     token: 'KSM',
     isNative: false,
     existentialDeposit: '100000000',
@@ -24,44 +31,18 @@ export const chainTokens: RawData['chainTokens'] = [
   },
   {
     chain: 'bifrost',
-    token: 'AUSD',
+    token: 'KUSD',
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ Stable: 'KUSD' }),
   },
 ]
 
+const weightLimit = '5000000000'
 export const routes: RawData['routes'] = [
-  {
-    from: 'bifrost',
-    to: 'karura',
-    token: 'BNC',
-    feeToken: 'BNC',
-    fee: '5120000000',
-    weightLimit: '5000000000',
-  },
-  {
-    from: 'bifrost',
-    to: 'karura',
-    token: 'KSM',
-    feeToken: 'KSM',
-    fee: '64000000',
-    weightLimit: '5000000000',
-  },
-  {
-    from: 'bifrost',
-    to: 'karura',
-    token: 'KAR',
-    feeToken: 'KAR',
-    fee: '6400000000',
-    weightLimit: '5000000000',
-  },
-  {
-    from: 'bifrost',
-    to: 'karura',
-    token: 'AUSD',
-    feeToken: 'AUSD',
-    fee: '10011896008',
-    weightLimit: '5000000000',
-  },
-]
+  { to: 'karura', token: 'BNC', feeToken: 'BNC', fee: '5120000000', weightLimit },
+  { to: 'karura', token: 'VSKSM', feeToken: 'VSKSM', fee: '64000000', weightLimit },
+  { to: 'karura', token: 'KSM', feeToken: 'KSM', fee: '64000000', weightLimit },
+  { to: 'karura', token: 'KAR', feeToken: 'KAR', fee: '6400000000', weightLimit },
+  { to: 'karura', token: 'KUSD', feeToken: 'KUSD', fee: '10011896008', weightLimit },
+].map((route) => ({ from: 'bifrost', ...route }))

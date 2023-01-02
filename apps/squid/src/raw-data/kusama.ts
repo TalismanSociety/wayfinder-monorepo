@@ -1,30 +1,12 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  {
-    chain: 'kusama',
-    token: 'KSM',
-    isNative: true,
-    existentialDeposit: '79999999',
-    tokenIdent: '',
-  },
+  { chain: 'kusama', token: 'KSM', isNative: true, existentialDeposit: '79999999', tokenIdent: '' },
 ]
 
+const weightLimit = 'Unlimited'
 export const routes: RawData['routes'] = [
-  {
-    from: 'kusama',
-    to: 'karura',
-    token: 'KSM',
-    feeToken: 'KSM',
-    fee: '64000000',
-    weightLimit: 'Unlimited',
-  },
-  {
-    from: 'kusama',
-    to: 'statemine',
-    token: 'KSM',
-    feeToken: 'KSM',
-    fee: '4000000000',
-    weightLimit: 'Unlimited',
-  },
-]
+  { to: 'karura', token: 'KSM', feeToken: 'KSM', fee: '71927964', weightLimit },
+  { to: 'basilisk', token: 'KSM', feeToken: 'KSM', fee: '51618187', weightLimit },
+  { to: 'statemine', token: 'KSM', feeToken: 'KSM', fee: '4000000000', weightLimit },
+].map((route) => ({ from: 'kusama', ...route }))

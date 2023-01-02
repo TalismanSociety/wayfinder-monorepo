@@ -9,9 +9,15 @@ export const parseRawData = (rawData: RawData) => {
   const chainUuids: Map<string, string> = new Map()
   const tokenUuids: Map<string, string> = new Map()
 
-  const chains: Chain[] = Object.entries(rawData.chains).map(
-    ([tempId, chain]) => new Chain({ id: chainUuids.set(tempId, uuidv4()).get(tempId), ...chain })
-  )
+  const chains: Chain[] = Object.entries(rawData.chains)
+    .filter(([tempId]) => {
+      if (!rawData.rpcs[tempId]) console.error(`Chain ${tempId} has no rpcUrls`)
+      return true
+    })
+    .map(
+      ([tempId, chain]) =>
+        new Chain({ id: chainUuids.set(tempId, uuidv4()).get(tempId), rpcs: rawData.rpcs[tempId] ?? [], ...chain })
+    )
 
   const tokens: Token[] = Object.entries(rawData.tokens).map(
     ([tempId, token]) => new Token({ id: tokenUuids.set(tempId, uuidv4()).get(tempId), ...token })
