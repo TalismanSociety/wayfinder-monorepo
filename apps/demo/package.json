@@ -25,6 +25,7 @@
     "@talismn/util": "^0.1.4",
     "@talismn/wayfinder-react-hook": "workspace:^",
     "@types/uuid": "^8.3.4",
+    "bignumber.js": "^9.1.1",
     "eslint": "^8.28.0",
     "graphql-request": "^5.0.0",
     "react": "^18.2.0",

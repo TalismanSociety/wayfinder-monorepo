@@ -18,8 +18,7 @@ export const App = () => {
   } = useWayfinder()
 
   const balances = useXcmBalances(inputs.sender ? inputs.sender : addresses)
-
-  useAssetsWithBalances(inputs.sender ? inputs.sender : addresses, (assets) => dispatch({ setAssets: assets }))
+  useAssetsWithBalances(balances, (assets) => dispatch({ setAssets: assets }))
 
   const selectedRoute = filtered.routes?.length === 1 ? filtered.routes[0] : undefined
   const rpcs = selectedRoute ? all.sourcesMap[selectedRoute.from.id]?.rpcs ?? [] : []
@@ -184,12 +183,27 @@ export const App = () => {
           </fieldset>
 
           <button disabled={!('READY' in status)}>{'LOADING' in status ? 'Loading' : 'Submit'}</button>
-          <button type="button" disabled={'PROCESSING' in status} onClick={() => dispatch({ reset: true })}>
+          <button
+            type="button"
+            disabled={'PROCESSING' in status || 'SUBMITTING' in status}
+            onClick={() => dispatch({ reset: true })}
+          >
             Reset
           </button>
 
           {'ERROR' in status && <div>ERROR</div>}
           {'ERROR' in status && <div>{status.ERROR}</div>}
+          {'SUBMITTING' in status && <div>{status.SUBMITTING}</div>}
+          {'TX_SUCCESS' in status && (
+            <div>
+              <a href={status.TX_SUCCESS.url}>TX success</a>
+            </div>
+          )}
+          {'TX_FAILED' in status && (
+            <div>
+              <a href={status.TX_FAILED.url}>TX failed</a>
+            </div>
+          )}
         </form>
       </div>
 

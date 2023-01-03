@@ -1,14 +1,12 @@
 import uniqWith from 'lodash/uniqWith'
 import { useEffect } from 'react'
 
-import { useXcmBalances } from './useXcmBalances'
+import { XcmBalances } from './useXcmBalances'
 
 export const useAssetsWithBalances = (
-  addresses: string | string[],
+  balances: XcmBalances,
   callback: (assets: Array<{ chainId: string; tokenId: string }>) => void
 ) => {
-  const balances = useXcmBalances(addresses)
-
   useEffect(() => {
     const assets = balances
       .filter(({ amount }) => amount !== '0')

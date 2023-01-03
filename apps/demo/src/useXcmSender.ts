@@ -1,6 +1,7 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { Signer } from '@polkadot/api/types'
 import { formatDecimals, planckToTokens, tokensToPlanck } from '@talismn/util'
+import { BigNumber } from 'bignumber.js'
 import { request } from 'graphql-request'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -16,8 +17,9 @@ type Status =
   | { READY: true }
   | { ERROR: string }
   | { PROCESSING: true }
-  | { TX_SUCCESS: true }
-  | { TX_FAILED: true }
+  | { SUBMITTING: string }
+  | { TX_SUCCESS: { url: string } }
+  | { TX_FAILED: { url: string } }
 
 export const useXcmSender = (
   sender?: string,
@@ -66,7 +68,7 @@ export const useXcmSender = (
     // TODO: [ ] Test for sufficient transfer token funds
     // TODO: [ ] Test for sufficient fee token funds
     // TODO: [x] Build & submit tx
-    // TODO: [ ] Watch tx
+    // TODO: [x] Watch tx
 
     const source = sourcesMap[route.from.id]
     const dest = destinationsMap[route.to.id]
@@ -103,9 +105,9 @@ export const useXcmSender = (
 
     const feeEstimate = await tx.paymentInfo(pair.address, { signer: pair.signer as Signer })
 
-    // TODO: Calculate sendingFee properly, I'm sure it's more complicated than just taking the value of partialFee
-    // const feeFactor = 1.2 // used to approximate the max fee from the estimated fee
-    const sendingFee = feeEstimate.partialFee.toBigInt() // * feeFactor
+    const feeFactor = 1.2 // used to approximate the max fee from the estimated fee
+    const partialFee = feeEstimate.partialFee.toBigInt()
+    const sendingFee = BigInt(BigNumber(partialFee.toString()).multipliedBy(feeFactor).integerValue().toString())
     const sendingEd = BigInt(fromChainToken.existentialDeposit)
     const feeEd = BigInt(feeChainToken.existentialDeposit)
     const receivingFee = BigInt(route.fee)
@@ -129,15 +131,17 @@ export const useXcmSender = (
 
     const canPaySendingFee = token.id === feeToken.id ? true : BigInt(feeBalance?.amount ?? 0) - feeEd - sendingFee > 0n
 
-    console.log(
+    console.info(
       JSON.stringify(
         {
+          route,
           amount,
           sendMinimum: sendMinimum.toString(),
           sendMaximum: sendMaximum.toString(),
           canPaySendingFee,
 
-          //   feeFactor: feeFactor.toString(),
+          feeFactor: feeFactor.toString(),
+          partialFee: partialFee.toString(),
           sendingFee: sendingFee.toString(),
           sendingEd: sendingEd.toString(),
           feeEd: feeEd.toString(),
@@ -166,15 +170,34 @@ export const useXcmSender = (
         }`,
       })
 
-    if (!canPaySendingFee) return setStatus({ ERROR: `Insufficient ${feeToken.symbol} balance to pay sending fee` })
+    if (!canPaySendingFee)
+      return setStatus({ ERROR: `Insufficient ${feeToken.symbol} balance to pay sending chain fee` })
 
-    const hash = await tx.signAndSend(pair.address, { signer: pair.signer as Signer }, ({ status, events }) => {
-      // do stuff
-    })
+    setStatus({ SUBMITTING: 'Submitting TX' })
 
-    console.log(hash)
+    try {
+      const unsubscribe = await tx.signAndSend(
+        pair.address,
+        { signer: pair.signer as Signer },
+        ({ status, events }) => {
+          if (status.isBroadcast) return setStatus({ SUBMITTING: 'Broadcasting TX' })
+          if (status.isInBlock) return setStatus({ SUBMITTING: 'Waiting for TX to be confirmed' })
 
-    console.log('send', route, amount)
+          if (status.isFinalized) {
+            unsubscribe()
+
+            const success = events.find(({ event }) => event.method === 'ExtrinsicSuccess')
+            const url = `https://app.talisman.xyz/history?address=${pair.address}`
+
+            if (success) return setStatus({ TX_SUCCESS: { url } })
+            return setStatus({ TX_FAILED: { url } })
+          }
+        }
+      )
+    } catch (error) {
+      if (String(error) === 'Error: Cancelled') return setStatus({ ERROR: `TX cancelled` })
+      return setStatus({ ERROR: `Unable to submit TX: ${error}` })
+    }
   }, [accounts, amount, api, balance, destinationsMap, feeBalance, route, sender, sourcesMap, tokensMap])
 
   return { status, send }

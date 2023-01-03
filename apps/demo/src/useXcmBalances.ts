@@ -14,7 +14,14 @@ import { useTokens } from './useWayfinder'
 
 const balanceModules = [SubNativeModule, SubOrmlModule, EvmNativeModule]
 
-export const useXcmBalances = (addressOrAddresses: string | string[]) => {
+export type XcmBalances = Array<{
+  address: string
+  chain: { id: string }
+  token: { id: string }
+  amount: string
+}>
+
+export const useXcmBalances = (addressOrAddresses: string | string[]): XcmBalances => {
   //
   // fetch chaindata balances
   //
