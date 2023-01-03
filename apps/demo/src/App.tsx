@@ -3,8 +3,8 @@ import { formatDecimals, planckToTokens } from '@talismn/util'
 
 import { Connect, useAccounts, useAddresses } from './Accounts'
 import { useAssetsWithBalances } from './useAssetsWithBalances'
-import { useBalances } from './useBalances'
 import { useWayfinder } from './useWayfinder'
+import { useXcmBalances } from './useXcmBalances'
 import { useXcmSender } from './useXcmSender'
 
 export const App = () => {
@@ -17,7 +17,7 @@ export const App = () => {
     filtered,
   } = useWayfinder()
 
-  const balances = useBalances(inputs.sender ? inputs.sender : addresses)
+  const balances = useXcmBalances(inputs.sender ? inputs.sender : addresses)
 
   useAssetsWithBalances(inputs.sender ? inputs.sender : addresses, (assets) => dispatch({ setAssets: assets }))
 
@@ -217,16 +217,19 @@ export const App = () => {
             {(inputs.assets ?? [])
               .map((asset) => ({
                 asset,
-                chain: all.sourcesMap[asset.chainId],
+                chain: { ...all.destinationsMap, ...all.sourcesMap }[asset.chainId],
                 token: all.tokensMap[asset.tokenId],
                 balance: balances
                   .filter((balance) => balance.chain.id === asset.chainId && balance.token.id === asset.tokenId)
                   .reduce((sum, balance) => sum + BigInt(balance.amount), 0n)
                   .toString(),
               }))
+              .filter(({ balance }) => balance !== '0')
               .map(
                 ({ chain, token, balance }) =>
-                  `${chain.name}: ${formatDecimals(planckToTokens(balance, token.decimals))} ${token.symbol}`
+                  `${chain?.name ?? 'Unknown'}: ${formatDecimals(planckToTokens(balance, token.decimals))} ${
+                    token?.symbol ?? 'Unknown'
+                  }`
               )
               .join('\n')}
           </p>

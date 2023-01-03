@@ -43,6 +43,10 @@ type ChainToken @entity {
 
   # on-chain identifier for this token on this chain
   tokenIdent: String!
+
+  # chaindata (@talismn/balances) identifier for this token on this chain
+  # used for balance fetching
+  chaindataId: String!
 }
 
 type Token @entity {

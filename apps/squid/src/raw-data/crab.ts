@@ -1,7 +1,14 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'crab', token: 'CRAB', isNative: true, existentialDeposit: '0', tokenIdent: '' },
+  {
+    chain: 'crab',
+    token: 'CRAB',
+    isNative: true,
+    existentialDeposit: '0',
+    tokenIdent: '',
+    chaindataId: 'crab-kusama-substrate-native-crab',
+  },
 ]
 
 const weightLimit = 'Unlimited'

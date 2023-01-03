@@ -83,6 +83,7 @@ export enum ChainOrderByInput {
 export type ChainToken = {
   __typename?: 'ChainToken'
   chain: Chain
+  chaindataId: Scalars['String']
   existentialDeposit: Scalars['String']
   id: Scalars['String']
   isNative: Scalars['Boolean']
@@ -107,6 +108,8 @@ export enum ChainTokenOrderByInput {
   ChainParaIdDesc = 'chain_paraId_DESC',
   ChainPrefixAsc = 'chain_prefix_ASC',
   ChainPrefixDesc = 'chain_prefix_DESC',
+  ChaindataIdAsc = 'chaindataId_ASC',
+  ChaindataIdDesc = 'chaindataId_DESC',
   ExistentialDepositAsc = 'existentialDeposit_ASC',
   ExistentialDepositDesc = 'existentialDeposit_DESC',
   IdAsc = 'id_ASC',
@@ -130,6 +133,23 @@ export type ChainTokenWhereInput = {
   OR?: InputMaybe<Array<ChainTokenWhereInput>>
   chain?: InputMaybe<ChainWhereInput>
   chain_isNull?: InputMaybe<Scalars['Boolean']>
+  chaindataId_contains?: InputMaybe<Scalars['String']>
+  chaindataId_containsInsensitive?: InputMaybe<Scalars['String']>
+  chaindataId_endsWith?: InputMaybe<Scalars['String']>
+  chaindataId_eq?: InputMaybe<Scalars['String']>
+  chaindataId_gt?: InputMaybe<Scalars['String']>
+  chaindataId_gte?: InputMaybe<Scalars['String']>
+  chaindataId_in?: InputMaybe<Array<Scalars['String']>>
+  chaindataId_isNull?: InputMaybe<Scalars['Boolean']>
+  chaindataId_lt?: InputMaybe<Scalars['String']>
+  chaindataId_lte?: InputMaybe<Scalars['String']>
+  chaindataId_not_contains?: InputMaybe<Scalars['String']>
+  chaindataId_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  chaindataId_not_endsWith?: InputMaybe<Scalars['String']>
+  chaindataId_not_eq?: InputMaybe<Scalars['String']>
+  chaindataId_not_in?: InputMaybe<Array<Scalars['String']>>
+  chaindataId_not_startsWith?: InputMaybe<Scalars['String']>
+  chaindataId_startsWith?: InputMaybe<Scalars['String']>
   existentialDeposit_contains?: InputMaybe<Scalars['String']>
   existentialDeposit_containsInsensitive?: InputMaybe<Scalars['String']>
   existentialDeposit_endsWith?: InputMaybe<Scalars['String']>
@@ -841,6 +861,7 @@ export type TokensQuery = {
         isNative: boolean
         existentialDeposit: string
         tokenIdent: string
+        chaindataId: string
         chain: { __typename?: 'Chain'; id: string }
       }>
       routes: Array<{ __typename?: 'Route'; id: string }>
@@ -1138,6 +1159,7 @@ export const TokensDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'isNative' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'existentialDeposit' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'tokenIdent' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'chaindataId' } },
                           ],
                         },
                       },

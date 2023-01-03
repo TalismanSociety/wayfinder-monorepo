@@ -7,8 +7,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAccounts, useAddresses } from './Accounts'
 import { WAYFINDER_DATASOURCE } from './constants'
 import { buildQuery } from './graphql'
-import { useBalances } from './useBalances'
 import { useAllQuery } from './useWayfinder'
+import { useXcmBalances } from './useXcmBalances'
 
 type Status =
   | { INIT: true }
@@ -27,7 +27,7 @@ export const useXcmSender = (
 ) => {
   const accounts = useAccounts()
   const addresses = useAddresses()
-  const balances = useBalances(addresses)
+  const balances = useXcmBalances(addresses)
   const { routesMap, sourcesMap, destinationsMap, tokensMap } = useAllQuery()
 
   const api = useApi(sender && route ? rpcs : undefined)

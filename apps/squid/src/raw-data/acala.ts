@@ -19,6 +19,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: true,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ Token: 'ACA' }),
+    chaindataId: 'acala-substrate-native-aca',
   },
   {
     chain: 'acala',
@@ -26,6 +27,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ Token: 'AUSD' }),
+    chaindataId: 'acala-substrate-orml-ausd',
   },
   {
     chain: 'acala',
@@ -33,6 +35,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '500000000',
     tokenIdent: JSON.stringify({ Token: 'LDOT' }),
+    chaindataId: 'acala-substrate-orml-ldot',
   },
   {
     chain: 'acala',
@@ -40,6 +43,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 4 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'acala',
@@ -47,6 +51,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100',
     tokenIdent: JSON.stringify({ ForeignAsset: 3 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'acala',
@@ -54,6 +59,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 0 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'acala',
@@ -61,6 +67,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 1 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'acala',
@@ -68,6 +75,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 2 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'acala',
@@ -75,6 +83,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ Token: 'DOT' }),
+    chaindataId: 'acala-substrate-orml-dot',
   },
 ]
 

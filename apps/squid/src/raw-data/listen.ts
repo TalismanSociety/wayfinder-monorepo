@@ -4,10 +4,38 @@ export const chainTokens: RawData['chainTokens'] = [
   // TODO: Check that tokenIdent works as a string (otherwise it will need to be an integer)
   // As a reference:
   // https://github.com/polkawallet-io/bridge/blob/b0695fd335772f22c652dabedff92686e4e0d7a1/src/adapters/listen.ts#L64-L69
-  { chain: 'listen', token: 'LT', isNative: true, existentialDeposit: '500000000000', tokenIdent: '0' },
-  { chain: 'listen', token: 'KAR', isNative: false, existentialDeposit: '100000000000', tokenIdent: '128' },
-  { chain: 'listen', token: 'KUSD', isNative: false, existentialDeposit: '10000000000', tokenIdent: '129' },
-  { chain: 'listen', token: 'LKSM', isNative: false, existentialDeposit: '500000000', tokenIdent: '131' },
+  {
+    chain: 'listen',
+    token: 'LT',
+    isNative: true,
+    existentialDeposit: '500000000000',
+    tokenIdent: '0',
+    chaindataId: 'listen-substrate-native-lt',
+  },
+  {
+    chain: 'listen',
+    token: 'KAR',
+    isNative: false,
+    existentialDeposit: '100000000000',
+    tokenIdent: '128',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
+  {
+    chain: 'listen',
+    token: 'KUSD',
+    isNative: false,
+    existentialDeposit: '10000000000',
+    tokenIdent: '129',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
+  {
+    chain: 'listen',
+    token: 'LKSM',
+    isNative: false,
+    existentialDeposit: '500000000',
+    tokenIdent: '131',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
 ]
 
 const weightLimit = '5000000000'

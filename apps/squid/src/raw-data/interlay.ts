@@ -7,6 +7,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: true,
     existentialDeposit: '0',
     tokenIdent: JSON.stringify({ Token: 'INTR' }),
+    chaindataId: 'interlay-substrate-orml-intr',
   },
   {
     chain: 'interlay',
@@ -14,6 +15,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '0',
     tokenIdent: JSON.stringify({ Token: 'IBTC' }),
+    chaindataId: 'interlay-substrate-orml-ibtc',
   },
 ]
 

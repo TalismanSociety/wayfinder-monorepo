@@ -7,6 +7,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: true,
     existentialDeposit: '10000000000',
     tokenIdent: JSON.stringify({ Native: 'BNC' }),
+    chaindataId: 'bifrost-kusama-substrate-native-bnc',
   },
   {
     chain: 'bifrost',
@@ -14,6 +15,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ VSToken: 'KSM' }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'bifrost',
@@ -21,6 +23,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ Token: 'KSM' }),
+    chaindataId: 'bifrost-kusama-substrate-orml-ksm',
   },
   {
     chain: 'bifrost',
@@ -28,6 +31,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '148000000',
     tokenIdent: JSON.stringify({ Token: 'KAR' }),
+    chaindataId: 'bifrost-kusama-substrate-orml-kar',
   },
   {
     chain: 'bifrost',
@@ -35,6 +39,9 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ Stable: 'KUSD' }),
+    // TODO: Check that this tracks the correct balance
+    // (`{ Stable: 'KUSD' }` vs `{ Token: 'KUSD' }`)
+    chaindataId: 'bifrost-kusama-substrate-orml-kusd',
   },
 ]
 

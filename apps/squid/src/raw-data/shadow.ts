@@ -1,13 +1,21 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'shadow', token: 'CSM', isNative: true, existentialDeposit: '100000000000', tokenIdent: '' },
+  {
+    chain: 'shadow',
+    token: 'CSM',
+    isNative: true,
+    existentialDeposit: '100000000000',
+    tokenIdent: '',
+    chaindataId: 'shadow-kusama-substrate-native-csm',
+  },
   {
     chain: 'shadow',
     token: 'KAR',
     isNative: false,
     existentialDeposit: '1',
     tokenIdent: '10810581592933651521121702237638664357',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'shadow',
@@ -15,6 +23,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1',
     tokenIdent: '214920334981412447805621250067209749032',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
 ]
 

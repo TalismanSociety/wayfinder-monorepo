@@ -89,6 +89,9 @@ export class ChainToken implements ChainTokenModel {
 
   @Field()
   tokenIdent!: string
+
+  @Field()
+  chaindataId!: string
 }
 
 @ObjectType()

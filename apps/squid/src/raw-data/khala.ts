@@ -4,9 +4,30 @@ export const chainTokens: RawData['chainTokens'] = [
   // TODO: Check that tokenIdent works as a string (otherwise it will need to be an integer)
   // As a reference:
   // https://github.com/polkawallet-io/bridge/blob/b0695fd335772f22c652dabedff92686e4e0d7a1/src/adapters/phala.ts#L104-L107
-  { chain: 'khala', token: 'PHA', isNative: false, existentialDeposit: '40000000000', tokenIdent: '' },
-  { chain: 'khala', token: 'KAR', isNative: false, existentialDeposit: '10000000000', tokenIdent: '1' },
-  { chain: 'khala', token: 'KUSD', isNative: false, existentialDeposit: '10000000000', tokenIdent: '4' },
+  {
+    chain: 'khala',
+    token: 'PHA',
+    isNative: false,
+    existentialDeposit: '40000000000',
+    tokenIdent: '',
+    chaindataId: 'khala-substrate-native-pha',
+  },
+  {
+    chain: 'khala',
+    token: 'KAR',
+    isNative: false,
+    existentialDeposit: '10000000000',
+    tokenIdent: '1',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
+  {
+    chain: 'khala',
+    token: 'KUSD',
+    isNative: false,
+    existentialDeposit: '10000000000',
+    tokenIdent: '4',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
 ]
 
 const weightLimit = '5000000000'

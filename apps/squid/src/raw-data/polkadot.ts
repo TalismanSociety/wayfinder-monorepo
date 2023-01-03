@@ -1,7 +1,14 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'polkadot', token: 'DOT', isNative: true, existentialDeposit: '10000000000', tokenIdent: '' },
+  {
+    chain: 'polkadot',
+    token: 'DOT',
+    isNative: true,
+    existentialDeposit: '10000000000',
+    tokenIdent: '',
+    chaindataId: 'polkadot-substrate-native-dot',
+  },
 ]
 
 const weightLimit = 'Unlimited'

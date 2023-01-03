@@ -1,10 +1,38 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'astar', token: 'ASTR', isNative: true, existentialDeposit: '1000000', tokenIdent: '' },
-  { chain: 'astar', token: 'ACA', isNative: false, existentialDeposit: '1', tokenIdent: '18446744073709551616' },
-  { chain: 'astar', token: 'AUSD', isNative: false, existentialDeposit: '1', tokenIdent: '18446744073709551617' },
-  { chain: 'astar', token: 'LDOT', isNative: false, existentialDeposit: '1', tokenIdent: '18446744073709551618' },
+  {
+    chain: 'astar',
+    token: 'ASTR',
+    isNative: true,
+    existentialDeposit: '1000000',
+    tokenIdent: '',
+    chaindataId: 'astar-substrate-native-astr',
+  },
+  {
+    chain: 'astar',
+    token: 'ACA',
+    isNative: false,
+    existentialDeposit: '1',
+    tokenIdent: '18446744073709551616',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
+  {
+    chain: 'astar',
+    token: 'AUSD',
+    isNative: false,
+    existentialDeposit: '1',
+    tokenIdent: '18446744073709551617',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
+  {
+    chain: 'astar',
+    token: 'LDOT',
+    isNative: false,
+    existentialDeposit: '1',
+    tokenIdent: '18446744073709551618',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
 ]
 
 const weightLimit = 'Unlimited'

@@ -4,9 +4,30 @@ export const chainTokens: RawData['chainTokens'] = [
   // TODO: Check that tokenIdent works as a string (otherwise it will need to be an integer)
   // As a reference:
   // https://github.com/polkawallet-io/bridge/blob/b0695fd335772f22c652dabedff92686e4e0d7a1/src/adapters/hydradx.ts#L63-L67
-  { chain: 'basilisk', token: 'BSX', isNative: true, existentialDeposit: '1000000000000', tokenIdent: '0' },
-  { chain: 'basilisk', token: 'KUSD', isNative: false, existentialDeposit: '10000000000', tokenIdent: '2' },
-  { chain: 'basilisk', token: 'KSM', isNative: false, existentialDeposit: '100000000', tokenIdent: '1' },
+  {
+    chain: 'basilisk',
+    token: 'BSX',
+    isNative: true,
+    existentialDeposit: '1000000000000',
+    tokenIdent: '0',
+    chaindataId: 'basilisk-substrate-native-bsx',
+  },
+  {
+    chain: 'basilisk',
+    token: 'KUSD',
+    isNative: false,
+    existentialDeposit: '10000000000',
+    tokenIdent: '2',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
+  {
+    chain: 'basilisk',
+    token: 'KSM',
+    isNative: false,
+    existentialDeposit: '100000000',
+    tokenIdent: '1',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
 ]
 
 const weightLimit = '5000000000'

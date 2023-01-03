@@ -1,6 +1,5 @@
 import { graphql } from './graphql-codegen'
 
-// TODO: Fill these out, then get the id for each token at runtime to fill out the config.ts file with account balances for each token
 export const routesQuery = graphql(`
   query routes {
     filter {
@@ -98,6 +97,7 @@ export const tokensQuery = graphql(`
           isNative
           existentialDeposit
           tokenIdent
+          chaindataId
         }
         routes {
           id

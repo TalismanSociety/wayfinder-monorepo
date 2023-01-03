@@ -1,7 +1,14 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'quartz', token: 'QTZ', isNative: true, existentialDeposit: '1000000000000000000', tokenIdent: '' },
+  {
+    chain: 'quartz',
+    token: 'QTZ',
+    isNative: true,
+    existentialDeposit: '1000000000000000000',
+    tokenIdent: '',
+    chaindataId: 'quartz-substrate-native-qtz',
+  },
 ]
 
 const weightLimit = 'Unlimited'

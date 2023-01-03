@@ -3,13 +3,21 @@ import { BN } from '@polkadot/util'
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'statemine', token: 'KSM', isNative: true, existentialDeposit: '79999999', tokenIdent: '' },
+  {
+    chain: 'statemine',
+    token: 'KSM',
+    isNative: true,
+    existentialDeposit: '79999999',
+    tokenIdent: '',
+    chaindataId: 'statemine-substrate-native-ksm',
+  },
   {
     chain: 'statemine',
     token: 'RMRK',
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: new BN(8).toString(),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'statemine',
@@ -17,6 +25,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '10000000',
     tokenIdent: new BN(16).toString(),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'statemine',
@@ -24,6 +33,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000',
     tokenIdent: new BN(1984).toString(),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
 ]
 

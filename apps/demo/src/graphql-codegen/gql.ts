@@ -20,7 +20,7 @@ const documents = {
     types.SourcesDocument,
   '\n  query destinations {\n    filter {\n      destinations {\n        id\n        paraId\n        name\n        logo\n        prefix\n        rpcs\n        tokens {\n          token {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n        }\n        routesFrom {\n          id\n        }\n        routesTo {\n          id\n        }\n      }\n    }\n  }\n':
     types.DestinationsDocument,
-  '\n  query tokens {\n    filter {\n      tokens {\n        id\n        name\n        symbol\n        decimals\n        chains {\n          chain {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n        }\n        routes {\n          id\n        }\n      }\n    }\n  }\n':
+  '\n  query tokens {\n    filter {\n      tokens {\n        id\n        name\n        symbol\n        decimals\n        chains {\n          chain {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n          chaindataId\n        }\n        routes {\n          id\n        }\n      }\n    }\n  }\n':
     types.TokensDocument,
   '\n  query buildQuery($route: String!, $accountId: String!, $amount: String!) {\n    build(route: $route, accountId: $accountId, amount: $amount) {\n      module\n      method\n      params\n    }\n  }\n':
     types.BuildQueryDocument,
@@ -50,8 +50,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query tokens {\n    filter {\n      tokens {\n        id\n        name\n        symbol\n        decimals\n        chains {\n          chain {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n        }\n        routes {\n          id\n        }\n      }\n    }\n  }\n'
-): typeof documents['\n  query tokens {\n    filter {\n      tokens {\n        id\n        name\n        symbol\n        decimals\n        chains {\n          chain {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n        }\n        routes {\n          id\n        }\n      }\n    }\n  }\n']
+  source: '\n  query tokens {\n    filter {\n      tokens {\n        id\n        name\n        symbol\n        decimals\n        chains {\n          chain {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n          chaindataId\n        }\n        routes {\n          id\n        }\n      }\n    }\n  }\n'
+): typeof documents['\n  query tokens {\n    filter {\n      tokens {\n        id\n        name\n        symbol\n        decimals\n        chains {\n          chain {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n          chaindataId\n        }\n        routes {\n          id\n        }\n      }\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

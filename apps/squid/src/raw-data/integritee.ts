@@ -1,7 +1,14 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'integritee', token: 'TEER', isNative: true, existentialDeposit: '100000000000', tokenIdent: '' },
+  {
+    chain: 'integritee',
+    token: 'TEER',
+    isNative: true,
+    existentialDeposit: '100000000000',
+    tokenIdent: '',
+    chaindataId: 'integritee-kusama-substrate-native-teer',
+  },
 ]
 
 const weightLimit = '5000000000'

@@ -1,8 +1,22 @@
 import type { RawData } from './_types'
 
 export const chainTokens: RawData['chainTokens'] = [
-  { chain: 'altair', token: 'AIR', isNative: true, existentialDeposit: '1000000000000', tokenIdent: '' },
-  { chain: 'altair', token: 'KUSD', isNative: false, existentialDeposit: '100000000000', tokenIdent: 'KUSD' },
+  {
+    chain: 'altair',
+    token: 'AIR',
+    isNative: true,
+    existentialDeposit: '1000000000000',
+    tokenIdent: '',
+    chaindataId: 'altair-substrate-native-air',
+  },
+  {
+    chain: 'altair',
+    token: 'KUSD',
+    isNative: false,
+    existentialDeposit: '100000000000',
+    tokenIdent: 'KUSD',
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
+  },
 ]
 
 const weightLimit = '5000000000'

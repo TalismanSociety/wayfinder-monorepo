@@ -7,6 +7,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: true,
     existentialDeposit: '0',
     tokenIdent: JSON.stringify({ Token: 'KINT' }),
+    chaindataId: 'kintsugi-substrate-orml-kint',
   },
   {
     chain: 'kintsugi',
@@ -14,6 +15,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '0',
     tokenIdent: JSON.stringify({ Token: 'KBTC' }),
+    chaindataId: 'kintsugi-substrate-orml-kbtc',
   },
   {
     chain: 'kintsugi',
@@ -21,6 +23,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '0',
     tokenIdent: JSON.stringify({ ForeignAsset: 2 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
 ]
 

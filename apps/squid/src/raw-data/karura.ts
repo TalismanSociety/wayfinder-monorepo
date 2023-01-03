@@ -19,6 +19,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: true,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ Token: 'KAR' }),
+    chaindataId: 'karura-substrate-native-kar',
   },
   {
     chain: 'karura',
@@ -26,6 +27,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '10000000000',
     tokenIdent: JSON.stringify({ Token: 'KUSD' }),
+    chaindataId: 'karura-substrate-orml-kusd',
   },
   {
     chain: 'karura',
@@ -33,6 +35,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '500000000',
     tokenIdent: JSON.stringify({ Token: 'LKSM' }),
+    chaindataId: 'karura-substrate-orml-lksm',
   },
   {
     chain: 'karura',
@@ -40,6 +43,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '10000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 18 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -47,6 +51,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '8000000000',
     tokenIdent: JSON.stringify({ Token: 'BNC' }),
+    chaindataId: 'karura-substrate-orml-bnc',
   },
   {
     chain: 'karura',
@@ -54,6 +59,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ Token: 'VSKSM' }),
+    chaindataId: 'karura-substrate-orml-vsksm',
   },
   {
     chain: 'karura',
@@ -61,6 +67,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 12 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -68,6 +75,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 5 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -75,6 +83,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 13 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -82,6 +91,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 11 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -89,6 +99,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 8 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -96,6 +107,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '133330000',
     tokenIdent: JSON.stringify({ Token: 'KINT' }),
+    chaindataId: 'karura-substrate-orml-kint',
   },
   {
     chain: 'karura',
@@ -103,6 +115,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '66',
     tokenIdent: JSON.stringify({ Token: 'KBTC' }),
+    chaindataId: 'karura-substrate-orml-kbtc',
   },
   {
     chain: 'karura',
@@ -110,6 +123,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 6 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -117,6 +131,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 17 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -124,6 +139,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 19 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -131,6 +147,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 10 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -138,6 +155,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 3 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -145,6 +163,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '40000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 16 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -152,6 +171,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 4 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -159,6 +179,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '40000000000',
     tokenIdent: JSON.stringify({ Token: 'PHA' }),
+    chaindataId: 'karura-substrate-orml-pha',
   },
   {
     chain: 'karura',
@@ -166,6 +187,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ Token: 'KSM' }),
+    chaindataId: 'karura-substrate-orml-ksm',
   },
   {
     chain: 'karura',
@@ -173,6 +195,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 0 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -180,6 +203,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 1 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -187,6 +211,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000',
     tokenIdent: JSON.stringify({ ForeignAsset: 7 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
   {
     chain: 'karura',
@@ -194,6 +219,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '40000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 2 }),
+    chaindataId: '', // TODO: Implement this token in @talismn/balances
   },
 ]
 
