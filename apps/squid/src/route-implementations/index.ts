@@ -1,10 +1,5 @@
-import {
-  Chain as ChainModel,
-  ChainToken as ChainTokenModel,
-  Route as RouteModel,
-  Token as TokenModel,
-} from '../../model'
-import { BuildResult } from '../../server-extension/model'
+import { Chain as ChainModel, ChainToken as ChainTokenModel, Route as RouteModel, Token as TokenModel } from '../model'
+import { BuildResult } from '../server-extension/model'
 import { xcmPalletLimitedReserveTransferAssets } from './xcmPalletLimitedReserveTransferAssets'
 import { xcmPalletLimitedTeleportAssets } from './xcmPalletLimitedTeleportAssets'
 import { xcmPalletReserveTransferAssets } from './xcmPalletReserveTransferAssets'
@@ -21,6 +16,11 @@ export type RouteImplementationProps = {
   feeChainToken: ChainTokenModel
   accountId: `0x${string}`
   amount: string
+}
+
+export const getRouteImplementation = (from: ChainModel, to: ChainModel) => {
+  if (!routeImplementations[from.name]) return undefined
+  return routeImplementations[from.name][to.name] ?? routeImplementations[from.name].default ?? undefined
 }
 
 /**

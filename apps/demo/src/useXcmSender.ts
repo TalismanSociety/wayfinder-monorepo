@@ -30,7 +30,7 @@ export const useXcmSender = (
   const accounts = useAccounts()
   const addresses = useAddresses()
   const balances = useXcmBalances(addresses)
-  const { routesMap, sourcesMap, destinationsMap, tokensMap } = useAllQuery()
+  const { tokensMap } = useAllQuery()
 
   const api = useApi(sender && route ? rpcs : undefined)
   const [status, setStatus] = useState<Status>({ INIT: true })
@@ -70,8 +70,6 @@ export const useXcmSender = (
     // TODO: [x] Build & submit tx
     // TODO: [x] Watch tx
 
-    const source = sourcesMap[route.from.id]
-    const dest = destinationsMap[route.to.id]
     const token = tokensMap[route.token.id]
     const feeToken = tokensMap[route.feeToken.id]
 
@@ -198,7 +196,7 @@ export const useXcmSender = (
       if (String(error) === 'Error: Cancelled') return setStatus({ ERROR: `TX cancelled` })
       return setStatus({ ERROR: `Unable to submit TX: ${error}` })
     }
-  }, [accounts, amount, api, balance, destinationsMap, feeBalance, route, sender, sourcesMap, tokensMap])
+  }, [accounts, amount, api, balance, feeBalance, route, sender, tokensMap])
 
   return { status, send }
 }
