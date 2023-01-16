@@ -15,7 +15,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1',
     tokenIdent: '18446744073709551616',
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'astar-substrate-assets-18446744073709551616-aca',
   },
   {
     chain: 'astar',
@@ -23,7 +23,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1',
     tokenIdent: '18446744073709551617',
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'astar-substrate-assets-18446744073709551617-ausd',
   },
   {
     chain: 'astar',
@@ -31,7 +31,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1',
     tokenIdent: '18446744073709551618',
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'astar-substrate-assets-18446744073709551618-ldot',
   },
 ]
 

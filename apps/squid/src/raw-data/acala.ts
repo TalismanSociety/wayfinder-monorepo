@@ -43,7 +43,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 4 }),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'acala-substrate-tokens-intr',
   },
   {
     chain: 'acala',
@@ -51,7 +51,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100',
     tokenIdent: JSON.stringify({ ForeignAsset: 3 }),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'acala-substrate-tokens-ibtc',
   },
   {
     chain: 'acala',
@@ -59,7 +59,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 0 }),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'acala-substrate-tokens-glmr',
   },
   {
     chain: 'acala',
@@ -67,7 +67,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 1 }),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'acala-substrate-tokens-para',
   },
   {
     chain: 'acala',
@@ -75,7 +75,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000000000000',
     tokenIdent: JSON.stringify({ ForeignAsset: 2 }),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'acala-substrate-tokens-astr',
   },
   {
     chain: 'acala',
@@ -83,6 +83,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: JSON.stringify({ Token: 'DOT' }),
+    // chaindataId: 'acala-substrate-tokens-dot', // TODO: Switch to this once on updated balance modules
     chaindataId: 'acala-substrate-orml-dot',
   },
 ]

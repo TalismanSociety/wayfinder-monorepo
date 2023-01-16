@@ -17,7 +17,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '100000000',
     tokenIdent: new BN(8).toString(),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'statemine-substrate-assets-8-rmrk',
   },
   {
     chain: 'statemine',
@@ -25,7 +25,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '10000000',
     tokenIdent: new BN(16).toString(),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'statemine-substrate-assets-16-aris',
   },
   {
     chain: 'statemine',
@@ -33,7 +33,7 @@ export const chainTokens: RawData['chainTokens'] = [
     isNative: false,
     existentialDeposit: '1000',
     tokenIdent: new BN(1984).toString(),
-    chaindataId: '', // TODO: Implement this token in @talismn/balances
+    chaindataId: 'statemine-substrate-assets-1984-usd₮',
   },
 ]
 

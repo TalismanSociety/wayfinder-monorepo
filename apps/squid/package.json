@@ -22,7 +22,7 @@
     "@subsquid/substrate-processor": "1.7.0",
     "@subsquid/typeorm-migration": "0.1.2",
     "@subsquid/typeorm-store": "0.1.2",
-    "@talismn/chaindata-provider": "^0.1.10",
+    "@talismn/chaindata-provider": "^0.2.0",
     "@types/uuid": "^9.0.0",
     "class-validator": "^0.13.2",
     "dotenv": "^10.0.0",

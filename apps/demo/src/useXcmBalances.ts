@@ -12,6 +12,7 @@ import { useMemo } from 'react'
 
 import { useTokens } from './useWayfinder'
 
+// import { balanceModules } from '@talismn/balances-default-modules'
 const balanceModules = [SubNativeModule, SubOrmlModule, EvmNativeModule]
 
 export type XcmBalances = Array<{
