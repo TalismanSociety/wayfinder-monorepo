@@ -1,4 +1,4 @@
 module.exports = {
   root: true,
-  extends: ['wayfinder'],
+  extends: ['@talismn/eslint-config-wayfinder'],
 }

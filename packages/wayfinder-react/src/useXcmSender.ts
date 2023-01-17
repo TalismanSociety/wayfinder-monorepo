@@ -5,11 +5,9 @@ import { BigNumber } from 'bignumber.js'
 import { request } from 'graphql-request'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { useAccounts, useAddresses } from './Accounts'
-import { WAYFINDER_DATASOURCE } from './constants'
 import { buildQuery } from './graphql'
 import { useAllQuery } from './useWayfinder'
-import { useXcmBalances } from './useXcmBalances'
+import type { XcmBalances } from './useXcmBalances'
 
 type Status =
   | { INIT: true }
@@ -22,15 +20,14 @@ type Status =
   | { TX_FAILED: { url: string } }
 
 export const useXcmSender = (
-  sender?: string,
+  wayfinderSquid: string,
+  balances: XcmBalances,
+  sender?: { address: string; signer?: unknown },
   route?: ReturnType<typeof useAllQuery>['routesMap']['string'],
   rpcs?: string | string[],
   amount?: string
 ) => {
-  const accounts = useAccounts()
-  const addresses = useAddresses()
-  const balances = useXcmBalances(addresses)
-  const { tokensMap } = useAllQuery()
+  const { tokensMap } = useAllQuery(wayfinderSquid)
 
   const api = useApi(sender && route ? rpcs : undefined)
   const [status, setStatus] = useState<Status>({ INIT: true })
@@ -41,7 +38,7 @@ export const useXcmSender = (
   ] => {
     if (!route) return [undefined, undefined]
     const allTokenBalances = balances
-      .filter((balance) => balance.address === sender)
+      .filter((balance) => balance.address === sender?.address)
       .filter((balance) => balance.chain.id === route.from.id)
 
     return [
@@ -73,10 +70,7 @@ export const useXcmSender = (
     const token = tokensMap[route.token.id]
     const feeToken = tokensMap[route.feeToken.id]
 
-    const accountId = api.createType('AccountId32', sender).toHex()
-
-    const pair = accounts.find(({ address }) => address === sender)
-    if (!pair) return setStatus({ ERROR: `Account ${sender} not found in keyring` })
+    const accountId = api.createType('AccountId32', sender.address).toHex()
 
     const fromChainToken = token.chains.find(({ chain }) => chain.id === route.from.id)
     if (!fromChainToken) throw new Error(`Failed to find chain ${route.from.id} for token ${token.name}`)
@@ -92,7 +86,7 @@ export const useXcmSender = (
 
     let buildTx
     try {
-      buildTx = (await request(WAYFINDER_DATASOURCE, buildQuery, { route: route.id, accountId, amount })).build
+      buildTx = (await request(wayfinderSquid, buildQuery, { route: route.id, accountId, amount })).build
     } catch (error) {
       const message = ((error as any)?.response?.errors || []).map((error: any) => error.message).join(': ')
       return setStatus({ ERROR: `Failed to build XCM TX: ${message.length > 0 ? message : error}` })
@@ -101,7 +95,7 @@ export const useXcmSender = (
     const params = JSON.parse(buildTx.params)
     const tx = api.tx[buildTx.module][buildTx.method](...(Array.isArray(params) ? params : []))
 
-    const feeEstimate = await tx.paymentInfo(pair.address, { signer: pair.signer as Signer })
+    const feeEstimate = await tx.paymentInfo(sender.address, { signer: sender.signer as Signer })
 
     const feeFactor = 1.2 // used to approximate the max fee from the estimated fee
     const partialFee = feeEstimate.partialFee.toBigInt()
@@ -175,8 +169,8 @@ export const useXcmSender = (
 
     try {
       const unsubscribe = await tx.signAndSend(
-        pair.address,
-        { signer: pair.signer as Signer },
+        sender.address,
+        { signer: sender.signer as Signer },
         ({ status, events }) => {
           if (status.isBroadcast) return setStatus({ SUBMITTING: 'Broadcasting TX' })
           if (status.isInBlock) return setStatus({ SUBMITTING: 'Waiting for TX to be confirmed' })
@@ -185,7 +179,7 @@ export const useXcmSender = (
             unsubscribe()
 
             const success = events.find(({ event }) => event.method === 'ExtrinsicSuccess')
-            const url = `https://app.talisman.xyz/history?address=${pair.address}`
+            const url = `https://app.talisman.xyz/history?address=${sender.address}`
 
             if (success) return setStatus({ TX_SUCCESS: { url } })
             return setStatus({ TX_FAILED: { url } })
@@ -196,7 +190,7 @@ export const useXcmSender = (
       if (String(error) === 'Error: Cancelled') return setStatus({ ERROR: `TX cancelled` })
       return setStatus({ ERROR: `Unable to submit TX: ${error}` })
     }
-  }, [accounts, amount, api, balance, feeBalance, route, sender, tokensMap])
+  }, [amount, api, balance, feeBalance, route, sender, tokensMap])
 
   return { status, send }
 }

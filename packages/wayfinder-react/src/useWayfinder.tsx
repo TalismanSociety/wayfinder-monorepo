@@ -3,7 +3,6 @@ import uniq from 'lodash/uniq'
 import { Dispatch, ReactNode, useEffect, useMemo, useReducer } from 'react'
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 
-import { WAYFINDER_DATASOURCE } from './constants'
 import { destinationsQuery, filterQuery, routesQuery, sourcesQuery, tokensQuery } from './graphql'
 
 const queryClient = new QueryClient()
@@ -12,11 +11,11 @@ export const WayfinderProvider = ({ children }: { children?: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 )
 
-export const useWayfinder = () => {
+export const useWayfinder = (wayfinderSquid: string) => {
   const { dispatch, from, to, amount, token, assets, sender, recipient, autofill } = useInputs()
 
-  const all = useAllQuery()
-  const filteredQuery = useFilterQuery({ from, to, token, assets })
+  const all = useAllQuery(wayfinderSquid)
+  const filteredQuery = useFilterQuery(wayfinderSquid, { from, to, token, assets })
 
   const filtered = {
     routes: all.routes ? (filteredQuery.routes ?? []).map(({ id }) => all.routesMap[id]) : [],
@@ -78,29 +77,32 @@ const useInputs = () => {
   return { ...inputState, dispatch }
 }
 
-export const useAllQuery = () => {
-  const { routes, routesMap } = useRoutes()
-  const { sources, sourcesMap } = useSources()
-  const { destinations, destinationsMap } = useDestinations()
-  const { tokens, tokensMap } = useTokens()
+export const useAllQuery = (wayfinderSquid: string) => {
+  const { routes, routesMap } = useRoutes(wayfinderSquid)
+  const { sources, sourcesMap } = useSources(wayfinderSquid)
+  const { destinations, destinationsMap } = useDestinations(wayfinderSquid)
+  const { tokens, tokensMap } = useTokens(wayfinderSquid)
 
   return { routes, routesMap, sources, sourcesMap, destinations, destinationsMap, tokens, tokensMap }
 }
 
-export const useFilterQuery = ({
-  from,
-  to,
-  token,
-  assets,
-}: {
-  from?: string
-  to?: string
-  token?: string
-  assets?: Array<{ chainId: string; tokenId: string }>
-}) => {
+export const useFilterQuery = (
+  wayfinderSquid: string,
+  {
+    from,
+    to,
+    token,
+    assets,
+  }: {
+    from?: string
+    to?: string
+    token?: string
+    assets?: Array<{ chainId: string; tokenId: string }>
+  }
+) => {
   const query = useQuery(
     ['filter', from, to, token, assets],
-    async () => await request(WAYFINDER_DATASOURCE, filterQuery, { from, to, token, assets })
+    async () => await request(wayfinderSquid, filterQuery, { from, to, token, assets })
   )
 
   return {
@@ -115,26 +117,26 @@ export const useFilterQuery = ({
 const useMap = <T extends { id: string }>(list?: T[]): Record<string, T> =>
   useMemo(() => Object.fromEntries((list ?? []).map((item) => [item.id, item])), [list])
 
-export const useRoutes = () => {
-  const query = useQuery('routes', async () => await request(WAYFINDER_DATASOURCE, routesQuery))
+export const useRoutes = (wayfinderSquid: string) => {
+  const query = useQuery('routes', async () => await request(wayfinderSquid, routesQuery))
   const routes = query.data?.filter.routes
   return { status: query.status, routes, routesMap: useMap(routes) }
 }
 
-export const useSources = () => {
-  const query = useQuery('sources', async () => await request(WAYFINDER_DATASOURCE, sourcesQuery))
+export const useSources = (wayfinderSquid: string) => {
+  const query = useQuery('sources', async () => await request(wayfinderSquid, sourcesQuery))
   const sources = query.data?.filter.sources
   return { status: query.status, sources, sourcesMap: useMap(sources) }
 }
 
-export const useDestinations = () => {
-  const query = useQuery('destinations', async () => await request(WAYFINDER_DATASOURCE, destinationsQuery))
+export const useDestinations = (wayfinderSquid: string) => {
+  const query = useQuery('destinations', async () => await request(wayfinderSquid, destinationsQuery))
   const destinations = query.data?.filter.destinations
   return { status: query.status, destinations, destinationsMap: useMap(destinations) }
 }
 
-export const useTokens = () => {
-  const query = useQuery('tokens', async () => await request(WAYFINDER_DATASOURCE, tokensQuery))
+export const useTokens = (wayfinderSquid: string) => {
+  const query = useQuery('tokens', async () => await request(wayfinderSquid, tokensQuery))
   const tokens = query.data?.filter.tokens
   return { status: query.status, tokens, tokensMap: useMap(tokens) }
 }

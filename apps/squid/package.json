@@ -1,5 +1,5 @@
 {
-  "name": "@talismn/wayfinder-datasource",
+  "name": "@talismn/wayfinder-squid",
   "private": true,
   "version": "0",
   "engines": {
@@ -15,6 +15,7 @@
     "release:update:reset": "node scripts/release.js --update --reset"
   },
   "dependencies": {
+    "@polkadot/util": "^10.2.1",
     "@subsquid/archive-registry": "1.0.12",
     "@subsquid/cli": "0.6.0",
     "@subsquid/graphql-server": "2.1.0",
@@ -23,6 +24,7 @@
     "@subsquid/typeorm-migration": "0.1.2",
     "@subsquid/typeorm-store": "0.1.2",
     "@talismn/chaindata-provider": "^0.2.0",
+    "@talismn/util": "^0.1.4",
     "@types/uuid": "^9.0.0",
     "class-validator": "^0.13.2",
     "dotenv": "^10.0.0",

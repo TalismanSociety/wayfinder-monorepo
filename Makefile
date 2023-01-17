@@ -1,23 +1,23 @@
 dev: build migrate
-	@bash -c 'yarn workspace @talismn/wayfinder-datasource query-node:start & node --inspect -r dotenv/config apps/squid/lib/processor.js & wait'
+	@bash -c 'yarn workspace @talismn/wayfinder-squid query-node:start & node --inspect -r dotenv/config apps/squid/lib/processor.js & wait'
 
 
 process: migrate
-	@yarn workspace @talismn/wayfinder-datasource processor:start
+	@yarn workspace @talismn/wayfinder-squid processor:start
 
 serve: build
-	@yarn workspace @talismn/wayfinder-datasource query-node:start
+	@yarn workspace @talismn/wayfinder-squid query-node:start
 
 
 build: codegen
-	@yarn workspace @talismn/wayfinder-datasource build
+	@yarn workspace @talismn/wayfinder-squid build
 
 
 create-migration: build
 	@cd apps/squid && npx squid-typeorm-migration generate
 
 migrate: build
-	@yarn workspace @talismn/wayfinder-datasource db:migrate
+	@yarn workspace @talismn/wayfinder-squid db:migrate
 
 
 codegen:

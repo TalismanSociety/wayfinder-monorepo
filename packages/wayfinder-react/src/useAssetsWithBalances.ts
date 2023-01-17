@@ -1,7 +1,7 @@
 import uniqWith from 'lodash/uniqWith'
 import { useEffect } from 'react'
 
-import { XcmBalances } from './useXcmBalances'
+import type { XcmBalances } from './useXcmBalances'
 
 export const useAssetsWithBalances = (
   balances: XcmBalances,

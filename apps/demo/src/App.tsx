@@ -1,11 +1,12 @@
 import { githubUnknownTokenLogoUrl } from '@talismn/chaindata-provider'
 import { formatDecimals, planckToTokens } from '@talismn/util'
+import { useAssetsWithBalances, useWayfinder, useXcmBalances, useXcmSender } from '@talismn/wayfinder-react'
 
 import { Connect, useAccounts, useAddresses } from './Accounts'
-import { useAssetsWithBalances } from './useAssetsWithBalances'
-import { useWayfinder } from './useWayfinder'
-import { useXcmBalances } from './useXcmBalances'
-import { useXcmSender } from './useXcmSender'
+
+const WAYFINDER_SQUID =
+  ((import.meta as any).env as Record<string, string | undefined>)?.VITE_WAYFINDER_SQUID ??
+  'https://squid.subsquid.io/wayfinder/v/0/graphql'
 
 export const App = () => {
   const accounts = useAccounts()
@@ -15,14 +16,15 @@ export const App = () => {
     inputs: { dispatch, ...inputs },
     all,
     filtered,
-  } = useWayfinder()
+  } = useWayfinder(WAYFINDER_SQUID)
 
   const balances = useXcmBalances(inputs.sender ? inputs.sender : addresses)
   useAssetsWithBalances(balances, (assets) => dispatch({ setAssets: assets }))
 
+  const sender = accounts.find(({ address }) => address === inputs.sender)
   const selectedRoute = filtered.routes?.length === 1 ? filtered.routes[0] : undefined
   const rpcs = selectedRoute ? all.sourcesMap[selectedRoute.from.id]?.rpcs ?? [] : []
-  const { status, send } = useXcmSender(inputs.sender, selectedRoute, rpcs, inputs.amount)
+  const { status, send } = useXcmSender(WAYFINDER_SQUID, balances, sender, selectedRoute, rpcs, inputs.amount)
 
   return (
     <div style={{ display: 'flex' }}>

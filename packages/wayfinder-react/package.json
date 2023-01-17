@@ -1,0 +1,62 @@
+{
+  "name": "@talismn/wayfinder-react",
+  "version": "0.1.0",
+  "author": "Talisman",
+  "homepage": "https://talisman.xyz",
+  "license": "UNLICENSED",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "directory": "packages/wayfinder-react",
+    "type": "git",
+    "url": "https://github.com/TalismanSociety/wayfinder-monorepo.git"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/talismn-wayfinder-react.cjs.js",
+  "module": "dist/talismn-wayfinder-react.esm.js",
+  "scripts": {
+    "codegen": "graphql-codegen -c src/codegen.cjs",
+    "dev": "tsc --watch",
+    "build": "rm -rf dist && tsc"
+  },
+  "dependencies": {
+    "@graphql-codegen/cli": "^2.16.1",
+    "@graphql-codegen/client-preset": "^1.2.3",
+    "@polkadot/api": "^9.10.1",
+    "@talismn/balances-evm-native": "^0.2.3",
+    "@talismn/balances-react": "^0.2.3",
+    "@talismn/balances-substrate-native": "^0.2.3",
+    "@talismn/balances-substrate-orml": "^0.2.3",
+    "@talismn/chaindata-provider": "^0.2.0",
+    "@talismn/util": "^0.1.4",
+    "@talismn/wayfinder": "workspace:^",
+    "bignumber.js": "^9.1.1",
+    "graphql": "^15.0.0",
+    "graphql-request": "^5.0.0",
+    "lodash": "^4.17.21",
+    "react-query": "^3.39.2"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^8.19.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.11.41",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/uuid": "^8.3.4",
+    "expect": "^27.5.1",
+    "fast-check": "^2.25.0",
+    "react": "^18.2.0",
+    "typescript": "~4.7.4"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
+  }
+}

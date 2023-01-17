@@ -1,0 +1,28 @@
+{
+  "name": "@talismn/wayfinder",
+  "version": "0.1.0",
+  "author": "Talisman",
+  "homepage": "https://talisman.xyz",
+  "license": "UNLICENSED",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "directory": "packages/wayfinder",
+    "type": "git",
+    "url": "https://github.com/TalismanSociety/wayfinder-monorepo.git"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "dist/talismn-wayfinder.cjs.js",
+  "module": "dist/talismn-wayfinder.esm.js",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "rm -rf dist && tsc"
+  },
+  "devDependencies": {
+    "typescript": "~4.7.4"
+  }
+}

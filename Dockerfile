@@ -48,8 +48,8 @@ EXPOSE 4000
 
 
 FROM squid AS processor
-CMD ["yarn", "workspace", "@talismn/wayfinder-datasource", "processor:start"]
+CMD ["yarn", "workspace", "@talismn/wayfinder-squid", "processor:start"]
 
 
 FROM squid AS query-node
-CMD ["yarn", "workspace", "@talismn/wayfinder-datasource", "query-node:start"]
+CMD ["yarn", "workspace", "@talismn/wayfinder-squid", "query-node:start"]

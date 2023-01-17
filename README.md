@@ -1,4 +1,4 @@
-# Talisman XCM monorepo
+# Talisman Wayfinder (XCM) monorepo
 
 A monorepo for XCM in polkadot, containing the following:
 
