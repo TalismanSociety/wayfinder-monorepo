@@ -14,7 +14,8 @@ export type RouteImplementationProps = {
   fromChainToken: ChainTokenModel
   toChainToken: ChainTokenModel
   feeChainToken: ChainTokenModel
-  accountId: `0x${string}`
+  sender: string
+  recipient: string
   amount: string
 }
 

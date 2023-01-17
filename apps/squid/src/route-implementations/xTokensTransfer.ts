@@ -1,14 +1,16 @@
+import { TypeRegistry } from '@polkadot/types'
 import { tokensToPlanck } from '@talismn/util'
 
 import type { RouteImplementationProps } from '.'
 
 export const xTokensTransfer = ({
-  accountId,
-  fromChainToken,
-  token,
-  amount: amountTokens,
   route,
+  token,
+  fromChainToken,
+  recipient,
+  amount: amountTokens,
 }: RouteImplementationProps) => {
+  const accountId = new TypeRegistry().createType('AccountId32', recipient).toHex()
   const { tokenIdent } = fromChainToken
   if (!tokenIdent) throw new Error(`No tokenIdent for token ${token.symbol} (${token.id})`)
 

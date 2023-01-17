@@ -108,8 +108,8 @@ export const tokensQuery = graphql(`
 `)
 
 export const buildQuery = graphql(`
-  query buildQuery($route: String!, $accountId: String!, $amount: String!) {
-    build(route: $route, accountId: $accountId, amount: $amount) {
+  query buildQuery($route: String!, $sender: String!, $recipient: String!, $amount: String!) {
+    build(route: $route, sender: $sender, recipient: $recipient, amount: $amount) {
       module
       method
       params

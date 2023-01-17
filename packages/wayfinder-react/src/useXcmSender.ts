@@ -23,13 +23,14 @@ export const useXcmSender = (
   wayfinderSquid: string,
   balances: XcmBalances,
   sender?: { address: string; signer?: unknown },
+  recipient?: string,
   route?: ReturnType<typeof useAllQuery>['routesMap']['string'],
   rpcs?: string | string[],
   amount?: string
 ) => {
   const { tokensMap } = useAllQuery(wayfinderSquid)
 
-  const api = useApi(sender && route ? rpcs : undefined)
+  const api = useApi(sender?.address !== undefined && recipient !== undefined && route !== undefined ? rpcs : undefined)
   const [status, setStatus] = useState<Status>({ INIT: true })
 
   const [balance, feeBalance] = useMemo((): [
@@ -49,15 +50,17 @@ export const useXcmSender = (
 
   useEffect(() => {
     if (!sender) return setStatus({ INIT: true })
+    if (!recipient) return setStatus({ INIT: true })
     if (!route) return setStatus({ INIT: true })
     if (amount === undefined) return setStatus({ INIT: true })
     if (!api) return setStatus({ LOADING: true })
 
     setStatus({ READY: true })
-  }, [sender, route, amount, api])
+  }, [sender, recipient, route, amount, api])
 
   const send = useCallback(async () => {
     if (!sender) return setStatus({ ERROR: 'No sender' })
+    if (!recipient) return setStatus({ ERROR: 'No recipient' })
     if (!route) return setStatus({ ERROR: 'No route' })
     if (amount === undefined) return setStatus({ ERROR: 'No amount' })
     if (!api) return setStatus({ ERROR: 'No api' })
@@ -69,8 +72,6 @@ export const useXcmSender = (
 
     const token = tokensMap[route.token.id]
     const feeToken = tokensMap[route.feeToken.id]
-
-    const accountId = api.createType('AccountId32', sender.address).toHex()
 
     const fromChainToken = token.chains.find(({ chain }) => chain.id === route.from.id)
     if (!fromChainToken) throw new Error(`Failed to find chain ${route.from.id} for token ${token.name}`)
@@ -86,7 +87,9 @@ export const useXcmSender = (
 
     let buildTx
     try {
-      buildTx = (await request(wayfinderSquid, buildQuery, { route: route.id, accountId, amount })).build
+      buildTx = (
+        await request(wayfinderSquid, buildQuery, { route: route.id, sender: sender.address, recipient, amount })
+      ).build
     } catch (error) {
       const message = ((error as any)?.response?.errors || []).map((error: any) => error.message).join(': ')
       return setStatus({ ERROR: `Failed to build XCM TX: ${message.length > 0 ? message : error}` })
@@ -127,6 +130,8 @@ export const useXcmSender = (
       JSON.stringify(
         {
           route,
+          sender: sender.address,
+          recipient,
           amount,
           sendMinimum: sendMinimum.toString(),
           sendMaximum: sendMaximum.toString(),
@@ -190,7 +195,7 @@ export const useXcmSender = (
       if (String(error) === 'Error: Cancelled') return setStatus({ ERROR: `TX cancelled` })
       return setStatus({ ERROR: `Unable to submit TX: ${error}` })
     }
-  }, [amount, api, balance, feeBalance, route, sender, tokensMap])
+  }, [wayfinderSquid, amount, api, balance, feeBalance, route, sender, recipient, tokensMap])
 
   return { status, send }
 }
@@ -200,7 +205,7 @@ const useApi = (rpcs?: string | string[]) => {
   const refCount = useRef(0)
 
   useEffect(() => {
-    if (!rpcs) setApi(undefined)
+    if (!rpcs) return setApi(undefined)
 
     refCount.current = (refCount.current + 1) % Number.MAX_SAFE_INTEGER
     const count = refCount.current

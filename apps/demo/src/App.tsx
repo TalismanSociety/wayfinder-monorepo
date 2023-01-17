@@ -24,7 +24,15 @@ export const App = () => {
   const sender = accounts.find(({ address }) => address === inputs.sender)
   const selectedRoute = filtered.routes?.length === 1 ? filtered.routes[0] : undefined
   const rpcs = selectedRoute ? all.sourcesMap[selectedRoute.from.id]?.rpcs ?? [] : []
-  const { status, send } = useXcmSender(WAYFINDER_SQUID, balances, sender, selectedRoute, rpcs, inputs.amount)
+  const { status, send } = useXcmSender(
+    WAYFINDER_SQUID,
+    balances,
+    sender,
+    inputs.recipient,
+    selectedRoute,
+    rpcs,
+    inputs.amount
+  )
 
   return (
     <div style={{ display: 'flex' }}>

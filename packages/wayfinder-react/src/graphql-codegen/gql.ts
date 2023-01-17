@@ -22,7 +22,7 @@ const documents = {
     types.DestinationsDocument,
   '\n  query tokens {\n    filter {\n      tokens {\n        id\n        name\n        symbol\n        decimals\n        chains {\n          chain {\n            id\n          }\n          isNative\n          existentialDeposit\n          tokenIdent\n          chaindataId\n        }\n        routes {\n          id\n        }\n      }\n    }\n  }\n':
     types.TokensDocument,
-  '\n  query buildQuery($route: String!, $accountId: String!, $amount: String!) {\n    build(route: $route, accountId: $accountId, amount: $amount) {\n      module\n      method\n      params\n    }\n  }\n':
+  '\n  query buildQuery($route: String!, $sender: String!, $recipient: String!, $amount: String!) {\n    build(route: $route, sender: $sender, recipient: $recipient, amount: $amount) {\n      module\n      method\n      params\n    }\n  }\n':
     types.BuildQueryDocument,
   '\n  query filterQuery($from: String, $to: String, $token: String, $assets: [AssetInput!]) {\n    filter(from: $from, to: $to, token: $token, assets: $assets) {\n      routes {\n        id\n      }\n      sources {\n        id\n      }\n      destinations {\n        id\n      }\n      tokens {\n        id\n      }\n    }\n  }\n':
     types.FilterQueryDocument,
@@ -56,8 +56,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query buildQuery($route: String!, $accountId: String!, $amount: String!) {\n    build(route: $route, accountId: $accountId, amount: $amount) {\n      module\n      method\n      params\n    }\n  }\n'
-): typeof documents['\n  query buildQuery($route: String!, $accountId: String!, $amount: String!) {\n    build(route: $route, accountId: $accountId, amount: $amount) {\n      module\n      method\n      params\n    }\n  }\n']
+  source: '\n  query buildQuery($route: String!, $sender: String!, $recipient: String!, $amount: String!) {\n    build(route: $route, sender: $sender, recipient: $recipient, amount: $amount) {\n      module\n      method\n      params\n    }\n  }\n'
+): typeof documents['\n  query buildQuery($route: String!, $sender: String!, $recipient: String!, $amount: String!) {\n    build(route: $route, sender: $sender, recipient: $recipient, amount: $amount) {\n      module\n      method\n      params\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

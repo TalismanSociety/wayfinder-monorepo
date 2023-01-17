@@ -1,8 +1,10 @@
+import { TypeRegistry } from '@polkadot/types'
 import { tokensToPlanck } from '@talismn/util'
 
 import type { RouteImplementationProps } from '.'
 
-export const xcmPalletLimitedTeleportAssets = ({ route, to, token, accountId, amount }: RouteImplementationProps) => {
+export const xcmPalletLimitedTeleportAssets = ({ route, to, token, recipient, amount }: RouteImplementationProps) => {
+  const accountId = new TypeRegistry().createType('AccountId32', recipient).toHex()
   const destination = { V1: { interior: { X1: { ParaChain: to.paraId } }, parents: 0 } }
   const beneficiary = { V1: { interior: { X1: { AccountId32: { id: accountId, network: 'Any' } } }, parents: 0 } }
   const assets = {

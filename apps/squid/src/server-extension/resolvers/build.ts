@@ -17,7 +17,8 @@ export class BuildResolver {
   @Query(() => BuildResult)
   async build(
     @Arg('route') routeId: string,
-    @Arg('accountId') accountId: `0x${string}`,
+    @Arg('sender') sender: string,
+    @Arg('recipient') recipient: string,
     @Arg('amount') amount: string
   ): Promise<BuildResult> {
     const manager = await this.tx()
@@ -71,7 +72,8 @@ export class BuildResolver {
       fromChainToken,
       toChainToken,
       feeChainToken,
-      accountId,
+      sender,
+      recipient,
       amount,
     })
   }

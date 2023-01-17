@@ -353,9 +353,10 @@ export type Query = {
 }
 
 export type QueryBuildArgs = {
-  accountId: Scalars['String']
   amount: Scalars['String']
+  recipient: Scalars['String']
   route: Scalars['String']
+  sender: Scalars['String']
 }
 
 export type QueryChainByIdArgs = {
@@ -871,7 +872,8 @@ export type TokensQuery = {
 
 export type BuildQueryQueryVariables = Exact<{
   route: Scalars['String']
-  accountId: Scalars['String']
+  sender: Scalars['String']
+  recipient: Scalars['String']
   amount: Scalars['String']
 }>
 
@@ -1197,7 +1199,12 @@ export const BuildQueryDocument = {
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'sender' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'recipient' } },
           type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
         },
         {
@@ -1220,8 +1227,13 @@ export const BuildQueryDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'accountId' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
+                name: { kind: 'Name', value: 'sender' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'sender' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'recipient' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'recipient' } },
               },
               {
                 kind: 'Argument',
