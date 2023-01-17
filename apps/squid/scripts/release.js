@@ -1,8 +1,8 @@
-const { version } = require('../package.json')
 const { spawnSync } = require('child_process')
 
 const projectName = process.env.PROJECT_NAME || 'wayfinder'
 const githubUrl = process.env.GITHUB_URL || 'https://github.com/TalismanSociety/wayfinder-monorepo.git#main'
+const version = '0'
 
 const squidCommand = process.argv.includes('--update') ? 'update' : 'release'
 const reset = squidCommand === 'update' && process.argv.includes('--reset') ? '--hardReset' : ''
