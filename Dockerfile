@@ -14,11 +14,10 @@ ADD Makefile .
 ADD package.json .
 ADD apps/demo/package.json apps/demo/
 ADD apps/squid/package.json apps/squid/
-ADD packages/eslint-config packages/eslint-config
-ADD packages/lib packages/lib
-ADD packages/react-hook packages/react-hook
-ADD packages/tsconfig packages/tsconfig
-ADD packages/types packages/types
+ADD packages/eslint-config-wayfinder packages/eslint-config-wayfinder
+ADD packages/wayfinder packages/wayfinder
+ADD packages/wayfinder-react packages/wayfinder-react
+ADD packages/wayfinder-tsconfig packages/wayfinder-tsconfig
 RUN yarn install --immutable
 ADD apps/squid/tsconfig.json apps/squid/
 ADD apps/squid/schema.graphql apps/squid/
