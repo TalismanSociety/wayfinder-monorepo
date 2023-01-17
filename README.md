@@ -4,9 +4,8 @@ A monorepo for XCM in polkadot, containing the following:
 
 1. XCM demo app -> `/apps/demo`
 1. Wayfinder squid -> `/apps/squid`
-1. Wayfinder library -> `/packages/lib`
-1. Wayfinder react hook -> `/packages/react-hook`
-1. Wayfinder types -> `/packages/types`
+1. Wayfinder library -> `/packages/wayfinder`
+1. Wayfinder react hook -> `/packages/wayfinder-react`
 
 To install and run:
 
