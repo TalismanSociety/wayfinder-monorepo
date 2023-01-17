@@ -22,3 +22,19 @@ jobs:
       - run: yarn workspaces foreach --verbose --no-private npm publish --tolerate-republish --tag snapshot
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-squid:
+    name: 'Publish Squid Snapshot'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+      - run: yarn --immutable
+      - run: yarn workspace @talismn/wayfinder-squid sqd auth -k ${{ secrets.SQUID_DEPLOY_KEY }}
+      - run: yarn workspace @talismn/wayfinder-squid release:update
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
