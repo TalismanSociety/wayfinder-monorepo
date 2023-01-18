@@ -13,7 +13,7 @@ export type XcmBalances = Array<{
 
 export const useXcmBalances = (
   wayfinderSquid: string,
-  chaindataBalances: Balances,
+  chaindataBalances: Balances | undefined,
   addressOrAddresses: string | string[]
 ): XcmBalances => {
   const addresses = useMemo(

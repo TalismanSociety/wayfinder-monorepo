@@ -19,7 +19,7 @@ export const App = () => {
     filtered,
   } = useWayfinder(WAYFINDER_SQUID)
 
-  const chaindataBalances = useBalances(inputs.sender ? inputs.sender : addresses)
+  const chaindataBalances = useBalances(addresses)
   const balances = useXcmBalances(WAYFINDER_SQUID, chaindataBalances, inputs.sender ? inputs.sender : addresses)
   useAssetsWithBalances(balances, (assets) => dispatch({ setAssets: assets }))
 

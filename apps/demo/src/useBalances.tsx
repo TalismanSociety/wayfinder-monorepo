@@ -1,4 +1,3 @@
-import { Balances } from '@talismn/balances'
 import { EvmNativeModule } from '@talismn/balances-evm-native'
 import {
   useChaindata,
@@ -13,7 +12,7 @@ import { useMemo } from 'react'
 // import { balanceModules } from '@talismn/balances-default-modules'
 const balanceModules = [SubNativeModule, SubOrmlModule, EvmNativeModule]
 
-export const useBalances = (addressOrAddresses: string | string[]): Balances => {
+export const useBalances = (addressOrAddresses: string | string[]) => {
   const chaindata = useChaindata()
 
   const chaindataTokens = useChaindataTokens(chaindata)
@@ -30,9 +29,7 @@ export const useBalances = (addressOrAddresses: string | string[]): Balances => 
     [addressOrAddresses]
   )
   const addressesByToken = useAddressesByToken(addresses, chaindataTokenIds)
-  const chaindataBalances = useChaindataBalances(balanceModules, chaindata, addressesByToken)
-
-  return chaindataBalances || new Balances([])
+  return useChaindataBalances(balanceModules, chaindata, addressesByToken)
 }
 
 /**
