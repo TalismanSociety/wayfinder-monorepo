@@ -1,5 +1,25 @@
 import { Chain as ChainModel, ChainToken as ChainTokenModel, Route as RouteModel, Token as TokenModel } from '../model'
 import { BuildResult } from '../server-extension/model'
+import {
+  buildAcalaOrKaruraTx,
+  buildAstarOrShidenTx,
+  buildBifrostTx,
+  buildCentrifugeAltairTx,
+  buildCrustShadowTx,
+  buildDarwiniaCrabTx,
+  buildHydradxBasiliskTx,
+  buildIntegriteeTx,
+  buildInterlayKintsugiTx,
+  buildKicoTx,
+  buildKylinPichiuTx,
+  buildListenTx,
+  buildMantaCalamariTx,
+  buildOakTuringTx,
+  buildParallelHeikoTx,
+  buildPhalaKhalaTx,
+  buildStatemintOrStatemineTx,
+  buildUniqueQuartzTx,
+} from './chain-specific'
 import { xcmPalletLimitedReserveTransferAssets } from './xcmPalletLimitedReserveTransferAssets'
 import { xcmPalletLimitedTeleportAssets } from './xcmPalletLimitedTeleportAssets'
 import { xcmPalletReserveTransferAssets } from './xcmPalletReserveTransferAssets'
@@ -43,17 +63,44 @@ export const routeImplementations: Record<
   //       Ideally we can work towards having a small number of common implementations based on
   //       the source pallet, and use them for many different chains.
   //       But for now we'll likely need to have at least one separate implementation per chain.
-  Polkadot: {
+
+  'Polkadot': {
     Statemint: xcmPalletLimitedTeleportAssets,
     Acala: xcmPalletReserveTransferAssets,
     default: xcmPalletLimitedReserveTransferAssets,
   },
-  Acala: {
+  'Statemint': { default: buildStatemintOrStatemineTx },
+  'Acala': {
     Polkadot: xTokensTransfer,
+    default: buildAcalaOrKaruraTx,
   },
-  Kusama: {
+  'Astar': { default: buildAstarOrShidenTx },
+  'Interlay': { default: buildInterlayKintsugiTx },
+  // 'Moonbeam': { default: buildMoonbeamMoonriverTx },
+  'Parallel': { default: buildParallelHeikoTx },
+
+  'Kusama': {
     Statemine: xcmPalletLimitedTeleportAssets,
     Karura: xcmPalletReserveTransferAssets,
     default: xcmPalletLimitedReserveTransferAssets,
   },
+  'Statemine': { default: buildStatemintOrStatemineTx },
+  'Karura': { default: buildAcalaOrKaruraTx },
+  'Bifrost': { default: buildBifrostTx },
+  'Shiden': { default: buildAstarOrShidenTx },
+  'Altair': { default: buildCentrifugeAltairTx },
+  'Crust Shadow': { default: buildCrustShadowTx },
+  'Darwinia Crab': { default: buildDarwiniaCrabTx },
+  'Basilisk': { default: buildHydradxBasiliskTx },
+  'Integritee': { default: buildIntegriteeTx },
+  'Kintsugi': { default: buildInterlayKintsugiTx },
+  'Kico': { default: buildKicoTx },
+  'Pichiu': { default: buildKylinPichiuTx },
+  'Listen': { default: buildListenTx },
+  'Calamari': { default: buildMantaCalamariTx },
+  // 'Moonriver': { default: buildMoonbeamMoonriverTx },
+  'Turing': { default: buildOakTuringTx },
+  'Parallel Heiko': { default: buildParallelHeikoTx },
+  'Khala': { default: buildPhalaKhalaTx },
+  'Quartz': { default: buildUniqueQuartzTx },
 }

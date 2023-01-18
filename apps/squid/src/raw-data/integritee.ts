@@ -6,7 +6,7 @@ export const chainTokens: RawData['chainTokens'] = [
     token: 'TEER',
     isNative: true,
     existentialDeposit: '100000000000',
-    tokenIdent: '',
+    tokenIdent: 'TEER',
     chaindataId: 'integritee-kusama-substrate-native-teer',
   },
 ]
