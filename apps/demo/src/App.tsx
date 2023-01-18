@@ -3,6 +3,7 @@ import { formatDecimals, planckToTokens } from '@talismn/util'
 import { useAssetsWithBalances, useWayfinder, useXcmBalances, useXcmSender } from '@talismn/wayfinder-react'
 
 import { Connect, useAccounts, useAddresses } from './Accounts'
+import { useBalances } from './useBalances'
 
 const WAYFINDER_SQUID =
   ((import.meta as any).env as Record<string, string | undefined>)?.VITE_WAYFINDER_SQUID ??
@@ -18,7 +19,8 @@ export const App = () => {
     filtered,
   } = useWayfinder(WAYFINDER_SQUID)
 
-  const balances = useXcmBalances(inputs.sender ? inputs.sender : addresses)
+  const chaindataBalances = useBalances(inputs.sender ? inputs.sender : addresses)
+  const balances = useXcmBalances(WAYFINDER_SQUID, chaindataBalances, inputs.sender ? inputs.sender : addresses)
   useAssetsWithBalances(balances, (assets) => dispatch({ setAssets: assets }))
 
   const sender = accounts.find(({ address }) => address === inputs.sender)
