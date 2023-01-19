@@ -40,8 +40,9 @@ export type RouteImplementationProps = {
 }
 
 export const getRouteImplementation = (from: ChainModel, to: ChainModel) => {
-  if (!routeImplementations[from.name]) return undefined
-  return routeImplementations[from.name][to.name] ?? routeImplementations[from.name].default ?? undefined
+  const fromImplementations = routeImplementations[from.name]
+  if (!fromImplementations) return undefined
+  return fromImplementations[to.name] ?? fromImplementations.default ?? undefined
 }
 
 /**

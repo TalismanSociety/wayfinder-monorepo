@@ -34,8 +34,8 @@ export const useXcmSender = (
   const [status, setStatus] = useState<Status>({ INIT: true })
 
   const [balance, feeBalance] = useMemo((): [
-    typeof balances[number] | undefined,
-    typeof balances[number] | undefined
+    (typeof balances)[number] | undefined,
+    (typeof balances)[number] | undefined
   ] => {
     if (!route) return [undefined, undefined]
     const allTokenBalances = balances
@@ -71,7 +71,10 @@ export const useXcmSender = (
     // TODO: [x] Watch tx
 
     const token = tokensMap[route.token.id]
+    if (!token) return setStatus({ ERROR: 'No token' })
+
     const feeToken = tokensMap[route.feeToken.id]
+    if (!feeToken) return setStatus({ ERROR: 'No fee token' })
 
     const fromChainToken = token.chains.find(({ chain }) => chain.id === route.from.id)
     if (!fromChainToken) throw new Error(`Failed to find chain ${route.from.id} for token ${token.name}`)
@@ -96,7 +99,11 @@ export const useXcmSender = (
     }
 
     const params = JSON.parse(buildTx.params)
-    const tx = api.tx[buildTx.module][buildTx.method](...(Array.isArray(params) ? params : []))
+    const tx = api.tx[buildTx.module]?.[buildTx.method]?.(...(Array.isArray(params) ? params : []))
+    if (!tx)
+      return setStatus({
+        ERROR: `Cannot build XCM TX ${buildTx.module}.${buildTx.method}: pallet and method not found`,
+      })
 
     const feeEstimate = await tx.paymentInfo(sender.address, { signer: sender.signer as Signer })
 

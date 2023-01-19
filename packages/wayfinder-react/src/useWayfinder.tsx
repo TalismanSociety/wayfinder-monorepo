@@ -17,20 +17,29 @@ export const useWayfinder = (wayfinderSquid: string) => {
   const all = useAllQuery(wayfinderSquid)
   const filteredQuery = useFilterQuery(wayfinderSquid, { from, to, token, assets })
 
-  const filtered = {
-    routes: all.routes ? (filteredQuery.routes ?? []).map(({ id }) => all.routesMap[id]) : [],
-    sources: all.sources ? (filteredQuery.sources ?? []).map(({ id }) => all.sourcesMap[id]) : [],
-    destinations: all.destinations ? (filteredQuery.destinations ?? []).map(({ id }) => all.destinationsMap[id]) : [],
-    tokens: all.tokens ? (filteredQuery.tokens ?? []).map(({ id }) => all.tokensMap[id]) : [],
-  }
+  const filtered = useMemo(
+    () => ({
+      routes: (all.routes ? (filteredQuery.routes ?? []).map(({ id }) => all.routesMap[id]) : []).filter(isDefined),
+      sources: (all.sources ? (filteredQuery.sources ?? []).map(({ id }) => all.sourcesMap[id]) : []).filter(isDefined),
+      destinations: (all.destinations
+        ? (filteredQuery.destinations ?? []).map(({ id }) => all.destinationsMap[id])
+        : []
+      ).filter(isDefined),
+      tokens: (all.tokens ? (filteredQuery.tokens ?? []).map(({ id }) => all.tokensMap[id]) : []).filter(isDefined),
+    }),
+    [all, filteredQuery]
+  )
 
   useAutofill(dispatch, { from, to, token, autofill }, filtered.routes)
 
-  return {
-    inputs: { dispatch, from, to, amount, token, assets, sender, recipient },
-    all,
-    filtered,
-  }
+  return useMemo(
+    () => ({
+      inputs: { dispatch, from, to, amount, token, assets, sender, recipient },
+      all,
+      filtered,
+    }),
+    [dispatch, from, to, amount, token, assets, sender, recipient, all, filtered]
+  )
 }
 
 type InputState = {
@@ -61,7 +70,10 @@ const useInputs = () => {
     if ('setFrom' in action) return { ...state, from: action.setFrom, autofill: action.setFrom !== undefined }
     if ('setTo' in action) return { ...state, to: action.setTo, autofill: action.setTo !== undefined }
     if ('setToken' in action) return { ...state, token: action.setToken, autofill: action.setToken !== undefined }
-    if ('setAssets' in action) return { ...state, assets: action.setAssets }
+    if ('setAssets' in action) {
+      if (JSON.stringify(state.assets) === JSON.stringify(action.setAssets)) return state
+      return { ...state, assets: action.setAssets }
+    }
     if ('setAmount' in action) return { ...state, amount: action.setAmount }
 
     // setSender resets other input vars
@@ -74,7 +86,7 @@ const useInputs = () => {
     throw new Error(`Unhandled action type ${exhaustiveCheck}`)
   }, {})
 
-  return { ...inputState, dispatch }
+  return useMemo(() => ({ ...inputState, dispatch }), [inputState])
 }
 
 export const useAllQuery = (wayfinderSquid: string) => {
@@ -83,7 +95,10 @@ export const useAllQuery = (wayfinderSquid: string) => {
   const { destinations, destinationsMap } = useDestinations(wayfinderSquid)
   const { tokens, tokensMap } = useTokens(wayfinderSquid)
 
-  return { routes, routesMap, sources, sourcesMap, destinations, destinationsMap, tokens, tokensMap }
+  return useMemo(
+    () => ({ routes, routesMap, sources, sourcesMap, destinations, destinationsMap, tokens, tokensMap }),
+    [routes, routesMap, sources, sourcesMap, destinations, destinationsMap, tokens, tokensMap]
+  )
 }
 
 export const useFilterQuery = (
@@ -100,45 +115,52 @@ export const useFilterQuery = (
     assets?: Array<{ chainId: string; tokenId: string }>
   }
 ) => {
-  const query = useQuery(
+  const { data, status } = useQuery(
     ['filter', from, to, token, assets],
     async () => await request(wayfinderSquid, filterQuery, { from, to, token, assets })
   )
 
-  return {
-    status: query.status,
-    routes: query.data?.filter?.routes,
-    sources: query.data?.filter?.sources,
-    destinations: query.data?.filter?.destinations,
-    tokens: query.data?.filter?.tokens,
-  }
+  return useMemo(
+    () => ({
+      status,
+      routes: data?.filter?.routes,
+      sources: data?.filter?.sources,
+      destinations: data?.filter?.destinations,
+      tokens: data?.filter?.tokens,
+    }),
+    [status, data]
+  )
 }
 
 const useMap = <T extends { id: string }>(list?: T[]): Record<string, T> =>
   useMemo(() => Object.fromEntries((list ?? []).map((item) => [item.id, item])), [list])
 
 export const useRoutes = (wayfinderSquid: string) => {
-  const query = useQuery('routes', async () => await request(wayfinderSquid, routesQuery))
-  const routes = query.data?.filter.routes
-  return { status: query.status, routes, routesMap: useMap(routes) }
+  const { data, status } = useQuery('routes', async () => await request(wayfinderSquid, routesQuery))
+  const routes = useMemo(() => data?.filter.routes, [data])
+  const routesMap = useMap(routes)
+  return useMemo(() => ({ status: status, routes, routesMap }), [status, routes, routesMap])
 }
 
 export const useSources = (wayfinderSquid: string) => {
-  const query = useQuery('sources', async () => await request(wayfinderSquid, sourcesQuery))
-  const sources = query.data?.filter.sources
-  return { status: query.status, sources, sourcesMap: useMap(sources) }
+  const { data, status } = useQuery('sources', async () => await request(wayfinderSquid, sourcesQuery))
+  const sources = useMemo(() => data?.filter.sources, [data])
+  const sourcesMap = useMap(sources)
+  return useMemo(() => ({ status: status, sources, sourcesMap }), [status, sources, sourcesMap])
 }
 
 export const useDestinations = (wayfinderSquid: string) => {
-  const query = useQuery('destinations', async () => await request(wayfinderSquid, destinationsQuery))
-  const destinations = query.data?.filter.destinations
-  return { status: query.status, destinations, destinationsMap: useMap(destinations) }
+  const { data, status } = useQuery('destinations', async () => await request(wayfinderSquid, destinationsQuery))
+  const destinations = useMemo(() => data?.filter.destinations, [data])
+  const destinationsMap = useMap(destinations)
+  return useMemo(() => ({ status: status, destinations, destinationsMap }), [status, destinations, destinationsMap])
 }
 
 export const useTokens = (wayfinderSquid: string) => {
-  const query = useQuery('tokens', async () => await request(wayfinderSquid, tokensQuery))
-  const tokens = query.data?.filter.tokens
-  return { status: query.status, tokens, tokensMap: useMap(tokens) }
+  const { data, status } = useQuery('tokens', async () => await request(wayfinderSquid, tokensQuery))
+  const tokens = useMemo(() => data?.filter.tokens, [data])
+  const tokensMap = useMap(tokens)
+  return useMemo(() => ({ status: status, tokens, tokensMap }), [status, tokens, tokensMap])
 }
 
 const useAutofill = (
@@ -150,12 +172,14 @@ const useAutofill = (
     if (!inputs.autofill) return
 
     const remainingSources = uniq(routes?.map((route) => route.from.id))
-    if (!inputs.from && remainingSources.length === 1) return dispatch({ setFrom: remainingSources[0] })
+    if (!inputs.from && remainingSources.length === 1) dispatch({ setFrom: remainingSources[0] })
 
     const remainingDestinations = uniq(routes?.map((route) => route.to.id))
-    if (!inputs.to && remainingDestinations.length === 1) return dispatch({ setTo: remainingDestinations[0] })
+    if (!inputs.to && remainingDestinations.length === 1) dispatch({ setTo: remainingDestinations[0] })
 
     const remainingTokens = uniq(routes?.map((route) => route.token.id))
-    if (!inputs.token && remainingTokens.length === 1) return dispatch({ setToken: remainingTokens[0] })
-  }, [dispatch, inputs.autofill, inputs.from, inputs.to, inputs.token, routes])
+    if (!inputs.token && remainingTokens.length === 1) dispatch({ setToken: remainingTokens[0] })
+  }, [dispatch, routes, inputs.autofill, inputs.from, inputs.to, inputs.token])
 }
+
+const isDefined = <T,>(value: T | undefined): value is T => value !== undefined

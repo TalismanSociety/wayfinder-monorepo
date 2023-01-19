@@ -1,17 +1,17 @@
 {
   "extends": "./base.json",
   "compilerOptions": {
-    "module": "commonjs",
     "target": "es2020",
+    "module": "commonjs",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "resolveJsonModule": true
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "resolveJsonModule": true,
+    "strict": true
   },
   "exclude": ["node_modules", ".next", ".turbo", ".dist", "**/*.spec.ts", "**/*.test.ts"]
 }

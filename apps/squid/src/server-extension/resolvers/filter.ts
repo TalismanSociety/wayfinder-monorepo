@@ -45,9 +45,15 @@ export class FilterResolver {
     const routes = allRoutes.filter(fromFilter).filter(toFilter).filter(tokenFilter).filter(assetsFilter)
 
     // retrieve the filtered things based on the remaining routes
-    const sources = uniq(routes.map(({ from }) => from.id)).map((id) => allChainsMap[id])
-    const destinations = uniq(routes.map(({ to }) => to.id)).map((id) => allChainsMap[id])
-    const tokens = uniq(routes.map(({ token }) => token.id)).map((id) => allTokensMap[id])
+    const sources = uniq(routes.map(({ from }) => from.id))
+      .map((id) => allChainsMap[id])
+      .filter(isDefined)
+    const destinations = uniq(routes.map(({ to }) => to.id))
+      .map((id) => allChainsMap[id])
+      .filter(isDefined)
+    const tokens = uniq(routes.map(({ token }) => token.id))
+      .map((id) => allTokensMap[id])
+      .filter(isDefined)
 
     // return the results
     return { routes, sources, destinations, tokens }
@@ -184,3 +190,5 @@ export class RouteResolver implements ResolverInterface<Route> {
     return token
   }
 }
+
+const isDefined = <T>(value: T | undefined): value is T => value !== undefined

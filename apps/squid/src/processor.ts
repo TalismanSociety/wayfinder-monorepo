@@ -51,8 +51,8 @@ async function checkAllRoutesAreImplemented() {
 
   routes
     .map((route) => ({ from: chains[route.from.id], to: chains[route.to.id], token: tokens[route.token.id] }))
-    .filter(({ from, to }) => !getRouteImplementation(from, to))
+    .filter(({ from, to }) => !from || !to || !getRouteImplementation(from, to))
     .forEach(({ from, to, token }) =>
-      console.error(`XCM route ${from.name} --${token.symbol}-> ${to.name} is not implemented`)
+      console.error(`XCM route ${from?.name} --${token?.symbol}-> ${to?.name} is not implemented`)
     )
 }

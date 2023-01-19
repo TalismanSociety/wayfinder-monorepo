@@ -253,7 +253,7 @@ export const App = () => {
               .filter(({ balance }) => balance !== '0')
               .map(
                 ({ chain, token, balance }) =>
-                  `${chain?.name ?? 'Unknown'}: ${formatDecimals(planckToTokens(balance, token.decimals))} ${
+                  `${chain?.name ?? 'Unknown'}: ${formatDecimals(planckToTokens(balance, token?.decimals ?? 0))} ${
                     token?.symbol ?? 'Unknown'
                   }`
               )
@@ -292,8 +292,8 @@ export const App = () => {
             <p key={id}>
               Route {id}
               <br />
-              {`${all.sourcesMap[from.id].name} --${all.tokensMap[token.id].symbol}-> ${
-                all.destinationsMap[to.id].name
+              {`${all.sourcesMap[from.id]?.name} --${all.tokensMap[token.id]?.symbol}-> ${
+                all.destinationsMap[to.id]?.name
               }`}
             </p>
           ))}
