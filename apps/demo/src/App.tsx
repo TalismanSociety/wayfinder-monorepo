@@ -272,7 +272,16 @@ export const App = () => {
           <p>
             <strong>Token</strong>
             <br />
-            {inputs.token ?? 'None'}
+            <div style={{ display: 'flex', gap: '1em' }}>
+              {inputs.token ?? 'None'}
+              {inputs.token ? (
+                <img
+                  alt={all.tokensMap[inputs.token]?.name}
+                  src={all.tokensMap[inputs.token]?.logo}
+                  style={{ width: '2em' }}
+                />
+              ) : null}
+            </div>
           </p>
           <p>
             <strong>Amount</strong>

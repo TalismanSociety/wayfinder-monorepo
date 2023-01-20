@@ -54,6 +54,9 @@ export class Token implements TokenModel {
   name!: string
 
   @Field()
+  logo!: string
+
+  @Field()
   symbol!: string
 
   @Field(() => Int)

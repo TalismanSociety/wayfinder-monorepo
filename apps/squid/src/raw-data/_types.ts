@@ -9,7 +9,7 @@ type RouteRelationFields = 'from' | 'to' | 'token' | 'feeToken'
 export type RawData = {
   chains: Record<string, Omit<NoId<Chain>, ChainDerivedFields>>
   rpcs: Record<string, string[]>
-  tokens: Record<string, Omit<NoId<Token>, TokenDerivedFields>>
+  tokens: Record<string, Omit<NoId<Token>, TokenDerivedFields | 'logo'> & { logo?: string }>
   chainTokens: Array<Omit<NoId<ChainToken>, ChainTokenRelationFields> & { chain: string; token: string }>
   routes: Array<Omit<NoId<Route>, RouteRelationFields> & { from: string; to: string; token: string; feeToken: string }>
 }

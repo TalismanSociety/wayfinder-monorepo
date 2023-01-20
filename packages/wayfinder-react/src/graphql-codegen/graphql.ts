@@ -122,6 +122,8 @@ export enum ChainTokenOrderByInput {
   TokenDecimalsDesc = 'token_decimals_DESC',
   TokenIdAsc = 'token_id_ASC',
   TokenIdDesc = 'token_id_DESC',
+  TokenLogoAsc = 'token_logo_ASC',
+  TokenLogoDesc = 'token_logo_DESC',
   TokenNameAsc = 'token_name_ASC',
   TokenNameDesc = 'token_name_DESC',
   TokenSymbolAsc = 'token_symbol_ASC',
@@ -476,6 +478,8 @@ export enum RouteOrderByInput {
   FeeTokenDecimalsDesc = 'feeToken_decimals_DESC',
   FeeTokenIdAsc = 'feeToken_id_ASC',
   FeeTokenIdDesc = 'feeToken_id_DESC',
+  FeeTokenLogoAsc = 'feeToken_logo_ASC',
+  FeeTokenLogoDesc = 'feeToken_logo_DESC',
   FeeTokenNameAsc = 'feeToken_name_ASC',
   FeeTokenNameDesc = 'feeToken_name_DESC',
   FeeTokenSymbolAsc = 'feeToken_symbol_ASC',
@@ -508,6 +512,8 @@ export enum RouteOrderByInput {
   TokenDecimalsDesc = 'token_decimals_DESC',
   TokenIdAsc = 'token_id_ASC',
   TokenIdDesc = 'token_id_DESC',
+  TokenLogoAsc = 'token_logo_ASC',
+  TokenLogoDesc = 'token_logo_DESC',
   TokenNameAsc = 'token_name_ASC',
   TokenNameDesc = 'token_name_DESC',
   TokenSymbolAsc = 'token_symbol_ASC',
@@ -654,6 +660,7 @@ export type Token = {
   chains: Array<ChainToken>
   decimals: Scalars['Int']
   id: Scalars['String']
+  logo: Scalars['String']
   name: Scalars['String']
   routes: Array<Route>
   symbol: Scalars['String']
@@ -684,6 +691,8 @@ export enum TokenOrderByInput {
   DecimalsDesc = 'decimals_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  LogoAsc = 'logo_ASC',
+  LogoDesc = 'logo_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SymbolAsc = 'symbol_ASC',
@@ -722,6 +731,23 @@ export type TokenWhereInput = {
   id_not_in?: InputMaybe<Array<Scalars['String']>>
   id_not_startsWith?: InputMaybe<Scalars['String']>
   id_startsWith?: InputMaybe<Scalars['String']>
+  logo_contains?: InputMaybe<Scalars['String']>
+  logo_containsInsensitive?: InputMaybe<Scalars['String']>
+  logo_endsWith?: InputMaybe<Scalars['String']>
+  logo_eq?: InputMaybe<Scalars['String']>
+  logo_gt?: InputMaybe<Scalars['String']>
+  logo_gte?: InputMaybe<Scalars['String']>
+  logo_in?: InputMaybe<Array<Scalars['String']>>
+  logo_isNull?: InputMaybe<Scalars['Boolean']>
+  logo_lt?: InputMaybe<Scalars['String']>
+  logo_lte?: InputMaybe<Scalars['String']>
+  logo_not_contains?: InputMaybe<Scalars['String']>
+  logo_not_containsInsensitive?: InputMaybe<Scalars['String']>
+  logo_not_endsWith?: InputMaybe<Scalars['String']>
+  logo_not_eq?: InputMaybe<Scalars['String']>
+  logo_not_in?: InputMaybe<Array<Scalars['String']>>
+  logo_not_startsWith?: InputMaybe<Scalars['String']>
+  logo_startsWith?: InputMaybe<Scalars['String']>
   name_contains?: InputMaybe<Scalars['String']>
   name_containsInsensitive?: InputMaybe<Scalars['String']>
   name_endsWith?: InputMaybe<Scalars['String']>
@@ -855,6 +881,7 @@ export type TokensQuery = {
       __typename?: 'Token'
       id: string
       name: string
+      logo: string
       symbol: string
       decimals: number
       chains: Array<{
@@ -1142,6 +1169,7 @@ export const TokensDocument = {
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'logo' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'symbol' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'decimals' } },
                       {

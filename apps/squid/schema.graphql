@@ -52,6 +52,7 @@ type ChainToken @entity {
 type Token @entity {
   id: ID!
   name: String!
+  logo: String!
   symbol: String!
   decimals: Int!
 

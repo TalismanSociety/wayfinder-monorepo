@@ -1,3 +1,4 @@
+import { githubUnknownTokenLogoUrl } from '@talismn/chaindata-provider'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Chain, ChainToken, Route, Token } from '../model'
@@ -16,11 +17,16 @@ export const parseRawData = (rawData: RawData) => {
     })
     .map(
       ([tempId, chain]) =>
-        new Chain({ id: chainUuids.set(tempId, uuidv4()).get(tempId), rpcs: rawData.rpcs[tempId] ?? [], ...chain })
+        new Chain({ ...chain, id: chainUuids.set(tempId, uuidv4()).get(tempId), rpcs: rawData.rpcs[tempId] ?? [] })
     )
 
   const tokens: Token[] = Object.entries(rawData.tokens).map(
-    ([tempId, token]) => new Token({ id: tokenUuids.set(tempId, uuidv4()).get(tempId), ...token })
+    ([tempId, token]) =>
+      new Token({
+        ...token,
+        id: tokenUuids.set(tempId, uuidv4()).get(tempId),
+        logo: token.logo ?? githubUnknownTokenLogoUrl,
+      })
   )
 
   const chainTokens: ChainToken[] = rawData.chainTokens.map((rawToken) => {
@@ -34,7 +40,7 @@ export const parseRawData = (rawData: RawData) => {
     if (!token)
       throw new Error(`Invalid chainToken config: can't find token ${tokenTempId} in token:\n${debug(rawToken)}`)
 
-    return new ChainToken({ id: uuidv4(), chain, token, ...chainToken })
+    return new ChainToken({ ...chainToken, id: uuidv4(), chain, token })
   })
 
   const routes: Route[] = rawData.routes.map((rawRoute) => {
@@ -71,7 +77,7 @@ export const parseRawData = (rawData: RawData) => {
         `Invalid route config: token ${feeToken.name} doesn't exist on chain ${to.name} in route:\n${debug(rawRoute)}`
       )
 
-    return new Route({ id: uuidv4(), from, to, token, feeToken, ...route })
+    return new Route({ ...route, id: uuidv4(), from, to, token, feeToken })
   })
 
   return { chains, tokens, chainTokens, routes }

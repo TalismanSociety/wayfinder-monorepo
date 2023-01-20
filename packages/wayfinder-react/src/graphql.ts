@@ -88,6 +88,7 @@ export const tokensQuery = graphql(`
       tokens {
         id
         name
+        logo
         symbol
         decimals
         chains {
