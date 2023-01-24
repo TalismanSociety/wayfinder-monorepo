@@ -1,4 +1,5 @@
 import { gql, request } from 'graphql-request'
+import produce from 'immer'
 import uniq from 'lodash/uniq'
 import { Dispatch, ReactNode, useEffect, useMemo, useReducer } from 'react'
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
@@ -66,14 +67,43 @@ type InputAction =
 const useInputs = () => {
   const [inputState, dispatch] = useReducer((state: InputState, action: InputAction): InputState => {
     if ('reset' in action) return {}
-    if ('setFrom' in action) return { ...state, from: action.setFrom, autofill: action.setFrom !== undefined }
-    if ('setTo' in action) return { ...state, to: action.setTo, autofill: action.setTo !== undefined }
-    if ('setToken' in action) return { ...state, token: action.setToken, autofill: action.setToken !== undefined }
-    if ('setAssets' in action) {
-      if (JSON.stringify(state.assets) === JSON.stringify(action.setAssets)) return state
-      return { ...state, assets: action.setAssets }
+
+    if (
+      'setFrom' in action ||
+      'setTo' in action ||
+      'setToken' in action ||
+      'setAssets' in action ||
+      'setAmount' in action
+    ) {
+      return produce(state, (draft) => {
+        draft.autofill = false
+
+        if ('setFrom' in action) {
+          draft.from = action.setFrom
+          draft.autofill = draft.autofill || action.setFrom !== undefined
+        }
+
+        if ('setTo' in action) {
+          draft.to = action.setTo
+          draft.autofill = draft.autofill || action.setTo !== undefined
+        }
+
+        if ('setToken' in action) {
+          draft.token = action.setToken
+          draft.autofill = draft.autofill || action.setToken !== undefined
+        }
+
+        if ('setAssets' in action) {
+          draft.assets = action.setAssets
+        }
+
+        if ('setAmount' in action) {
+          draft.amount = action.setAmount
+        }
+
+        return draft
+      })
     }
-    if ('setAmount' in action) return { ...state, amount: action.setAmount }
 
     // setSender resets other input vars
     if ('setSender' in action) return { sender: action.setSender, recipient: action.setSender }
