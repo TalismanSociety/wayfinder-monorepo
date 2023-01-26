@@ -212,7 +212,7 @@ const useApi = (rpcs?: string | string[]) => {
   const refCount = useRef(0)
 
   useEffect(() => {
-    if (!rpcs) return setApi(undefined)
+    if ((rpcs?.length ?? 0) === 0) return setApi(undefined)
 
     refCount.current = (refCount.current + 1) % Number.MAX_SAFE_INTEGER
     const count = refCount.current
