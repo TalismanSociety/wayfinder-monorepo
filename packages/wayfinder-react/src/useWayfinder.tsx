@@ -172,7 +172,7 @@ export const useFilterQuery = (
           }
         `
       ),
-    { staleTime: Infinity, cacheTime: Infinity }
+    { staleTime: Infinity }
   )
 
   return useMemo(() => {
