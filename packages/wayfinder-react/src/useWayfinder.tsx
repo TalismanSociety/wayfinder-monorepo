@@ -7,7 +7,9 @@ import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import { destinationsQuery, routesQuery, sourcesQuery, tokensQuery } from './graphql'
 import { Query, Route } from './graphql-codegen/graphql'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: Infinity } },
+})
 
 export const WayfinderProvider = ({ children }: { children?: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -171,8 +173,7 @@ export const useFilterQuery = (
             }
           }
         `
-      ),
-    { staleTime: Infinity }
+      )
   )
 
   return useMemo(() => {
