@@ -8,7 +8,7 @@ import { destinationsQuery, routesQuery, sourcesQuery, tokensQuery } from './gra
 import { Query, Route } from './graphql-codegen/graphql'
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: Infinity } },
+  defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: Infinity } },
 })
 
 export const WayfinderProvider = ({ children }: { children?: ReactNode }) => (
