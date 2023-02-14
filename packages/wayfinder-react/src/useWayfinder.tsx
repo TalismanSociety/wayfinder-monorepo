@@ -1,11 +1,15 @@
-import { request } from 'graphql-request'
+import { gql, request } from 'graphql-request'
+import produce from 'immer'
 import uniq from 'lodash/uniq'
 import { Dispatch, ReactNode, useEffect, useMemo, useReducer } from 'react'
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 
-import { destinationsQuery, filterQuery, routesQuery, sourcesQuery, tokensQuery } from './graphql'
+import { destinationsQuery, routesQuery, sourcesQuery, tokensQuery } from './graphql'
+import { Query, Route } from './graphql-codegen/graphql'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: Infinity } },
+})
 
 export const WayfinderProvider = ({ children }: { children?: ReactNode }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -32,14 +36,12 @@ export const useWayfinder = (wayfinderSquid: string) => {
 
   useAutofill(dispatch, { from, to, token, autofill }, filtered.routes)
 
-  return useMemo(
-    () => ({
-      inputs: { dispatch, from, to, amount, token, assets, sender, recipient },
-      all,
-      filtered,
-    }),
-    [dispatch, from, to, amount, token, assets, sender, recipient, all, filtered]
-  )
+  return {
+    status: filteredQuery.status,
+    inputs: { dispatch, from, to, amount, token, assets, sender, recipient },
+    all,
+    filtered,
+  }
 }
 
 type InputState = {
@@ -67,14 +69,43 @@ type InputAction =
 const useInputs = () => {
   const [inputState, dispatch] = useReducer((state: InputState, action: InputAction): InputState => {
     if ('reset' in action) return {}
-    if ('setFrom' in action) return { ...state, from: action.setFrom, autofill: action.setFrom !== undefined }
-    if ('setTo' in action) return { ...state, to: action.setTo, autofill: action.setTo !== undefined }
-    if ('setToken' in action) return { ...state, token: action.setToken, autofill: action.setToken !== undefined }
-    if ('setAssets' in action) {
-      if (JSON.stringify(state.assets) === JSON.stringify(action.setAssets)) return state
-      return { ...state, assets: action.setAssets }
+
+    if (
+      'setFrom' in action ||
+      'setTo' in action ||
+      'setToken' in action ||
+      'setAssets' in action ||
+      'setAmount' in action
+    ) {
+      return produce(state, (draft) => {
+        draft.autofill = false
+
+        if ('setFrom' in action) {
+          draft.from = action.setFrom
+          draft.autofill = draft.autofill || action.setFrom !== undefined
+        }
+
+        if ('setTo' in action) {
+          draft.to = action.setTo
+          draft.autofill = draft.autofill || action.setTo !== undefined
+        }
+
+        if ('setToken' in action) {
+          draft.token = action.setToken
+          draft.autofill = draft.autofill || action.setToken !== undefined
+        }
+
+        if ('setAssets' in action) {
+          draft.assets = action.setAssets
+        }
+
+        if ('setAmount' in action) {
+          draft.amount = action.setAmount
+        }
+
+        return draft
+      })
     }
-    if ('setAmount' in action) return { ...state, amount: action.setAmount }
 
     // setSender resets other input vars
     if ('setSender' in action) return { sender: action.setSender, recipient: action.setSender }
@@ -115,21 +146,61 @@ export const useFilterQuery = (
     assets?: Array<{ chainId: string; tokenId: string }>
   }
 ) => {
-  const { data, status } = useQuery(
-    ['filter', from, to, token, assets],
-    async () => await request(wayfinderSquid, filterQuery, { from, to, token, assets })
+  const query = useQuery<Pick<Query, 'chains' | 'tokens' | 'routes'>>(
+    ['all-routes'],
+    async () =>
+      await request(
+        wayfinderSquid,
+        gql`
+          query {
+            chains {
+              id
+            }
+            tokens {
+              id
+            }
+            routes {
+              id
+              from {
+                id
+              }
+              to {
+                id
+              }
+              token {
+                id
+              }
+            }
+          }
+        `
+      )
   )
 
-  return useMemo(
-    () => ({
-      status,
-      routes: data?.filter?.routes,
-      sources: data?.filter?.sources,
-      destinations: data?.filter?.destinations,
-      tokens: data?.filter?.tokens,
-    }),
-    [status, data]
-  )
+  return useMemo(() => {
+    // organise the things which we'll later need to retrieve by id
+    const allChainsMap = Object.fromEntries(query.data?.chains.map((chain) => [chain.id, chain]) ?? [])
+    const allTokensMap = Object.fromEntries(query.data?.tokens.map((token) => [token.id, token]) ?? [])
+
+    // create the route filters
+    const allPass = () => true
+    const fromFilter = from ? (route: Route) => route.from.id === from : allPass
+    const toFilter = to ? (route: Route) => route.to.id === to : allPass
+    const tokenFilter = token ? (route: Route) => route.token.id === token : allPass
+    const assetsFilter = assets
+      ? (route: Route) => assets.some(({ chainId, tokenId }) => chainId === route.from.id && tokenId === route.token.id)
+      : allPass
+
+    // filter the routes
+    const routes = query.data?.routes.filter(fromFilter).filter(toFilter).filter(tokenFilter).filter(assetsFilter) ?? []
+
+    // retrieve the filtered things based on the remaining routes
+    const sources = uniq(routes.map(({ from }) => from.id)).map((id) => allChainsMap[id])
+    const destinations = uniq(routes.map(({ to }) => to.id)).map((id) => allChainsMap[id])
+    const tokens = uniq(routes.map(({ token }) => token.id)).map((id) => allTokensMap[id])
+
+    // return the results
+    return { routes, sources, destinations, tokens, status: query.status }
+  }, [assets, from, query.data?.chains, query.data?.routes, query.data?.tokens, query.status, to, token])
 }
 
 const useMap = <T extends { id: string }>(list?: T[]): Record<string, T> =>
